@@ -1,0 +1,70 @@
+{
+  "_from": "jquery.flowchart",
+  "_id": "jquery.flowchart@1.1.0",
+  "_inBundle": false,
+  "_integrity": "sha1-xpsCHgHiI5Dl7ukoBmnrph/lOgc=",
+  "_location": "/jquery.flowchart",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "tag",
+    "registry": true,
+    "raw": "jquery.flowchart",
+    "name": "jquery.flowchart",
+    "escapedName": "jquery.flowchart",
+    "rawSpec": "",
+    "saveSpec": null,
+    "fetchSpec": "latest"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/jquery.flowchart/-/jquery.flowchart-1.1.0.tgz",
+  "_shasum": "c69b021e01e22390e5eee9280669eba61fe53a07",
+  "_spec": "jquery.flowchart",
+  "_where": "/home/ignacio/Projects/AngularWFWeb",
+  "author": {
+    "name": "Sébastien Drouyer",
+    "url": "http://sebastien.drouyer.com"
+  },
+  "bugs": {
+    "url": "https://github.com/sdrdis/jquery.flowchart/issues"
+  },
+  "bundleDependencies": false,
+  "dependencies": {
+    "jquery": ">=1.10",
+    "jquery-ui": ">=1.11"
+  },
+  "deprecated": false,
+  "description": "JQuery UI plugin that allows you to draw a flow chart.",
+  "docs": "https://github.com/sdrdis/jquery.flowchart/",
+  "homepage": "http://sebastien.drouyer.com/jquery.flowchart-demo/",
+  "keywords": [
+    "flowchart",
+    "flow",
+    "chart",
+    "graph",
+    "ui",
+    "jquery-plugin",
+    "ecosystem:jquery"
+  ],
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/sdrdis/jquery.flowchart/blob/master/MIT-LICENSE.txt"
+    }
+  ],
+  "maintainers": [
+    {
+      "name": "Sébastien Drouyer",
+      "url": "http://sebastien.drouyer.com"
+    }
+  ],
+  "name": "jquery.flowchart",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sdrdis/jquery.flowchart.git"
+  },
+  "title": "Flowchart",
+  "version": "1.1.0"
+}
