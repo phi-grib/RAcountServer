@@ -14,10 +14,10 @@ class UserSerializer (serializers.ModelSerializer):
         fields = "__all__"
 
 class NodeSerializer (serializers.ModelSerializer):
-
+    
     class Meta:
         model = Nodes
-        fields = "__all__"
+        fields = ('name', 'description', 'outputs', 'outputs_comments', 'project', 'node_seq')
 
 class ResourcesSerializer (serializers.ModelSerializer):
 
