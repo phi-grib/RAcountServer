@@ -11,7 +11,8 @@ from .models import Users as UsersModel
 from .models import Nodes as NodesModel
 from .models import Resources as ResourcesModel
 
-from .serializer import ProjectSerializer, UserSerializer, NodeSerializer, StatusSerializer, ResourcesSerializer
+from .serializer import ProjectSerializer, UserSerializer, NodeSerializer
+from .serializer import StatusSerializer, ResourcesSerializer
 
 
 class ManageProject(APIView):
@@ -24,9 +25,10 @@ class ManageProject(APIView):
         Publishes a new version of the model
         TODO: Complete  error handling and error status
         """
-        p = Projects(owner=user, name=project)
-        p.save()
-        return Response(['ok'], status=status.HTTP_201_CREATED)
+        # p = ProjectsModel(owner=user, name=project)
+        # p.save()
+        # return Response(['ok'], status=status.HTTP_201_CREATED)
+        pass
 
     def get(self, request, project_id):
 
@@ -45,8 +47,29 @@ class ManageNodes(APIView):
 
     def get(self, request, project, node):
 
+
+        newdict = {}
+
+
         node_info = NodesModel.objects.get(project_id=project,node_seq=node)
-        return Response(NodeSerializer(node_info, many=False).data, 200)
+        newdict.update(NodeSerializer(node_info, many=False).data)
+
+        resources = ResourcesModel.objects.filter(node=node)
+        resources = ResourcesSerializer(resources, many=True).data
+
+        newdict['resources'] = resources
+
+        i = 1
+        inputs = []
+
+        while i < node:
+            historial = NodesModel.objects.get(project_id=project, node_seq=i)
+            inputs.append({'name': historial.name, 'content': historial.outputs, 'comment': historial.outputs_comments})
+            i = i+1
+
+        newdict['inputs'] = inputs
+
+        return Response(newdict, 200)
 
     def post(self, request, project, node):
 
