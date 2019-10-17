@@ -105,9 +105,7 @@ class ManageNodes(APIView):
 @method_decorator((csrf_protect,ensure_csrf_cookie), name='dispatch')
 class User(APIView):
     def get(self,request,logout):
-        if logout == "logout":
-            return JsonResponse({'CSRF_TOKEN':get_token(request)}, status=200)
-        return render(request,'API/csrf_token.html')
+        return JsonResponse({'CSRF_TOKEN':get_token(request)}, status=200)
     def post(self,request,logout):
         if logout == "logout":
             if request.user.is_authenticated:
