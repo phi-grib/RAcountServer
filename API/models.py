@@ -1,18 +1,14 @@
 
 from django.db import models
+from django.conf import settings
 
 # Create your models here.
-
-class Users(models.Model):
-
-    user = models.CharField(max_length=255)
-    mail = models.CharField(max_length=255)
-    nickName = models.CharField(max_length=50)
 
 class Projects(models.Model):
 
     name = models.CharField(max_length=50)
-    owner = models.ForeignKey(Users, on_delete=models.CASCADE)
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+
 
 class Nodes(models.Model):
 

@@ -1,5 +1,7 @@
+from django.contrib.auth import get_user_model
+
 from rest_framework import serializers
-from .models import Projects, Users, Nodes, Resources
+from .models import Projects, Nodes, Resources
 
 class ProjectSerializer (serializers.ModelSerializer):
 
@@ -10,8 +12,8 @@ class ProjectSerializer (serializers.ModelSerializer):
 class UserSerializer (serializers.ModelSerializer):
 
     class Meta:
-        model = Users
-        fields = "__all__"
+        model = get_user_model()
+        fields = ('id','email','first_name','last_name')
 
 class NodeSerializer (serializers.ModelSerializer):
     

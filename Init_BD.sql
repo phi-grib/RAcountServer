@@ -1,5 +1,5 @@
-INSERT INTO API_users ("user", mail, nickName) VALUES('Manuel Pastor', 'manuel.pastor@upf.edu', 'Manuel');
-INSERT INTO API_users ("user", mail, nickName) VALUES('Ignacio Pasamontes Fúnez', '***REMOVED***','Ignacio');
+INSERT INTO API_users (username, first_name, last_name, email, password) VALUES('manuel.pastor@upf.edu','Manuel', 'Pastor', 'manuel.pastor@upf.edu','manuel.pastor@upf.edu', 'Manuel');
+INSERT INTO API_users (username, first_name, last_name, email, password) VALUES('***REMOVED***', 'Ignacio', 'Pasamontes Fúnez', '***REMOVED***','Ignacio');
 
 
 INSERT INTO API_projects (name, owner_id) VALUES('Read_Across', '1');

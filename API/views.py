@@ -1,13 +1,22 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
+from django.shortcuts import render
 from rest_framework import status
-from django.http import JsonResponse
-
+from django.contrib.auth import get_user_model
+from django.contrib.auth import authenticate, login, logout as auth_logout
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
+from django.views.decorators.http import require_http_methods
+from django.views.decorators.csrf import csrf_protect, ensure_csrf_cookie
+from django.middleware.csrf import get_token
 
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from rest_framework.permissions import IsAuthenticated
+
 from .models import Projects as ProjectsModel
-from .models import Users as UsersModel
+
 from .models import Nodes as NodesModel
 from .models import Resources as ResourcesModel
 
@@ -15,11 +24,16 @@ from .serializer import ProjectSerializer, UserSerializer, NodeSerializer
 from .serializer import StatusSerializer, ResourcesSerializer
 
 
+
+UserModel = get_user_model()
+
+@method_decorator((csrf_protect,ensure_csrf_cookie), name='dispatch')
 class ManageProject(APIView):
     """
     Add Project
     """
-
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
     def put(self, request, user, projectname):
         """
         Publishes a new version of the model
@@ -37,14 +51,17 @@ class ManageProject(APIView):
         return Response(StatusSerializer(projects, many=True).data, 200)
 
 class ListProjects(APIView):
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
+    def get(self, request):
 
-    def get(self, request, user):
-
-        projects = ProjectsModel.objects.filter(owner_id=user)
+        projects = ProjectsModel.objects.filter(owner_id=request.user.id)
         return Response(ProjectSerializer(projects, many=True).data, 200)
 
+@method_decorator((csrf_protect,ensure_csrf_cookie), name='dispatch')
 class ManageNodes(APIView):
-
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
     def get(self, request, project, node):
 
 
@@ -68,7 +85,7 @@ class ManageNodes(APIView):
             i = i+1
 
         newdict['inputs'] = inputs
-
+        newdict['CSRF_TOKEN'] = get_token(request)
         return Response(newdict, 200)
 
     def post(self, request, project, node):
@@ -85,13 +102,32 @@ class ManageNodes(APIView):
 
         return JsonResponse({'Ok':'ok'}, status=200)
 
+@method_decorator((csrf_protect,ensure_csrf_cookie), name='dispatch')
+class User(APIView):
+    def get(self,request,logout):
+        if logout == "logout":
+            return JsonResponse({'CSRF_TOKEN':get_token(request)}, status=200)
+        return render(request,'API/csrf_token.html')
+    def post(self,request,logout):
+        if logout == "logout":
+            if request.user.is_authenticated:
+                auth_logout(request)
+                return JsonResponse({'Ok':'ok'}, status=200)
+        else:
+            username = request.POST.get('username')
+            password = request.POST.get('password')
 
-class Users(APIView):
+            user = authenticate(username=username, password=password)
+            
+            if user is not None:
+                login(request, user)
+                return Response(UserSerializer(user, many=False).data, 200)
 
-    def get(self,request,user):
+        response = HttpResponse('401 Unauthorized')
+        response.status_code = 401
+        response.reason_phrase='Unauthorized'
+        return response
 
-        user = UsersModel.objects.get(mail=user)
-        return Response(UserSerializer(user, many=False).data, 200)
 
 class Resources(APIView):
 

@@ -2,11 +2,14 @@ name: RAcount
 channels:
   - defaults
 dependencies:
-  - pip=10.0.1
+  - pip=19.3
+# - pip=10.0.1
   - python=3.6.5
   - django=2.0.5
   - numpy=1.14.3
   - pandas=0.23.0
+  - cython=0.29.13
   - pip:
-    - django-cors-headers==2.2.0
+    - django-cors-headers==3.1.1
     - djangorestframework==3.8.2
+    - argon2-cffi=19.1.0
