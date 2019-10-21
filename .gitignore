@@ -1,4 +1,7 @@
+*.vscode
 .idea
-API/__pychche_
+# Byte-compiled / optimized / DLL files
+*.py[cod]
+*$py.class
+API/__pycache__/
 *.ipynb
-*.pyc
