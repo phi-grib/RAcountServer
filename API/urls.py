@@ -14,13 +14,13 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.urls import path,re_path
-from .views import ListProjects, ManageProject, ManageNodes, User, Resources
+from .views import ListProjects, ProjectStatus, ManageProject, ManageNodes, User, Resources
 
 urlpatterns = [
     #path("RX", ListModels.as_view()),
     re_path('^RX/user/(?P<logout>logout)?/?$', User.as_view()),
     path("RX/user/projects/", ListProjects.as_view()),
-    path("RX/project/<int:project_id>/status/", ManageProject.as_view()),
+    path("RX/project/<int:project>/status/", ProjectStatus.as_view()),
     path("RX/project/<int:project>/node/<int:node>/", ManageNodes.as_view()),
     path("RX/node/<int:node>/resources/", Resources.as_view())
 
