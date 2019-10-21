@@ -16,7 +16,7 @@ from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 from rest_framework.generics import GenericAPIView, RetrieveUpdateDestroyAPIView, ListAPIView
 from rest_framework.response import Response
-from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from rest_framework.authentication import SessionAuthentication
 from rest_framework.permissions import IsAuthenticated
 
 from .models import Projects as ProjectsModel
@@ -26,6 +26,8 @@ from .models import Resources as ResourcesModel
 
 from .serializer import ProjectSerializer, UserSerializer, NodeSerializer
 from .serializer import StatusSerializer, ResourcesSerializer
+
+from .permissions import IsProjectOwner
 
 
 
@@ -42,7 +44,7 @@ class ManageProject(RetrieveUpdateDestroyAPIView):
     lookup_field = 'project'
     lookup_url_kwarg = 'project'
     authentication_classes = [SessionAuthentication]
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated,IsProjectOwner]
 
 
 
@@ -56,7 +58,7 @@ class ProjectStatus(ListAPIView):
     lookup_field = 'project'
     lookup_url_kwarg = 'project'
     authentication_classes = [SessionAuthentication]
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated,IsProjectOwner]
 
     def get_queryset(self):
         return self.queryset.filter(**{self.lookup_field:self.kwargs[self.lookup_url_kwarg]})
@@ -76,7 +78,7 @@ class ListProjects(ListAPIView):
 @method_decorator((csrf_protect,ensure_csrf_cookie), name='dispatch')
 class ManageNodes(APIView):
     authentication_classes = [SessionAuthentication]
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated,IsProjectOwner]
     def get(self, request, project, node):
 
 
@@ -147,7 +149,7 @@ class Resources(ListAPIView):
     serializer_class = ResourcesSerializer
     lookup_field = 'node'
     lookup_url_kwarg = 'node'
-    
+
     def get_queryset(self):
         return self.queryset.filter(**{self.lookup_field:self.kwargs[self.lookup_url_kwarg]})
 
