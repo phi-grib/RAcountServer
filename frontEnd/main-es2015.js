@@ -62,7 +62,7 @@ module.exports = "<nav class=\"navbar navbar-dark sticky-top bg-dark flex-md-now
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<h1 mat-dialog-title> {{this.info.name}}</h1>\n<div mat-dialog-content>\n    <div class=\"card\">\n      <div class=\"card-body\">\n         {{this.info.description}}\n      </div>\n    </div>\n    <div class=\"card\" *ngIf=\"this.info.inputs.length>0\">\n        <h5 class=\"card-header bg-light p-1\">Inputs</h5>\n        <div class=\"card-body p-0\">\n            <div class=\"card m-0\" *ngFor=\"let info of this.info.inputs ; let i=index;\"> \n                <div class=\"card-header p-0\">\n                    \n                    <a class=\"btn m-0\" data-toggle=\"collapse\" href= \"#accordion_{{ i }}\" role=\"button\" aria-expanded=\"false\" >\n                        {{info.name}}\n                    </a> \n                   \n                </div>\n                <div class=\"collapse\" id= \"accordion_{{ i }}\">\n                    <div class=\"card-body\">\n                        <div class=\"row\">\n                            <div class=\"col-6\">\n                                <div [innerHTML]=\"info.content\">\n                                </div>       \n                            </div>\n                            <div class=\"col-6\">\n                                <div [innerHTML]=\"info.comment\">\n                                </div>\n                            </div>  \n                        </div>\n                    </div>\n                </div>\n            </div>\n        </div>\n    </div>\n    <div class=\"card\">\n        <h5 class=\"card-header bg-light p-1\">Resources</h5>\n        <div class=\"card-body p-2\">\n            <ul class=\"list-group list-group-flush\">\n                <li class=\"list-group-item p-1\" *ngFor=\"let info of this.info.resources ;\">\n                   {{this.info.resources_name}}  <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"{{this.info.resources_link}}\"> ( {{this.info.resources_link}} )</a>\n                </li>\n            \n            </ul>\n        </div>\n    </div>\n    <div class=\"card\">\n        <h5 class=\"card-header bg-light p-1\">Output</h5>\n        <div class=\"card-body p-0\">\n            <div class=\"mat-elevation-z8\">\n                <button mat-raised-button (click)=\"addColumn()\"> Add column </button>\n                <button mat-raised-button (click)=\"removeColumn()\"> Remove column </button>\n                <button mat-raised-button (click)=\"shuffle()\"> Shuffle </button>\n\n                <table mat-table [dataSource]=\"this.dataSource\" class=\"mat-elevation-z8\" matSort>\n                <ng-container [matColumnDef]=\"column\" *ngFor=\"let column of displayedColumns\">\n                    <th mat-header-cell *matHeaderCellDef  mat-sort-header> {{column}} </th>\n                    <td mat-cell *matCellDef=\"let element;let index = index\"> \n                        <editable>\n                            <ng-template viewMode>\n                                {{element[column]}}\n                            </ng-template>\n                            <ng-template editMode>\n                                <mat-form-field class=\"example-full-width\">\n                                    <input matInput [formControl]=\"getControl(index, column)\">\n                                </mat-form-field>\n                                <!-- <input  [formControl]=\"getControl(index, 'name')\" focusable editableOnEnter> -->\n                            </ng-template>\n                        </editable>\n                    </td>\n                </ng-container>\n                <tr mat-header-row *matHeaderRowDef=\"columnsToDisplay\"></tr>\n                <tr mat-row *matRowDef=\"let row; columns: columnsToDisplay;\"></tr>\n                </table>\n                <mat-paginator [pageSizeOptions]=\"[5, 10, 20]\" showFirstLastButtons></mat-paginator>\n            </div> \n           <!-- <ckeditor [editor]=\"Editor\" [(ngModel)]=\"this.info.outputs\" [disabled]=\"inline_output\"></ckeditor>-->\n        </div>\n    </div>\n\n    <div class=\"card\">\n        <h5 class=\"card-header bg-light p-1\">Comments</h5>\n        <div class=\"card-body p-0\">\n           <!--<textarea class=\"form-control\" id=\"exampleFormControlTextarea1\" [(ngModel)]=\"this.info.outputs_comments\" rows=\"10\"></textarea>-->\n            <ckeditor [editor]=\"Editor\" [(ngModel)]=\"this.info.outputs_comments\" [disabled]=\"inline_comments\"></ckeditor>\n        </div>\n    </div>\n</div>      \n      \n<div mat-dialog-actions>\n    <button mat-button matDialogClose>No Thanks</button>\n    <button mat-button (click)=\"NodeCompleted(this.info.project,this.info.node_seq)\" [mat-dialog-close]=\"\">Ok</button>\n</div>"
+module.exports = "<h1 mat-dialog-title> {{this.info.name}}</h1>\n<div mat-dialog-content>\n    <div class=\"card\">\n      <div class=\"card-body\">\n         {{this.info.description}}\n      </div>\n    </div>\n    <div class=\"card\" *ngIf=\"this.info.inputs.length>0\">\n        <h5 class=\"card-header bg-light p-1\">Inputs</h5>\n        <div class=\"card-body p-0\">\n            <div class=\"card m-0\" *ngFor=\"let info of this.info.inputs ; let i=index;\"> \n                <div class=\"card-header p-0\">\n                    \n                    <a class=\"btn m-0\" data-toggle=\"collapse\" href= \"#accordion_{{ i }}\" role=\"button\" aria-expanded=\"false\" >\n                        {{info.name}}\n                    </a> \n                   \n                </div>\n                <div class=\"collapse\" id= \"accordion_{{ i }}\">\n                    <div class=\"card-body\">\n                        <div class=\"row\">\n                            <div class=\"col-6\">\n                                <div [innerHTML]=\"info.content\">\n                                </div>       \n                            </div>\n                            <div class=\"col-6\">\n                                <div [innerHTML]=\"info.comment\">\n                                </div>\n                            </div>  \n                        </div>\n                    </div>\n                </div>\n            </div>\n        </div>\n    </div>\n    <ng-container class=\"card\" [ngSwitch]=\"this.info.node_id\">\n        <app-node1-problem-formulation [info]=\"this.info\" *ngSwitchCase=\"1\"></app-node1-problem-formulation>\n        <ng-container *ngSwitchDefault>\n            <div class=\"card\">\n                <h5 class=\"card-header bg-light p-1\">Resources</h5>\n                <div class=\"card-body p-2\">\n                    <ul class=\"list-group list-group-flush\">\n                        <li class=\"list-group-item p-1\" *ngFor=\"let info of this.info.resources ;\">\n                        {{this.info.resources_name}}  <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"{{this.info.resources_link}}\"> ( {{this.info.resources_link}} )</a>\n                        </li>\n                    \n                    </ul>\n                </div>\n            </div>\n            <div class=\"card\">\n                <h5 class=\"card-header bg-light p-1\">Output</h5>\n                <div class=\"card-body p-0\">\n                    <div class=\"mat-elevation-z8\">\n                        <button mat-raised-button (click)=\"addColumn()\"> Add column </button>\n                        <button mat-raised-button (click)=\"removeColumn()\"> Remove column </button>\n                        <button mat-raised-button (click)=\"shuffle()\"> Shuffle </button>\n\n                        <table mat-table [dataSource]=\"this.dataSource\" class=\"mat-elevation-z8\" matSort>\n                        <ng-container [matColumnDef]=\"column\" *ngFor=\"let column of displayedColumns\">\n                            <th mat-header-cell *matHeaderCellDef  mat-sort-header> {{column}} </th>\n                            <td mat-cell *matCellDef=\"let element;let index = index\"> \n                                <editable>\n                                    <ng-template viewMode>\n                                        {{element[column]}}\n                                    </ng-template>\n                                    <ng-template editMode>\n                                        <mat-form-field class=\"example-full-width\">\n                                            <input matInput [formControl]=\"getControl(index, column)\">\n                                        </mat-form-field>\n                                        <!-- <input  [formControl]=\"getControl(index, 'name')\" focusable editableOnEnter> -->\n                                    </ng-template>\n                                </editable>\n                            </td>\n                        </ng-container>\n                        <tr mat-header-row *matHeaderRowDef=\"columnsToDisplay\"></tr>\n                        <tr mat-row *matRowDef=\"let row; columns: columnsToDisplay;\"></tr>\n                        </table>\n                        <mat-paginator [pageSizeOptions]=\"[5, 10, 20]\" showFirstLastButtons></mat-paginator>\n                    </div> \n                <!-- <ckeditor [editor]=\"Editor\" [(ngModel)]=\"this.info.outputs\" [disabled]=\"inline_output\"></ckeditor>-->\n                </div>\n            </div>\n        </ng-container>    \n    </ng-container>\n    <div class=\"card\">\n        <h5 class=\"card-header bg-light p-1\">Comments</h5>\n        <div class=\"card-body p-0\">\n           <!--<textarea class=\"form-control\" id=\"exampleFormControlTextarea1\" [(ngModel)]=\"this.info.outputs_comments\" rows=\"10\"></textarea>-->\n            <ckeditor [editor]=\"Editor\" [(ngModel)]=\"this.info.outputs_comments\" [disabled]=\"inline_comments\"></ckeditor>\n        </div>\n    </div>\n</div>      \n      \n<div mat-dialog-actions>\n    <button mat-button matDialogClose>No Thanks</button>\n    <button mat-button (click)=\"NodeCompleted(this.info.project,this.info.node_seq)\" [mat-dialog-close]=\"\">Ok</button>\n</div>"
 
 /***/ }),
 
@@ -73,7 +73,7 @@ module.exports = "<h1 mat-dialog-title> {{this.info.name}}</h1>\n<div mat-dialog
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<p>node1-problem-formulation works!</p>\n"
+module.exports = "<div class=\"card\">\n        <h5 class=\"card-header bg-light p-1\">Problem description</h5>\n        <div class=\"card-body p-0\">\n            <ckeditor [editor]=\"Editor\" [(ngModel)]=\"problem_description\" [disabled]=\"this.inline_problem_description\"></ckeditor>\n        </div>\n</div>\n"
 
 /***/ }),
 
@@ -525,6 +525,7 @@ let EachWorkflowComponent = class EachWorkflowComponent {
         // GET ID PROJECT
         this.service.getNodeInfo(project_id, node_id).subscribe(result => {
             result['outputs'] = ELEMENT_DATA;
+            result['node_id'] = node_id;
             if (!this.globals.node_csrf_token.hasOwnProperty(project_id)) {
                 this.globals.node_csrf_token[project_id] = {};
             }
@@ -1325,6 +1326,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _ckeditor_ckeditor5_build_classic__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @ckeditor/ckeditor5-build-classic */ "./node_modules/@ckeditor/ckeditor5-build-classic/build/ckeditor.js");
 /* harmony import */ var _ckeditor_ckeditor5_build_classic__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_ckeditor_ckeditor5_build_classic__WEBPACK_IMPORTED_MODULE_7__);
 /* harmony import */ var _angular_material_dialog__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @angular/material/dialog */ "./node_modules/@angular/material/esm2015/dialog.js");
+/* harmony import */ var _node1_problem_formulation_node1_problem_formulation_component__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../node1-problem-formulation/node1-problem-formulation.component */ "./src/app/node1-problem-formulation/node1-problem-formulation.component.ts");
+
 
 
 
@@ -1354,6 +1357,18 @@ let NodeInfoComponent = class NodeInfoComponent {
     }
     ngOnInit() {
         this.info = this.data;
+        console.log('before');
+        console.log(this.info);
+        if (this.info.inputs_comments == undefined) {
+            this.info.inputs_comments = '';
+        }
+        ;
+        if (this.info.outputs_comments == undefined) {
+            this.info.outputs_comments = '';
+        }
+        ;
+        console.log('after');
+        console.log(this.info);
         this.dataSource = new _angular_material_table__WEBPACK_IMPORTED_MODULE_4__["MatTableDataSource"](this.data['outputs']);
         this.displayedColumns = Object.keys(this.data['outputs'][0]);
         this.columnsToDisplay = this.displayedColumns.slice();
@@ -1367,8 +1382,18 @@ let NodeInfoComponent = class NodeInfoComponent {
     }
     NodeCompleted(project_id, node_id) {
         this.service.saveNode(this.info.project, this.info.node_seq, this.info.outputs, this.info.outputs_comments, this.globals.node_csrf_token[project_id][node_id]).subscribe(result => {
+            this.globals.change = !this.globals.change;
         });
-        this.globals.change = !this.globals.change;
+        switch (node_id) {
+            case 1: {
+                this.node1.NodeCompleted(project_id);
+                break;
+            }
+            default: {
+                //statements; 
+                break;
+            }
+        }
         this.inline_output = true;
         this.inline_comments = true;
         return false;
@@ -1414,6 +1439,10 @@ tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
     Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["ViewChild"])(_angular_material_paginator__WEBPACK_IMPORTED_MODULE_3__["MatPaginator"], { static: true }),
     tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", _angular_material_paginator__WEBPACK_IMPORTED_MODULE_3__["MatPaginator"])
 ], NodeInfoComponent.prototype, "paginator", void 0);
+tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+    Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["ViewChild"])(_node1_problem_formulation_node1_problem_formulation_component__WEBPACK_IMPORTED_MODULE_9__["Node1ProblemFormulationComponent"], { static: false }),
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Object)
+], NodeInfoComponent.prototype, "node1", void 0);
 NodeInfoComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
     Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
         selector: 'app-node-info',
@@ -1461,8 +1490,8 @@ let NodeInfoService = class NodeInfoService {
     }
     saveNode(project, node, output, comments, csrftoken) {
         const formData = new FormData();
-        formData.append('output', output);
-        formData.append('output_comments', comments);
+        formData.append('outputs', output);
+        formData.append('outputs_comments', comments);
         if (csrftoken !== null && csrftoken !== undefined) {
             formData.append(this.globals.csrftoken_form_input_name, csrftoken);
         }
@@ -1512,21 +1541,115 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Node1ProblemFormulationComponent", function() { return Node1ProblemFormulationComponent; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm2015/core.js");
+/* harmony import */ var _ckeditor_ckeditor5_build_classic__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @ckeditor/ckeditor5-build-classic */ "./node_modules/@ckeditor/ckeditor5-build-classic/build/ckeditor.js");
+/* harmony import */ var _ckeditor_ckeditor5_build_classic__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_ckeditor_ckeditor5_build_classic__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _node1_problem_formulation_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./node1-problem-formulation.service */ "./src/app/node1-problem-formulation/node1-problem-formulation.service.ts");
+/* harmony import */ var _globals__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../globals */ "./src/app/globals.ts");
+
+
+
 
 
 let Node1ProblemFormulationComponent = class Node1ProblemFormulationComponent {
-    constructor() { }
+    constructor(service, globals) {
+        this.service = service;
+        this.globals = globals;
+        this.inline_problem_description = false;
+        this.show_inline = false;
+        this.Editor = _ckeditor_ckeditor5_build_classic__WEBPACK_IMPORTED_MODULE_2__;
+    }
     ngOnInit() {
+        console.log(this.info);
+        this.problem_description = this.info.inputs_comments;
+    }
+    NodeCompleted(project_id) {
+        const node_id = 1;
+        this.service.saveNode(this.info.project, this.problem_description, this.globals.node_csrf_token[project_id][node_id]).subscribe(result => {
+            this.globals.change = !this.globals.change;
+        });
+        this.inline_problem_description = true;
+        return false;
     }
 };
+Node1ProblemFormulationComponent.ctorParameters = () => [
+    { type: _node1_problem_formulation_service__WEBPACK_IMPORTED_MODULE_3__["Node1ProblemFormulationService"] },
+    { type: _globals__WEBPACK_IMPORTED_MODULE_4__["Globals"] }
+];
+tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+    Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Object)
+], Node1ProblemFormulationComponent.prototype, "info", void 0);
+tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+    Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Output"])(),
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", String)
+], Node1ProblemFormulationComponent.prototype, "problem_description", void 0);
 Node1ProblemFormulationComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
     Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
         selector: 'app-node1-problem-formulation',
         template: __webpack_require__(/*! raw-loader!./node1-problem-formulation.component.html */ "./node_modules/raw-loader/index.js!./src/app/node1-problem-formulation/node1-problem-formulation.component.html"),
         styles: [__webpack_require__(/*! ./node1-problem-formulation.component.css */ "./src/app/node1-problem-formulation/node1-problem-formulation.component.css")]
     }),
-    tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [])
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_node1_problem_formulation_service__WEBPACK_IMPORTED_MODULE_3__["Node1ProblemFormulationService"],
+        _globals__WEBPACK_IMPORTED_MODULE_4__["Globals"]])
 ], Node1ProblemFormulationComponent);
+
+
+
+/***/ }),
+
+/***/ "./src/app/node1-problem-formulation/node1-problem-formulation.service.ts":
+/*!********************************************************************************!*\
+  !*** ./src/app/node1-problem-formulation/node1-problem-formulation.service.ts ***!
+  \********************************************************************************/
+/*! exports provided: Node1ProblemFormulationService */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Node1ProblemFormulationService", function() { return Node1ProblemFormulationService; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm2015/core.js");
+/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm2015/http.js");
+/* harmony import */ var _environments_environment__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../environments/environment */ "./src/environments/environment.ts");
+/* harmony import */ var _globals__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../globals */ "./src/app/globals.ts");
+/* harmony import */ var _login_login_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../login/login.service */ "./src/app/login/login.service.ts");
+
+
+
+
+
+
+let Node1ProblemFormulationService = class Node1ProblemFormulationService {
+    constructor(http, loginService, globals) {
+        this.http = http;
+        this.loginService = loginService;
+        this.globals = globals;
+    }
+    saveNode(project, inputs, csrftoken) {
+        const node = 1;
+        const formData = new FormData();
+        formData.append('inputs_comments', inputs);
+        if (csrftoken !== null && csrftoken !== undefined) {
+            formData.append(this.globals.csrftoken_form_input_name, csrftoken);
+        }
+        // formData.append('parameters',  this.model.parameters);
+        const url = _environments_environment__WEBPACK_IMPORTED_MODULE_3__["environment"].baseUrl + 'project/' + project + '/node/' + node + '/';
+        return this.http.post(url, formData, this.loginService.getPOSTHttpOptions());
+    }
+};
+Node1ProblemFormulationService.ctorParameters = () => [
+    { type: _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpClient"] },
+    { type: _login_login_service__WEBPACK_IMPORTED_MODULE_5__["LoginService"] },
+    { type: _globals__WEBPACK_IMPORTED_MODULE_4__["Globals"] }
+];
+Node1ProblemFormulationService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+    Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
+        providedIn: 'root'
+    }),
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpClient"],
+        _login_login_service__WEBPACK_IMPORTED_MODULE_5__["LoginService"],
+        _globals__WEBPACK_IMPORTED_MODULE_4__["Globals"]])
+], Node1ProblemFormulationService);
 
 
 
