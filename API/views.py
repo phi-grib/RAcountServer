@@ -85,7 +85,6 @@ class ManageNodes(GenericAPIView,UpdateModelMixin):
     permission_classes = [IsAuthenticated,IsProjectOwner]
     
     def get_queryset(self):
-        print('project',self.kwargs['project'],'node',self.kwargs['node'])
         return NodesModel.objects.filter(project=self.kwargs['project'], node_seq=self.kwargs['node'])
 
     def get(self, request, project, node):
@@ -101,39 +100,23 @@ class ManageNodes(GenericAPIView,UpdateModelMixin):
         newdict['resources'] = resources
 
         qhistory = NodesModel.objects.filter(project=project, node_seq__lt=node).order_by('node_seq')
-        qhistory = qhistory.annotate(content=F('outputs'),comment=F('outputs_comments')).values('name','content','comment')
+        qhistory = qhistory.annotate(content=F('outputs'),comment=F('outputs_comments')).values('name','content','comment','inputs_comments','node_seq')
+        history = list(qhistory)
+        for i in range(0,len(history)):
+            histi = dict(history[i])
+            if history[i]['node_seq'] == 1:
+                histi['content'] = histi['inputs_comments']
+            histi.pop('inputs_comments', None)
+            histi.pop('node_seq', None)
+            history[i] = histi
 
-        newdict['inputs'] = list(qhistory)
+        newdict['inputs'] = history
         newdict['CSRF_TOKEN'] = get_token(request)
         return Response(newdict, 200)
 
     def post(self, request, project, node):
-        print('hola:',request.data)
-        print('hola2:',request.POST)
-        # request.data.node_seq = node
-        # request.data.project = project
-
         self.partial_update(request)
         self.get_queryset().update(executed=True)
-        # node = NodesModel.objects.get(project=project, node_seq=node)
-        # updated = False
-        # if 'inputs_comments' in request.POST:
-        #     inputs_comments = request.POST.get ('inputs_comments')
-        #     node.inputs_comments = inputs_comments
-        #     updated = True
-        # if 'output' in request.POST:
-        #     output = request.POST.get('output')
-        #     node.outputs = output
-        #     updated = True
-        # if 'output_comments' in request.POST:
-        #     output_comments = request.POST.get('output_comments')
-        #     node.outputs_comments = output_comments
-        #     updated = True
-        
-        # if updated:
-        #     node.executed = True
-        #     node.save()
-
         return JsonResponse({'Ok':'ok'}, status=200)
 
 @method_decorator((csrf_protect,ensure_csrf_cookie), name='dispatch')
