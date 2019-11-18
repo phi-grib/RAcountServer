@@ -14,11 +14,11 @@ class Nodes(models.Model):
 
     project = models.ForeignKey(Projects, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
-    description = models.TextField()
-    inputs = models.TextField()
-    inputs_comments = models.TextField()
-    outputs = models.TextField()
-    outputs_comments = models.TextField()
+    description = models.TextField(blank=True,null=False,default='')
+    inputs = models.TextField(blank=True,null=False,default='')
+    inputs_comments = models.TextField(blank=True,null=False,default='')
+    outputs = models.TextField(blank=True,null=False,default='')
+    outputs_comments = models.TextField(blank=True,null=False,default='')
     node_seq = models.IntegerField()
     executed = models.BooleanField(default=False)
 

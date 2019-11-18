@@ -15,6 +15,7 @@ from rest_framework.decorators import api_view
 
 from rest_framework.views import APIView
 from rest_framework.generics import GenericAPIView, RetrieveUpdateDestroyAPIView, ListAPIView
+from rest_framework.mixins import UpdateModelMixin
 from rest_framework.response import Response
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.permissions import IsAuthenticated
@@ -76,14 +77,20 @@ class ListProjects(ListAPIView):
  
 
 @method_decorator((csrf_protect,ensure_csrf_cookie), name='dispatch')
-class ManageNodes(APIView):
+class ManageNodes(GenericAPIView,UpdateModelMixin):
+    serializer_class = NodeSerializer
+    lookup_field = 'project'
+    lookup_url_kwarg = 'project'
     authentication_classes = [SessionAuthentication]
     permission_classes = [IsAuthenticated,IsProjectOwner]
+    
+    def get_queryset(self):
+        print('project',self.kwargs['project'],'node',self.kwargs['node'])
+        return NodesModel.objects.filter(project=self.kwargs['project'], node_seq=self.kwargs['node'])
+
     def get(self, request, project, node):
 
-
         newdict = {}
-
 
         node_info = NodesModel.objects.get(project=project,node_seq=node)
         newdict.update(NodeSerializer(node_info, many=False).data)
@@ -93,29 +100,39 @@ class ManageNodes(APIView):
 
         newdict['resources'] = resources
 
-        i = 1
-        inputs = []
+        qhistory = NodesModel.objects.filter(project=project, node_seq__lt=node).order_by('node_seq')
+        qhistory = qhistory.annotate(content=F('outputs'),comment=F('outputs_comments')).values('name','content','comment')
 
-        while i < node:
-            historial = NodesModel.objects.get(project=project, node_seq=i)
-            inputs.append({'name': historial.name, 'content': historial.outputs, 'comment': historial.outputs_comments})
-            i = i+1
-
-        newdict['inputs'] = inputs
+        newdict['inputs'] = list(qhistory)
         newdict['CSRF_TOKEN'] = get_token(request)
         return Response(newdict, 200)
 
     def post(self, request, project, node):
+        print('hola:',request.data)
+        print('hola2:',request.POST)
+        # request.data.node_seq = node
+        # request.data.project = project
 
-        output = request.POST.get ('output')
-        output_comments = request.POST.get('output_comments')
-
-        node = NodesModel.objects.get(project=project, node_seq=node)
-
-        node.outputs = output
-        node.outputs_comments = output_comments
-        node.executed = True
-        node.save()
+        self.partial_update(request)
+        self.get_queryset().update(executed=True)
+        # node = NodesModel.objects.get(project=project, node_seq=node)
+        # updated = False
+        # if 'inputs_comments' in request.POST:
+        #     inputs_comments = request.POST.get ('inputs_comments')
+        #     node.inputs_comments = inputs_comments
+        #     updated = True
+        # if 'output' in request.POST:
+        #     output = request.POST.get('output')
+        #     node.outputs = output
+        #     updated = True
+        # if 'output_comments' in request.POST:
+        #     output_comments = request.POST.get('output_comments')
+        #     node.outputs_comments = output_comments
+        #     updated = True
+        
+        # if updated:
+        #     node.executed = True
+        #     node.save()
 
         return JsonResponse({'Ok':'ok'}, status=200)
 

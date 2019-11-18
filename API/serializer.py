@@ -19,7 +19,7 @@ class NodeSerializer (serializers.ModelSerializer):
     
     class Meta:
         model = Nodes
-        fields = ('name', 'description', 'outputs', 'outputs_comments', 'project', 'node_seq')
+        fields = ('name', 'description','inputs_comments','outputs', 'outputs_comments', 'project', 'node_seq','executed')
 
 class ResourcesSerializer (serializers.ModelSerializer):
 
