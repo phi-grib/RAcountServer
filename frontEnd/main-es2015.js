@@ -18,7 +18,7 @@ module.exports = "\n<router-outlet></router-outlet>\n"
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "\n<div class=\"limit\">\n    <div class=\"row p-5 justify-content-center\">\n        <div class=\"card node {{projectName}}\" [ngClass]=\"{'checked':this.checked.node1}\" id=\"{{projectName}}_id_1\" cdkDragBoundary=\".limit\" cdkDrag (cdkDragMoved)=\"reDraw()\" (dblclick)=\"nodeInfo_selected(projectName,1)\">\n            <div class=\"card-body\">\n                1.Problem formulation\n            </div>\n        </div>\n    </div>\n    <div class=\"row m-5 justify-content-center\">\n        <div class=\"card parent\" cdkDragBoundary=\".limit\" cdkDrag (cdkDragMoved)=\"reDraw()\">\n            <div class=\"card-body\">\n                <div class=\"card node m-5 {{projectName}}\" [ngClass]=\"{'checked':this.checked.node2}\" id=\"{{projectName}}_id_2\" (dblclick)=\"nodeInfo_selected(projectName,2)\">\n                    <div class=\"card-body\">\n                    2.TC Characterization\n                    </div>\n                </div>\n                <div class=\"card node m-5 {{projectName}}\" [ngClass]=\"{'checked':this.checked.node3}\" id=\"{{projectName}}_id_3\" (dblclick)=\"nodeInfo_selected(projectName,3)\">\n                    <div class=\"card-body\">\n                    Metabolism data gathering\n                    </div>\n                </div>\n                <div class=\"card node m-5 {{projectName}}\" [ngClass]=\"{'checked':this.checked.node4}\" id=\"{{projectName}}_id_4\" (dblclick)=\"nodeInfo_selected(projectName,4)\">\n                    <div class=\"card-body\">\n                    Initial RAX hypothesis\n                    </div>\n                </div>\n            </div>\n        </div>\n    </div>\n    <div class=\"row m-5 justify-content-center\">\n        <div class=\"card node {{projectName}}\"  [ngClass]=\"{'checked':this.checked.node5}\" id=\"{{projectName}}_id_5\" cdkDragBoundary=\".limit\" cdkDrag (cdkDragMoved)=\"reDraw()\" (dblclick)=\"nodeInfo_selected(projectName,5)\">\n            <div class=\"card-body\">\n                3.SCs identification\n            </div>\n        </div>\n    </div>\n    <div class=\"row m-5 justify-content-center\">\n        <div class=\"card node {{projectName}}\"  [ngClass]=\"{'checked':this.checked.node6}\" id=\"{{projectName}}_id_6\" cdkDragBoundary=\".limit\" cdkDrag (cdkDragMoved)=\"reDraw()\" (dblclick)=\"nodeInfo_selected(projectName,6)\">\n            <div class=\"card-body\">\n                4.SCs evaluation\n            </div>\n        </div>\n    </div>\n    <div class=\"row m-5 justify-content-center\">\n        <div class=\"card node {{projectName}}\"  [ngClass]=\"{'checked':this.checked.node7}\" id=\"{{projectName}}_id_7\" cdkDragBoundary=\".limit\" cdkDrag (cdkDragMoved)=\"reDraw()\" (dblclick)=\"nodeInfo_selected(projectName,7)\">\n            <div class=\"card-body\">\n                Overarching RAX hypothesis\n            </div>\n        </div>\n    </div>\n    <div class=\"row m-5 justify-content-center\">\n        <div class=\"card parent2\" cdkDragBoundary=\".limit\" cdkDrag (cdkDragMoved)=\"reDraw()\">\n            <div class=\"card-body\">\n                <div class=\"row\">\n                    <div class=\"card node m-5 {{projectName}}\" [ngClass]=\"{'checked':this.checked.node8}\"  id=\"{{projectName}}_id_8\" cdkDrag (cdkDragMoved)=\"reDraw()\" (dblclick)=\"nodeInfo_selected(projectName,8)\">\n                        <div class=\"card-body\">\n                        NAM testing and evaluation(in vitro & in silico)\n                        </div>\n                    </div>\n                </div>\n                <div class=\"row\"> \n                    <div class=\"card node m-5 col-3 {{projectName}}\" [ngClass]=\"{'checked':this.checked.node9}\" id=\"{{projectName}}_id_9\" cdkDrag (cdkDragMoved)=\"reDraw()\" (dblclick)=\"nodeInfo_selected(projectName,9)\">\n                        <div class=\"card-body\">\n                        TK\n                        </div>\n                    </div>\n                    <div class=\"card node m-5 col-3 {{projectName}}\" [ngClass]=\"{'checked':this.checked.node10}\" id=\"{{projectName}}_id_10\" cdkDrag (cdkDragMoved)=\"reDraw()\" (dblclick)=\"nodeInfo_selected(projectName,10)\">\n                        <div class=\"card-body\">\n                        TD\n                        </div>\n                    </div>\n                </div>\n            </div>\n        </div>\n    </div>\n    <div class=\"row m-5 justify-content-center\">\n        <div class=\"card node {{projectName}}\"  [ngClass]=\"{'checked':this.checked.node11}\" id=\"{{projectName}}_id_11\" cdkDragBoundary=\".limit\" cdkDrag (cdkDragMoved)=\"reDraw()\" (dblclick)=\"nodeInfo_selected(projectName,11)\">\n            <div class=\"card-body\">\n                5.Data gap filling\n            </div>\n        </div>\n    </div>\n    <div class=\"row m-5 justify-content-center\">\n        <div class=\"card node {{projectName}}\"  [ngClass]=\"{'checked':this.checked.node12}\" id=\"{{projectName}}_id_12\" cdkDragBoundary=\".limit\" cdkDrag (cdkDragMoved)=\"reDraw()\" (dblclick)=\"nodeInfo_selected(projectName,12)\">\n            <div class=\"card-body\">\n                6.Uncertainty assessment\n            </div>\n        </div>\n    </div>\n</div>\n\n<!---MODAL DIALOG--->\n\n<div class=\"backdrop\" [ngStyle]=\"{'display':display}\"></div>\n<div class=\"modal\" tabindex=\"-1\" role=\"dialog\" [ngStyle]=\"{'display':display}\">\n    <div class=\"modal-dialog\" role=\"document\">\n        <div class=\"modal-content\">\n            <div class=\"modal-header border-bottom\">\n                <h5 class=\"modal-title\">{{ this?.name }}</h5>\n                <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\" (click)=\"onCloseHandled()\">\n                <span aria-hidden=\"true\">&times;</span>\n                </button>\n            </div>\n            <div class=\"modal-body\">\n                <div class=\"card\">\n                    <div class=\"card-body\">\n                        {{this?.description}}\n                    </div>\n                </div>\n                <div class=\"card\" *ngIf=\"this?.input.length>0\">\n                    <h5 class=\"card-header bg-light p-1\">Inputs</h5>\n                    <div class=\"card-body p-0\">\n                        <div class=\"card m-0\" *ngFor=\"let info of this?.input ; let i=index;\"> \n                            <div class=\"card-header p-0\">\n                                <a class=\"btn m-0\" data-toggle=\"collapse\" href= \"#accordion_{{ i }}\" role=\"button\" aria-expanded=\"false\" >\n                                    {{info.name}}\n                                </a>   \n                            </div>\n                            <div class=\"collapse\" id= \"accordion_{{ i }}\">\n                                <div class=\"card-body\">\n                                    <div class=\"row\">\n                                        <div class=\"col-6\">\n                                            <div [innerHTML]=\"info.content\">\n                                            </div>       \n                                        </div>\n                                        <div class=\"col-6\">\n                                            <div [innerHTML]=\"info.comment\">\n                                            </div>\n                                        </div>  \n                                    </div>\n                                </div>\n                            </div>\n                        </div>\n                    </div>\n                </div>\n                <div class=\"card\">\n                    <h5 class=\"card-header bg-light p-1\">Resources</h5>\n                    <div class=\"card-body p-2\">\n                        <ul class=\"list-group list-group-flush\">\n                            <li class=\"list-group-item p-1\" *ngFor=\"let info of this?.resources ;\">\n                            {{info.resources_name}}  <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"{{info.resources_link}}\"> ( {{info.resources_link}} )</a>\n                            </li>\n                        \n                        </ul>\n                    </div>\n                </div>\n                <!--<div class=\"card\">\n                    <h5 class=\"card-header bg-light p-1\">Output</h5>\n                    <div class=\"card-body p-0\">   \n                        <ckeditor [editor]=\"Editor\" [(ngModel)]=\"this.output\"></ckeditor>\n                    </div>\n                </div>-->\n                <div class=\"card\">\n                    <h5 class=\"card-header bg-light p-1\">Output</h5>\n                    <div class=\"card-body p-0\">\n                        <div class=\"mat-elevation-z8\">\n                            <button mat-raised-button (click)=\"addColumn()\"> Add column </button>\n                            <button mat-raised-button (click)=\"removeColumn()\"> Remove column </button>\n                            <button mat-raised-button (click)=\"shuffle()\"> Shuffle </button>\n\n                            <table mat-table [dataSource]=\"dataSource\" class=\"mat-elevation-z8\" matSort>\n                            <ng-container [matColumnDef]=\"column\" *ngFor=\"let column of displayedColumns\">\n                                <th mat-header-cell *matHeaderCellDef  mat-sort-header> {{column}} </th>\n                                <td mat-cell *matCellDef=\"let element;let index = index\"> \n                                    <editable>\n                                        <ng-template viewMode>\n                                            {{element[column]}}\n                                        </ng-template>\n                                        <ng-template editMode>\n                                            <mat-form-field class=\"example-full-width\">\n                                                <input matInput [formControl]=\"getControl(index, column)\">\n                                            </mat-form-field>\n                                            <!-- <input  [formControl]=\"getControl(index, 'name')\" focusable editableOnEnter> -->\n                                        </ng-template>\n                                    </editable>\n                                </td>\n                            </ng-container>\n\n\n\n\n\n\n                            <tr mat-header-row *matHeaderRowDef=\"columnsToDisplay\"></tr>\n                            <tr mat-row *matRowDef=\"let row; columns: columnsToDisplay;\"></tr>\n                            </table>\n                            <mat-paginator [pageSizeOptions]=\"[5, 10, 20]\" showFirstLastButtons></mat-paginator>\n                        </div>\n                    </div>\n                </div>\n\n                <div class=\"card\">\n                    <h5 class=\"card-header bg-light p-1\">Comments</h5>\n                    <div class=\"card-body p-0\">\n                        <ckeditor [editor]=\"Editor\" [(ngModel)]=\"this.comments\"></ckeditor>\n                    </div>\n                </div>      \n            </div>\n            <div class=\"modal-footer\">\n                <button type=\"button\" class=\"btn btn-primary\" (click)=\"NodeCompleted(this?.project, this?.node_seq)\">Save</button>\n                <button type=\"button\" class=\"btn btn-secondary\" data-dismiss=\"modal\" (click)=\"onCloseHandled()\">Close</button>\n            </div>\n        </div>\n    </div>\n</div>"
+module.exports = "\n<div class=\"limit\">\n    <div class=\"row p-5 justify-content-center\">\n        <div class=\"card node {{projectName}}\" [ngClass]=\"{'checked':this.checked.node1}\" id=\"{{projectName}}_id_1\" cdkDragBoundary=\".limit\" cdkDrag (cdkDragMoved)=\"reDraw()\" (dblclick)=\"nodeInfo_selected(projectName,1)\">\n            <div class=\"card-body\">\n                1.Problem formulation\n            </div>\n        </div>\n    </div>\n    <div class=\"row m-5 justify-content-center\">\n        <div class=\"card parent\" cdkDragBoundary=\".limit\" cdkDrag (cdkDragMoved)=\"reDraw()\">\n            <div class=\"card-body\">\n                <div class=\"card node m-5 {{projectName}}\" [ngClass]=\"{'checked':this.checked.node2}\" id=\"{{projectName}}_id_2\" (dblclick)=\"nodeInfo_selected(projectName,2)\">\n                    <div class=\"card-body\">\n                    2.TC Characterization\n                    </div>\n                </div>\n                <div class=\"card node m-5 {{projectName}}\" [ngClass]=\"{'checked':this.checked.node3}\" id=\"{{projectName}}_id_3\" (dblclick)=\"nodeInfo_selected(projectName,3)\">\n                    <div class=\"card-body\">\n                    Metabolism data gathering\n                    </div>\n                </div>\n                <div class=\"card node m-5 {{projectName}}\" [ngClass]=\"{'checked':this.checked.node4}\" id=\"{{projectName}}_id_4\" (dblclick)=\"nodeInfo_selected(projectName,4)\">\n                    <div class=\"card-body\">\n                    Initial RAX hypothesis\n                    </div>\n                </div>\n            </div>\n        </div>\n    </div>\n    <div class=\"row m-5 justify-content-center\">\n        <div class=\"card node {{projectName}}\"  [ngClass]=\"{'checked':this.checked.node5}\" id=\"{{projectName}}_id_5\" cdkDragBoundary=\".limit\" cdkDrag (cdkDragMoved)=\"reDraw()\" (dblclick)=\"nodeInfo_selected(projectName,5)\">\n            <div class=\"card-body\">\n                3.SCs identification\n            </div>\n        </div>\n    </div>\n    <div class=\"row m-5 justify-content-center\">\n        <div class=\"card node {{projectName}}\"  [ngClass]=\"{'checked':this.checked.node6}\" id=\"{{projectName}}_id_6\" cdkDragBoundary=\".limit\" cdkDrag (cdkDragMoved)=\"reDraw()\" (dblclick)=\"nodeInfo_selected(projectName,6)\">\n            <div class=\"card-body\">\n                4.SCs evaluation\n            </div>\n        </div>\n    </div>\n    <div class=\"row m-5 justify-content-center\">\n        <div class=\"card node {{projectName}}\"  [ngClass]=\"{'checked':this.checked.node7}\" id=\"{{projectName}}_id_7\" cdkDragBoundary=\".limit\" cdkDrag (cdkDragMoved)=\"reDraw()\" (dblclick)=\"nodeInfo_selected(projectName,7)\">\n            <div class=\"card-body\">\n                Overarching RAX hypothesis\n            </div>\n        </div>\n    </div>\n    <div class=\"row m-5 justify-content-center\">\n        <div class=\"card parent2\" cdkDragBoundary=\".limit\" cdkDrag (cdkDragMoved)=\"reDraw()\">\n            <div class=\"card-body\">\n                <div class=\"row\">\n                    <div class=\"card node m-5 {{projectName}}\" [ngClass]=\"{'checked':this.checked.node8}\"  id=\"{{projectName}}_id_8\" cdkDrag (cdkDragMoved)=\"reDraw()\" (dblclick)=\"nodeInfo_selected(projectName,8)\">\n                        <div class=\"card-body\">\n                        NAM testing and evaluation(in vitro & in silico)\n                        </div>\n                    </div>\n                </div>\n                <div class=\"row\"> \n                    <div class=\"card node m-5 col-3 {{projectName}} text-center\" [ngClass]=\"{'checked':this.checked.node9}\" id=\"{{projectName}}_id_9\" cdkDrag (cdkDragMoved)=\"reDraw()\" (dblclick)=\"nodeInfo_selected(projectName,9)\">\n                        <div class=\"card-body\">\n                        TK\n                        </div>\n                    </div>\n                    <div class=\"card node m-5 col-3 {{projectName}} justify-content-end text-center\" [ngClass]=\"{'checked':this.checked.node10}\" id=\"{{projectName}}_id_10\" cdkDrag (cdkDragMoved)=\"reDraw()\" (dblclick)=\"nodeInfo_selected(projectName,10)\">\n                        <div class=\"card-body\">\n                        TD\n                        </div>\n                    </div>\n                </div>\n            </div>\n        </div>\n    </div>\n    <div class=\"row m-5 justify-content-center\">\n        <div class=\"card node {{projectName}}\"  [ngClass]=\"{'checked':this.checked.node11}\" id=\"{{projectName}}_id_11\" cdkDragBoundary=\".limit\" cdkDrag (cdkDragMoved)=\"reDraw()\" (dblclick)=\"nodeInfo_selected(projectName,11)\">\n            <div class=\"card-body\">\n                5.Uncertainty assessment\n            </div>\n        </div>\n    </div>\n    <div class=\"row m-5 justify-content-center\">\n        <div class=\"card node {{projectName}}\"  [ngClass]=\"{'checked':this.checked.node12}\" id=\"{{projectName}}_id_12\" cdkDragBoundary=\".limit\" cdkDrag (cdkDragMoved)=\"reDraw()\" (dblclick)=\"nodeInfo_selected(projectName,12)\">\n            <div class=\"card-body\">\n                6.Data gap filling\n            </div>\n        </div>\n    </div>\n</div>\n\n<!---MODAL DIALOG--->\n\n<div class=\"backdrop\" [ngStyle]=\"{'display':display}\"></div>\n<div class=\"modal\" tabindex=\"-1\" role=\"dialog\" [ngStyle]=\"{'display':display}\">\n    <div class=\"modal-dialog\" role=\"document\">\n        <div class=\"modal-content\">\n            <div class=\"modal-header border-bottom\">\n                <h5 class=\"modal-title\">{{ this?.name }}</h5>\n                <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\" (click)=\"onCloseHandled()\">\n                <span aria-hidden=\"true\">&times;</span>\n                </button>\n            </div>\n            <div class=\"modal-body\">\n                <div class=\"card\">\n                    <div class=\"card-body\">\n                        {{this?.description}}\n                    </div>\n                </div>\n                <div class=\"card\" *ngIf=\"this?.input.length>0\">\n                    <h5 class=\"card-header bg-light p-1\">Inputs</h5>\n                    <div class=\"card-body p-0\">\n                        <div class=\"card m-0\" *ngFor=\"let info of this?.input ; let i=index;\"> \n                            <div class=\"card-header p-0\">\n                                <a class=\"btn m-0\" data-toggle=\"collapse\" href= \"#accordion_{{ i }}\" role=\"button\" aria-expanded=\"false\" >\n                                    {{info.name}}\n                                </a>   \n                            </div>\n                            <div class=\"collapse\" id= \"accordion_{{ i }}\">\n                                <div class=\"card-body\">\n                                    <div class=\"row\">\n                                        <div class=\"col-6\">\n                                            <div [innerHTML]=\"info.content\">\n                                            </div>       \n                                        </div>\n                                        <div class=\"col-6\">\n                                            <div [innerHTML]=\"info.comment\">\n                                            </div>\n                                        </div>  \n                                    </div>\n                                </div>\n                            </div>\n                        </div>\n                    </div>\n                </div>\n                <div class=\"card\">\n                    <h5 class=\"card-header bg-light p-1\">Resources</h5>\n                    <div class=\"card-body p-2\">\n                        <ul class=\"list-group list-group-flush\">\n                            <li class=\"list-group-item p-1\" *ngFor=\"let info of this?.resources ;\">\n                            {{info.resources_name}}  <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"{{info.resources_link}}\"> ( {{info.resources_link}} )</a>\n                            </li>\n                        \n                        </ul>\n                    </div>\n                </div>\n                <!--<div class=\"card\">\n                    <h5 class=\"card-header bg-light p-1\">Output</h5>\n                    <div class=\"card-body p-0\">   \n                        <ckeditor [editor]=\"Editor\" [(ngModel)]=\"this.output\"></ckeditor>\n                    </div>\n                </div>-->\n                <div class=\"card\">\n                    <h5 class=\"card-header bg-light p-1\">Output</h5>\n                    <div class=\"card-body p-0\">\n                        <div class=\"mat-elevation-z8\">\n                            <button mat-raised-button (click)=\"addColumn()\"> Add column </button>\n                            <button mat-raised-button (click)=\"removeColumn()\"> Remove column </button>\n                            <button mat-raised-button (click)=\"shuffle()\"> Shuffle </button>\n\n                            <table mat-table [dataSource]=\"dataSource\" class=\"mat-elevation-z8\" matSort>\n                            <ng-container [matColumnDef]=\"column\" *ngFor=\"let column of displayedColumns\">\n                                <th mat-header-cell *matHeaderCellDef  mat-sort-header> {{column}} </th>\n                                <td mat-cell *matCellDef=\"let element;let index = index\"> \n                                    <editable>\n                                        <ng-template viewMode>\n                                            {{element[column]}}\n                                        </ng-template>\n                                        <ng-template editMode>\n                                            <mat-form-field class=\"example-full-width\">\n                                                <input matInput [formControl]=\"getControl(index, column)\">\n                                            </mat-form-field>\n                                            <!-- <input  [formControl]=\"getControl(index, 'name')\" focusable editableOnEnter> -->\n                                        </ng-template>\n                                    </editable>\n                                </td>\n                            </ng-container>\n\n\n\n\n\n\n                            <tr mat-header-row *matHeaderRowDef=\"columnsToDisplay\"></tr>\n                            <tr mat-row *matRowDef=\"let row; columns: columnsToDisplay;\"></tr>\n                            </table>\n                            <mat-paginator [pageSizeOptions]=\"[5, 10, 20]\" showFirstLastButtons></mat-paginator>\n                        </div>\n                    </div>\n                </div>\n\n                <div class=\"card\">\n                    <h5 class=\"card-header bg-light p-1\">Comments</h5>\n                    <div class=\"card-body p-0\">\n                        <ckeditor [editor]=\"Editor\" [(ngModel)]=\"this.comments\"></ckeditor>\n                    </div>\n                </div>      \n            </div>\n            <div class=\"modal-footer\">\n                <button type=\"button\" class=\"btn btn-primary\" (click)=\"NodeCompleted(this?.project, this?.node_seq)\">Save</button>\n                <button type=\"button\" class=\"btn btn-secondary\" data-dismiss=\"modal\" (click)=\"onCloseHandled()\">Close</button>\n            </div>\n        </div>\n    </div>\n</div>"
 
 /***/ }),
 
@@ -29,7 +29,7 @@ module.exports = "\n<div class=\"limit\">\n    <div class=\"row p-5 justify-cont
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "\n<head>\n    <meta charset=\"utf-8\">\n    <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge,chrome=1\">\n    <!--<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">-->\n    <title>Login</title>\n  </head>\n    <body class=\"text-center\">\n        <div class=\"form-signin\">\n          <img class=\"mb-4\"  src=\"assets/img/user.png\" alt=\"\" width=\"72\" height=\"72\">\n          <h1 class=\"h3 mb-3 font-weight-normal\">Please sign in</h1>\n          <label for=\"inputEmail\" class=\"sr-only\">Email address</label>\n          <input id=\"inputEmail\" class=\"form-control\" placeholder=\"Email address\" required=\"\" autofocus=\"\" type=\"text\" [(ngModel)]=\"user\">\n          <label for=\"inputPassword\" class=\"sr-only\">Password</label>\n          <input id=\"inputPassword\" class=\"form-control\" placeholder=\"Password\" required=\"\" type=\"password\" [(ngModel)]=\"user_password\">\n          <div class=\"checkbox mb-3\">\n            <label>\n              <input value=\"remember-me\" type=\"checkbox\"> Remember me\n            </label>\n          </div>\n          <button class=\"btn btn-lg btn-primary btn-block\" (click)=\"login()\">Sign in</button>\n          <div *ngIf=\"error\" class=\"alert alert-danger\" role=\"alert\">\n              The user or password does't not exist\n          </div>\n          <div *ngIf=\"success\" class=\"alert alert-success\" role=\"alert\">\n              Success\n          </div>\n          <p class=\"mt-5 mb-3 text-muted\">© 2017-2019</p>\n        </div>\n    </body>"
+module.exports = "\n<head>\n    <meta charset=\"utf-8\">\n    <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge,chrome=1\">\n    <!--<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">-->\n    <title>Login</title>\n  </head>\n    <body class=\"text-center\">\n        <div class=\"form-signin\">\n          <img class=\"mb-4\"  src=\"assets/img/user.png\" alt=\"\" width=\"72\" height=\"72\">\n          <h1 class=\"h3 mb-3 font-weight-normal\">Please sign in</h1>\n          <label for=\"inputEmail\" class=\"sr-only\">Email address</label>\n          <input id=\"inputEmail\" class=\"form-control\" placeholder=\"Email address\" required=\"\" autofocus=\"\" type=\"text\" [(ngModel)]=\"user\">\n          <label for=\"inputPassword\" class=\"sr-only\">Password</label>\n          <input id=\"inputPassword\" class=\"form-control\" placeholder=\"Password\" required=\"\" type=\"password\" [(ngModel)]=\"user_password\">\n          <div class=\"form-check mb-3\">\n              <label class=\"form-check-label\">\n                  <input type=\"checkbox\" [(ngModel)]=\"rememberme\"> Remember me\n               </label>\n          </div>\n          <button class=\"btn btn-lg btn-primary btn-block\" (click)=\"login()\">Sign in</button>\n          <div *ngIf=\"error\" class=\"alert alert-danger\" role=\"alert\">\n              The user or password does't not exist\n          </div>\n          <div *ngIf=\"success\" class=\"alert alert-success\" role=\"alert\">\n              Success\n          </div>\n          <p class=\"mt-5 mb-3 text-muted\">© 2017-2019</p>\n        </div>\n    </body>"
 
 /***/ }),
 
@@ -51,7 +51,7 @@ module.exports = "<app-navbar></app-navbar>\n<div class=\"container-fluid\">\n  
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<nav class=\"navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0\">\n    <a class=\"navbar-brand col-sm-3 col-md-2 mr-0\" href=\"#\">{{globals.actual_user.name}}</a>\n    <ul class=\"navbar-nav px-3\">\n        <li class=\"nav-item text-nowrap\">\n            <a class=\"nav-link\" [routerLink]=\"\" (click)=\"this.logout()\" href=\"\">Sign out</a>\n        </li>\n    </ul>\n</nav>"
+module.exports = "<nav class=\"navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0\">\n    <a class=\"navbar-brand col-sm-3 col-md-2 mr-0\" href=\"#\">{{this.globals.actual_user.name$ | async}}</a>\n    <ul class=\"navbar-nav px-3\">\n        <li class=\"nav-item text-nowrap\">\n            <a class=\"nav-link\" [routerLink]=\"\" (click)=\"this.logout()\" href=\"\">Sign out</a>\n        </li>\n    </ul>\n</nav>"
 
 /***/ }),
 
@@ -95,7 +95,18 @@ module.exports = "<div class=\"sidebar-sticky\">\n    <ul class=\"nav flex-colum
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "\n<div class=\"d-flex flex-row\">\n    <div>\n        <ul class=\"nav nav-pills\" id=\"pills-tab\" role=\"tablist\">\n            <li *ngFor=\"let project of this.globals.active_projects.slice().reverse(); let i = index\" class=\"nav-item\" (click)=\"visibleProject(project)\">\n\n                <a class=\"nav-link\" [ngClass]=\"{'active show': project===this.globals.visible_project}\" data-toggle=\"pill\" href=\"#pills-{{project}}\" role=\"tab\" aria-controls=\"pills-Project1\" aria-selected=\"true\">\n                        {{project}}<button type=\"button\" class=\"close\" aria-label=\"Close\"(click)=\"deleteProject(project)\">\n                                <span aria-hidden=\"true\">&times;</span>\n                            </button>\n                    </a>\n            </li>        \n        </ul>\n    </div>\n    \n    <div class=\"ml-auto\">\n        <div class=\"btn-group\">\n            <button type=\"button\" class=\"btn btn-primary dropdown-toggle\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"true\">\n                Projects\n            </button>\n            <div class=\"dropdown-menu\">\n                <!--<div class=\"dropdown-divider\"></div>-->\n                <a *ngFor=\"let name of objectKeys(this.globals.actual_user.projects);\" class=\"dropdown-item\"  (click)=\"openProject(name)\"> {{name}} </a>\n            </div>\n        </div>\n    </div>\n</div>\n"
+module.exports = "\n<div class=\"d-flex flex-row\">\n    <div>\n        \n        <ul class=\"nav nav-pills\" id=\"pills-tab\" role=\"tablist\">\n            <li *ngFor=\"let project of this.globals.active_projects.slice().reverse(); let i = index\" class=\"nav-item\" (click)=\"visibleProject(project)\">\n\n                <a class=\"nav-link\" [ngClass]=\"{'active show': project===this.globals.visible_project}\" data-toggle=\"pill\" href=\"#pills-{{project}}\" role=\"tab\" aria-controls=\"pills-Project1\" aria-selected=\"true\">\n                        {{project}}<button type=\"button\" class=\"close\" aria-label=\"Close\"(click)=\"deleteProject(project)\">\n                                <span aria-hidden=\"true\">&times;</span>\n                            </button>\n                    </a>\n            </li>    \n        </ul>\n    </div>\n    \n    <div class=\"ml-auto\">\n        <div class=\"btn-group\">\n            <button type=\"button\" class=\"btn btn-primary dropdown-toggle\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"true\">\n                Projects\n            </button>\n            <div class=\"dropdown-menu\">\n                <!--<div class=\"dropdown-divider\"></div>-->\n                <ng-container *ngIf=\"this.globals.actual_user.projects || false\">\n                <a *ngFor=\"let name of objectKeys(this.globals.actual_user.projects);\" class=\"dropdown-item\"  (click)=\"openProject(name)\"> {{name}} </a>\n                </ng-container> \n            </div>\n        </div>\n    </div>\n</div>\n"
+
+/***/ }),
+
+/***/ "./node_modules/raw-loader/index.js!./src/app/welcome/welcome.component.html":
+/*!**************************************************************************!*\
+  !*** ./node_modules/raw-loader!./src/app/welcome/welcome.component.html ***!
+  \**************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "<p></p>\n"
 
 /***/ }),
 
@@ -146,16 +157,19 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm2015/core.js");
 /* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm2015/router.js");
-/* harmony import */ var _login_login_component__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./login/login.component */ "./src/app/login/login.component.ts");
-/* harmony import */ var _main_main_component__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./main/main.component */ "./src/app/main/main.component.ts");
+/* harmony import */ var _welcome_welcome_component__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./welcome/welcome.component */ "./src/app/welcome/welcome.component.ts");
+/* harmony import */ var _login_login_component__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./login/login.component */ "./src/app/login/login.component.ts");
+/* harmony import */ var _main_main_component__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./main/main.component */ "./src/app/main/main.component.ts");
+
 
 
 
 
 
 const routes = [
-    { path: '', component: _login_login_component__WEBPACK_IMPORTED_MODULE_3__["LoginComponent"] },
-    { path: 'main', component: _main_main_component__WEBPACK_IMPORTED_MODULE_4__["MainComponent"] }
+    { path: '', component: _welcome_welcome_component__WEBPACK_IMPORTED_MODULE_3__["WelcomeComponent"] },
+    { path: 'login', component: _login_login_component__WEBPACK_IMPORTED_MODULE_4__["LoginComponent"] },
+    { path: 'main', component: _main_main_component__WEBPACK_IMPORTED_MODULE_5__["MainComponent"] }
 ];
 let AppRoutingModule = class AppRoutingModule {
 };
@@ -164,7 +178,8 @@ AppRoutingModule = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         imports: [
             _angular_router__WEBPACK_IMPORTED_MODULE_2__["RouterModule"].forRoot(routes)
         ],
-        exports: [_angular_router__WEBPACK_IMPORTED_MODULE_2__["RouterModule"]]
+        exports: [_angular_router__WEBPACK_IMPORTED_MODULE_2__["RouterModule"]],
+        providers: []
     })
 ], AppRoutingModule);
 
@@ -264,6 +279,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_material_card__WEBPACK_IMPORTED_MODULE_35__ = __webpack_require__(/*! @angular/material/card */ "./node_modules/@angular/material/esm2015/card.js");
 /* harmony import */ var ngx_cookie_service__WEBPACK_IMPORTED_MODULE_36__ = __webpack_require__(/*! ngx-cookie-service */ "./node_modules/ngx-cookie-service/ngx-cookie-service.js");
 /* harmony import */ var _node1_problem_formulation_node1_problem_formulation_component__WEBPACK_IMPORTED_MODULE_37__ = __webpack_require__(/*! ./node1-problem-formulation/node1-problem-formulation.component */ "./src/app/node1-problem-formulation/node1-problem-formulation.component.ts");
+/* harmony import */ var _welcome_welcome_component__WEBPACK_IMPORTED_MODULE_38__ = __webpack_require__(/*! ./welcome/welcome.component */ "./src/app/welcome/welcome.component.ts");
+
 
 
 
@@ -320,7 +337,8 @@ AppModule = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
             _editable_view_mode_directive__WEBPACK_IMPORTED_MODULE_27__["ViewModeDirective"],
             _editable_edit_mode_directive__WEBPACK_IMPORTED_MODULE_28__["EditModeDirective"],
             _keys_pipe__WEBPACK_IMPORTED_MODULE_17__["KeysPipe"],
-            _node1_problem_formulation_node1_problem_formulation_component__WEBPACK_IMPORTED_MODULE_37__["Node1ProblemFormulationComponent"]
+            _node1_problem_formulation_node1_problem_formulation_component__WEBPACK_IMPORTED_MODULE_37__["Node1ProblemFormulationComponent"],
+            _welcome_welcome_component__WEBPACK_IMPORTED_MODULE_38__["WelcomeComponent"]
         ],
         imports: [
             _angular_platform_browser__WEBPACK_IMPORTED_MODULE_1__["BrowserModule"],
@@ -888,10 +906,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Globals", function() { return Globals; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm2015/core.js");
+/* harmony import */ var _user__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./user */ "./src/app/user.ts");
+
 
 
 let Globals = class Globals {
     constructor() {
+        this.actual_user = new _user__WEBPACK_IMPORTED_MODULE_2__["User"]();
         this.active_projects = [];
         this.visible_project = '';
         this.operatorId = '';
@@ -967,8 +988,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm2015/router.js");
 /* harmony import */ var _globals__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../globals */ "./src/app/globals.ts");
 /* harmony import */ var _login_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./login.service */ "./src/app/login/login.service.ts");
-/* harmony import */ var _user__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../user */ "./src/app/user.ts");
-
 
 
 
@@ -979,28 +998,17 @@ let LoginComponent = class LoginComponent {
         this.router = router;
         this.globals = globals;
         this.service = service;
+        this.rememberme = false;
         this.success = false;
         this.error = false;
     }
     ngOnInit() {
     }
     getUserInfo(csrftoken) {
-        this.service.getUser(this.user, this.user_password, csrftoken).subscribe(result => {
-            this.globals.actual_user = new _user__WEBPACK_IMPORTED_MODULE_5__["User"]();
-            this.globals.actual_user.id = result.id;
-            this.globals.actual_user.name = result.first_name + ' ' + result.last_name;
-            this.globals.actual_user.mail = result.email;
-            this.globals.actual_user.projects = {};
-            this.service.getProjects().subscribe(result2 => {
-                for (const projects of result2) {
-                    this.globals.actual_user.projects[projects.name] = projects.id;
-                }
-                setTimeout(() => {
-                    this.router.navigate(['/main']);
-                }, 1000);
-            }, error => {
-                alert('Error getting user projects.');
-            });
+        const resume = false;
+        this.getuser_subscription = this.service.getUser(this.user, this.user_password, csrftoken, resume, this.rememberme).subscribe(result => {
+            this.service.setActualUserGlobals(result);
+            this.router.navigate(['main']);
         }, error => {
             if (error.status === 401) {
                 alert('Invalid username or password.');
@@ -1014,7 +1022,7 @@ let LoginComponent = class LoginComponent {
     }
     login() {
         this.error = false;
-        const newLocal = this.success = false;
+        this.success = false;
         this.service.getUserCSRFToken().subscribe(csrf => {
             let csrftoken = null;
             if (csrf.hasOwnProperty('CSRF_TOKEN')) {
@@ -1025,6 +1033,9 @@ let LoginComponent = class LoginComponent {
             alert("Cannot retrieve CSRF token.");
             return;
         });
+    }
+    ngOnDestroy() {
+        this.getuser_subscription.unsubscribe();
     }
 };
 LoginComponent.ctorParameters = () => [
@@ -1066,6 +1077,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var ngx_cookie_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ngx-cookie-service */ "./node_modules/ngx-cookie-service/ngx-cookie-service.js");
 /* harmony import */ var _environments_environment__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../environments/environment */ "./src/environments/environment.ts");
 /* harmony import */ var _globals__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../globals */ "./src/app/globals.ts");
+/* harmony import */ var _user__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../user */ "./src/app/user.ts");
+
 
 
 
@@ -1105,15 +1118,25 @@ let LoginService = class LoginService {
      * Call to the server to create a new model with the given name
      * @param model Name of the model to add
      */
-    getUser(username, password, csrftoken) {
+    getUser(username, password, csrftoken, resume = false, rememberme = false) {
         const url = _environments_environment__WEBPACK_IMPORTED_MODULE_4__["environment"].baseUrl + 'user/';
         const formData = new FormData();
-        formData.append('username', username);
-        formData.append('password', password);
+        if (!(resume || username == undefined || username == null || password == undefined || password == null)) {
+            formData.append('username', username);
+            formData.append('password', password);
+        }
         if (csrftoken !== null && csrftoken !== undefined) {
             formData.append(this.globals.csrftoken_form_input_name, csrftoken);
         }
-        return this.http.post(url, formData, this.getPOSTHttpOptions());
+        if (rememberme) {
+            formData.append('rememberme', '1');
+        }
+        if (resume && !rememberme) {
+            return this.http.get(url, { withCredentials: true });
+        }
+        else {
+            return this.http.post(url, formData, this.getPOSTHttpOptions());
+        }
     }
     logout(csrftoken) {
         const url = _environments_environment__WEBPACK_IMPORTED_MODULE_4__["environment"].baseUrl + 'user/logout/';
@@ -1146,6 +1169,13 @@ let LoginService = class LoginService {
         }
         ;
         return null;
+    }
+    setActualUserGlobals(result) {
+        this.globals.actual_user = new _user__WEBPACK_IMPORTED_MODULE_6__["User"]();
+        this.globals.actual_user.id = result.id;
+        this.globals.actual_user.setName(result.first_name + ' ' + result.last_name);
+        this.globals.actual_user.mail = result.email;
+        this.globals.actual_user.setProjects({});
     }
 };
 LoginService.ctorParameters = () => [
@@ -1189,15 +1219,25 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MainComponent", function() { return MainComponent; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm2015/core.js");
-/* harmony import */ var _globals__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../globals */ "./src/app/globals.ts");
+/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm2015/router.js");
+/* harmony import */ var _globals__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../globals */ "./src/app/globals.ts");
+/* harmony import */ var _login_login_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../login/login.service */ "./src/app/login/login.service.ts");
+
+
 
 
 
 let MainComponent = class MainComponent {
-    constructor(globals) {
+    constructor(globals, login, router) {
         this.globals = globals;
+        this.login = login;
+        this.router = router;
     }
     ngOnInit() {
+        if (this.globals.actual_user == undefined || this.globals.actual_user.id == null) {
+            this.getUserInfo();
+        }
+        this.getUserProjects();
         document.getElementById('sidebarCollapse').addEventListener('click', function () {
             document.getElementById('sidebar').classList.toggle('active');
         });
@@ -1206,9 +1246,40 @@ let MainComponent = class MainComponent {
     change() {
         this.globals.change = !this.globals.change;
     }
+    getUserInfo(csrftoken) {
+        let username; // = undefined
+        let password; //= undefined
+        const resume = true;
+        this.getuser_subscription = this.login.getUser(username, password, csrftoken, resume).subscribe(result => {
+            if (result.id == null || !result.hasOwnProperty('id')) {
+                this.router.navigate(['login']);
+                return;
+            }
+            this.login.setActualUserGlobals(result);
+        }, error => {
+            alert('Cannot connect to server.');
+        });
+    }
+    getUserProjects() {
+        this.getprojects_subscription = this.login.getProjects().subscribe(result2 => {
+            let projects = {};
+            for (const project of result2) {
+                projects[project.name] = project.id;
+            }
+            this.globals.actual_user.setProjects(projects);
+        }, error => {
+            alert('Error getting user projects.');
+        });
+    }
+    ngOnDestroy() {
+        this.getuser_subscription.unsubscribe();
+        this.getprojects_subscription.unsubscribe();
+    }
 };
 MainComponent.ctorParameters = () => [
-    { type: _globals__WEBPACK_IMPORTED_MODULE_2__["Globals"] }
+    { type: _globals__WEBPACK_IMPORTED_MODULE_3__["Globals"] },
+    { type: _login_login_service__WEBPACK_IMPORTED_MODULE_4__["LoginService"] },
+    { type: _angular_router__WEBPACK_IMPORTED_MODULE_2__["Router"] }
 ];
 MainComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
     Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
@@ -1216,7 +1287,9 @@ MainComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         template: __webpack_require__(/*! raw-loader!./main.component.html */ "./node_modules/raw-loader/index.js!./src/app/main/main.component.html"),
         styles: [__webpack_require__(/*! ./main.component.css */ "./src/app/main/main.component.css")]
     }),
-    tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_globals__WEBPACK_IMPORTED_MODULE_2__["Globals"]])
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_globals__WEBPACK_IMPORTED_MODULE_3__["Globals"],
+        _login_login_service__WEBPACK_IMPORTED_MODULE_4__["LoginService"],
+        _angular_router__WEBPACK_IMPORTED_MODULE_2__["Router"]])
 ], MainComponent);
 
 
@@ -1357,8 +1430,6 @@ let NodeInfoComponent = class NodeInfoComponent {
     }
     ngOnInit() {
         this.info = this.data;
-        console.log('before');
-        console.log(this.info);
         if (this.info.inputs_comments == undefined) {
             this.info.inputs_comments = '';
         }
@@ -1367,8 +1438,6 @@ let NodeInfoComponent = class NodeInfoComponent {
             this.info.outputs_comments = '';
         }
         ;
-        console.log('after');
-        console.log(this.info);
         this.dataSource = new _angular_material_table__WEBPACK_IMPORTED_MODULE_4__["MatTableDataSource"](this.data['outputs']);
         this.displayedColumns = Object.keys(this.data['outputs'][0]);
         this.columnsToDisplay = this.displayedColumns.slice();
@@ -1559,7 +1628,6 @@ let Node1ProblemFormulationComponent = class Node1ProblemFormulationComponent {
         this.Editor = _ckeditor_ckeditor5_build_classic__WEBPACK_IMPORTED_MODULE_2__;
     }
     ngOnInit() {
-        console.log(this.info);
         this.problem_description = this.info.inputs_comments;
     }
     NodeCompleted(project_id) {
@@ -1802,8 +1870,111 @@ TabsComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "User", function() { return User; });
+/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm2015/index.js");
+
 class User {
+    constructor() {
+        this.name = 'Unknown';
+        this.nameSource = new rxjs__WEBPACK_IMPORTED_MODULE_0__["BehaviorSubject"]('Unknown');
+        this.name$ = this.nameSource.asObservable();
+        this.projectsSource = new rxjs__WEBPACK_IMPORTED_MODULE_0__["BehaviorSubject"]({});
+        this.projects$ = this.projectsSource.asObservable();
+    }
+    setName(name) {
+        this.name = name;
+        this.nameSource.next(this.name);
+    }
+    setProjects(projects) {
+        this.projects = projects;
+        this.projectsSource.next(this.projects);
+    }
+    getName() {
+        return this.nameSource.getValue();
+    }
+    getProjects() {
+        return this.projectsSource.getValue();
+    }
 }
+
+
+/***/ }),
+
+/***/ "./src/app/welcome/welcome.component.css":
+/*!***********************************************!*\
+  !*** ./src/app/welcome/welcome.component.css ***!
+  \***********************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiJzcmMvYXBwL3dlbGNvbWUvd2VsY29tZS5jb21wb25lbnQuY3NzIn0= */"
+
+/***/ }),
+
+/***/ "./src/app/welcome/welcome.component.ts":
+/*!**********************************************!*\
+  !*** ./src/app/welcome/welcome.component.ts ***!
+  \**********************************************/
+/*! exports provided: WelcomeComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "WelcomeComponent", function() { return WelcomeComponent; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm2015/core.js");
+/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm2015/router.js");
+/* harmony import */ var _globals__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../globals */ "./src/app/globals.ts");
+/* harmony import */ var _login_login_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../login/login.service */ "./src/app/login/login.service.ts");
+
+
+
+
+
+let WelcomeComponent = class WelcomeComponent {
+    constructor(globals, login, router) {
+        this.globals = globals;
+        this.login = login;
+        this.router = router;
+    }
+    ngOnInit() {
+        this.session_check_subscription = this.SessionCheck();
+    }
+    SessionCheck() {
+        const username = undefined;
+        const password = undefined;
+        const resume = true;
+        const csrftoken = undefined;
+        return this.login.getUser(username, password, csrftoken, resume).subscribe(result => {
+            if (result.id == null || !result.hasOwnProperty('id')) {
+                this.router.navigate(['login']);
+            }
+            else {
+                this.router.navigate(['main']);
+            }
+        }, error => {
+            alert('Cannot connect to server.');
+        });
+    }
+    ngOnDestroy() {
+        this.session_check_subscription.unsubscribe();
+    }
+};
+WelcomeComponent.ctorParameters = () => [
+    { type: _globals__WEBPACK_IMPORTED_MODULE_3__["Globals"] },
+    { type: _login_login_service__WEBPACK_IMPORTED_MODULE_4__["LoginService"] },
+    { type: _angular_router__WEBPACK_IMPORTED_MODULE_2__["Router"] }
+];
+WelcomeComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+    Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
+        selector: 'app-welcome',
+        template: __webpack_require__(/*! raw-loader!./welcome.component.html */ "./node_modules/raw-loader/index.js!./src/app/welcome/welcome.component.html"),
+        styles: [__webpack_require__(/*! ./welcome.component.css */ "./src/app/welcome/welcome.component.css")]
+    }),
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_globals__WEBPACK_IMPORTED_MODULE_3__["Globals"],
+        _login_login_service__WEBPACK_IMPORTED_MODULE_4__["LoginService"],
+        _angular_router__WEBPACK_IMPORTED_MODULE_2__["Router"]])
+], WelcomeComponent);
+
 
 
 /***/ }),
