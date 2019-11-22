@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 from rest_framework import status
@@ -31,8 +32,8 @@ from .serializer import StatusSerializer, ResourcesSerializer
 from .permissions import IsProjectOwner
 
 
-
-UserModel = get_user_model()
+from django.utils.decorators import available_attrs
+from functools import wraps
 
 
 @method_decorator((csrf_protect,ensure_csrf_cookie), name='dispatch')
@@ -63,7 +64,6 @@ class ProjectStatus(ListAPIView):
 
     def get_queryset(self):
         return self.queryset.filter(**{self.lookup_field:self.kwargs[self.lookup_url_kwarg]})
-
 
 class ListProjects(ListAPIView):
     serializer_class = ProjectSerializer
@@ -121,22 +121,42 @@ class ManageNodes(GenericAPIView,UpdateModelMixin):
 
 @method_decorator((csrf_protect,ensure_csrf_cookie), name='dispatch')
 class User(APIView):
+    # If the user is already logged in, it responds a JSON with user data and the CSRF token.
+    # Otherwise, only responds a JSON with the CSRF token for the POST method.
     def get(self,request,logout):
-        return JsonResponse({'CSRF_TOKEN':get_token(request)}, status=200)
+        respdata = {}
+        if request.user.is_authenticated:
+            respdata = UserSerializer(request.user, many=False).data
+        respdata['CSRF_TOKEN'] = get_token(request) 
+        return JsonResponse(respdata, status=200)
+
     def post(self,request,logout):
         if logout == "logout":
             if request.user.is_authenticated:
                 auth_logout(request)
+                request.session.pop('rememberme', default=None)
                 return JsonResponse({'Ok':'ok'}, status=200)
         else:
-            username = request.POST.get('username')
-            password = request.POST.get('password')
-
-            user = authenticate(username=username, password=password)
             
-            if user is not None:
-                login(request, user)
-                return Response(UserSerializer(user, many=False).data, 200)
+            if 'username' in request.POST or 'password' in request.POST:
+                username = request.POST.get('username')
+                password = request.POST.get('password')
+
+                user = authenticate(username=username, password=password)
+                if user is not None:
+                    login(request, user)
+            
+            if request.user.is_authenticated:
+                if 'rememberme' in request.POST:
+                    if int(request.POST.get('rememberme')):
+                        request.session['rememberme'] = True
+                        request.session.set_expiry(settings.SESSION_COOKIE_AGE)
+                    else:
+                        request.session['rememberme'] = False
+                        request.session.set_expiry(0)
+                else:
+                    request.session.set_expiry(0)
+                return Response(UserSerializer(request.user, many=False).data, 200)
 
         response = HttpResponse('401 Unauthorized')
         response.status_code = 401

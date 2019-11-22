@@ -1,0 +1,3 @@
+The following files are subjected to thir corresponding licenses:
+
+-custom_middleware.py: CC BY-SA 4.0
