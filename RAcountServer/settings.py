@@ -143,6 +143,29 @@ USE_L10N = True
 USE_TZ = True
 
 
+# Media files
+
+MEDIA_URL = '/file/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'uploads')
+MEDIA_API_PREFIX = 'RX'
+MAX_UPLOAD_SIZE=50*1024**2
+DATA_UPLOAD_MAX_MEMORY_SIZE = 20971520
+FILE_UPLOAD_PERMISSIONS = 0o660
+#FILE_UPLOAD_TEMP_DIR = "/tmp"  # uncomment and setup for production
+
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/2.0/howto/static-files/
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+
+# CORS
+ANGULAR_APP_DIR = os.path.join(BASE_DIR, 'frontEnd')
+
+STATICFILES_DIRS = [
+    os.path.join(ANGULAR_APP_DIR),
+]
+
 # django-cors-headers
 # https://github.com/adamchainz/django-cors-headers#configuration
 
@@ -159,15 +182,3 @@ if DEBUG:
     CORS_ORIGIN_WHITELIST += [
         'http://localhost:4200',
     ]
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/2.0/howto/static-files/
-STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-
-# CORS
-ANGULAR_APP_DIR = os.path.join(BASE_DIR, 'frontEnd')
-
-STATICFILES_DIRS = [
-    os.path.join(ANGULAR_APP_DIR),
-]

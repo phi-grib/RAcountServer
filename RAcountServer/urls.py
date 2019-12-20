@@ -13,13 +13,26 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.conf import settings
 from django.contrib import admin
 from django.conf.urls import url, include
 from django.views.generic import RedirectView
-from django.contrib.staticfiles.views import serve
+from django.contrib.staticfiles.views import serve as static_serve
+from django.views.static import serve as debug_serve
 
-urlpatterns = [
-    url(r'^$', serve, kwargs={'path': 'index.html'}),
+if settings.DEBUG:
+    urlpatterns = [
+        url(r'^$', static_serve, kwargs={'path': 'index.html'}),
+        url(r'^login$', static_serve, kwargs={'path': 'index.html'}),
+        url(r'^main$', static_serve, kwargs={'path': 'index.html'}),
+        url(r'^'+settings.MEDIA_URL[1:]+r'(?P<path>.*)$', debug_serve,
+         kwargs={'document_root': settings.MEDIA_ROOT})
+    ]
+else:
+    urlpatterns = []
+
+urlpatterns += [
     url(r'^', include('API.urls')),
-    url(r'^(?!/?static/)(?!/?media/)(?P<path>.*\..*)$', RedirectView.as_view(url='/static/%(path)s', permanent=False))
+    url(r'^(?!/?static/)(?!/?media/)(?!/?'+settings.MEDIA_URL[1:]+r')(?P<path>.*\..*)$', RedirectView.as_view(url='/static/%(path)s', permanent=False))
+
 ]
