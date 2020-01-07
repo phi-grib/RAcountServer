@@ -27,6 +27,7 @@ from rest_framework.response import Response
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.parsers import MultiPartParser
+from rest_framework.exceptions import PermissionDenied
 
 from .models import Projects as ProjectsModel
 from .models import Nodes as NodesModel
@@ -165,10 +166,7 @@ class User(APIView):
                     request.session.set_expiry(0)
                 return Response(UserSerializer(request.user, many=False).data, 200)
 
-        response = HttpResponse('401 Unauthorized')
-        response.status_code = 401
-        response.reason_phrase='Unauthorized'
-        return response
+        raise PermissionDenied
 
 
 class Resources(ListAPIView):
