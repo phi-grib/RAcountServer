@@ -2,6 +2,7 @@ import hashlib
 import base64
 import datetime
 import os
+import time
 
 from django.db import IntegrityError
 from django.conf import settings
@@ -17,25 +18,28 @@ from django.views.decorators.csrf import csrf_protect, ensure_csrf_cookie
 from django.middleware.csrf import get_token
 from django.utils import timezone
 from django.db.models import F
+from django.db import OperationalError
+from django.http import Http404
 
 from rest_framework.decorators import api_view
+from rest_framework import serializers, status
 
 from rest_framework.views import APIView
 from rest_framework.generics import GenericAPIView, RetrieveUpdateDestroyAPIView, ListAPIView
-from rest_framework.mixins import UpdateModelMixin
+from rest_framework.mixins import UpdateModelMixin, CreateModelMixin, RetrieveModelMixin
 from rest_framework.response import Response
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.parsers import MultiPartParser
 from rest_framework.exceptions import PermissionDenied
 
-from .models import Projects as ProjectsModel
+from .models import Projects as ProjectsModel, ProblemDescription
 from .models import Nodes as NodesModel
 from .models import Resources as ResourcesModel
 from .models import File, FileType
 
 from .serializer import ProjectSerializer, UserSerializer, NodeSerializer
-from .serializer import StatusSerializer, ResourcesSerializer
+from .serializer import StatusSerializer, ResourcesSerializer, ProblemDescriptionSerializer, ProblemDescriptionSerializerInput
 
 from .permissions import IsProjectOwner
 
@@ -120,12 +124,55 @@ class ManageNodes(GenericAPIView,UpdateModelMixin):
 
         newdict['inputs'] = history
         newdict['CSRF_TOKEN'] = get_token(request)
-        return Response(newdict, 200)
+        return Response(newdict, status.HTTP_200_OK)
 
     def post(self, request, project, node):
-        self.partial_update(request)
-        self.get_queryset().update(executed=True)
-        return JsonResponse({'Ok':'ok'}, status=200)
+
+        response = self.partial_update(request)
+        if response.status_code == status.HTTP_200_OK:
+            self.get_queryset().update(executed=True)
+        return JsonResponse({'Ok':'ok'}, status=status.HTTP_200_OK)
+
+@method_decorator((csrf_protect,ensure_csrf_cookie), name='dispatch')
+class ProblemDescriptionView(GenericAPIView,CreateModelMixin,RetrieveModelMixin,UpdateModelMixin):
+    serializer_class = ProblemDescriptionSerializer
+    lookup_field = 'project'
+    lookup_url_kwarg = 'project'
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated,IsProjectOwner]
+    queryset = ProblemDescription.objects.all()
+    
+    def get(self, request, project):
+        try:
+            response = self.retrieve(request)
+        except Http404:
+            return Response({'description':'Not Found: '+request.path,'CSRF_TOKEN':get_token(request)}, status=status.HTTP_404_NOT_FOUND)
+        response.data['CSRF_TOKEN'] = get_token(request)
+        return response
+
+    def post(self, request, project):
+        data = dict(request.data)
+        for key in data:
+            data[key] = data[key][0]
+        data['project'] = project
+        serializer = ProblemDescriptionSerializerInput(data=data)
+        serializer.is_valid(raise_exception=True)
+        project_obj = ProjectsModel.objects.get(pk=serializer.data['project'])
+        
+        success = False
+        while not success:
+            try:
+                obj, created = self.get_queryset().update_or_create(project=project_obj, defaults={'description': serializer.data['description']})
+                success = True
+            except OperationalError as e:
+                if str(e) == "database is locked":
+                    time.sleep(5)
+                else:
+                    raise e
+
+        if created:
+            NodesModel.objects.filter(project=self.kwargs['project'], node_seq=1).update(executed=True)
+        return Response({'Ok':'ok'}, status=status.HTTP_200_OK)
 
 @method_decorator((csrf_protect,ensure_csrf_cookie), name='dispatch')
 class User(APIView):
@@ -136,14 +183,14 @@ class User(APIView):
         if request.user.is_authenticated:
             respdata = UserSerializer(request.user, many=False).data
         respdata['CSRF_TOKEN'] = get_token(request) 
-        return JsonResponse(respdata, status=200)
+        return JsonResponse(respdata, status=status.HTTP_200_OK)
 
     def post(self,request,logout):
         if logout == "logout":
             if request.user.is_authenticated:
                 auth_logout(request)
                 request.session.pop('rememberme', default=None)
-                return JsonResponse({'Ok':'ok'}, status=200)
+                return JsonResponse({'Ok':'ok'}, status=status.HTTP_200_OK)
         else:
             
             if 'username' in request.POST or 'password' in request.POST:
@@ -164,7 +211,7 @@ class User(APIView):
                         request.session.set_expiry(0)
                 else:
                     request.session.set_expiry(0)
-                return Response(UserSerializer(request.user, many=False).data, 200)
+                return Response(UserSerializer(request.user, many=False).data, status.HTTP_200_OK)
 
         raise PermissionDenied
 
@@ -200,18 +247,18 @@ class FileUploadView(APIView):
     def get(self, request, project, node, part):
         respdata = {'msg': 'OK'}
         respdata['CSRF_TOKEN'] = get_token(request) 
-        return JsonResponse(respdata, status=200)
+        return JsonResponse(respdata, status=status.HTTP_200_OK)
 
     def post(self, request, project, node, part, format=None):
         filekey = 'file'
         if filekey not in request.FILES:
-            return Response({"detail","%s file field is missing." % (filekey)},status=400)
+            return Response({"detail","%s file field is missing." % (filekey)},status=status.HTTP_400_BAD_REQUEST)
         print(request.FILES.getlist(filekey))
         file_list = request.FILES.getlist(filekey)
         if len(file_list) > 1:
-            return Response({"detail","Only one file in %s is acceptable." % (filekey)},status=400)
+            return Response({"detail","Only one file in %s is acceptable." % (filekey)},status=status.HTTP_400_BAD_REQUEST)
         elif len(file_list) == 0:
-            return Response({"detail","%s has no files." % (filekey)},status=400)
+            return Response({"detail","%s has no files." % (filekey)},status=status.HTTP_400_BAD_REQUEST)
 
         uploadedfile = file_list[0]
         filename = uploadedfile.name
@@ -259,6 +306,6 @@ class FileUploadView(APIView):
                 break
         if not created:
             return Response(data={'detail':'File "%s" already exists.' % (filename),'URL':new_obj.url},status=400)
-        return Response(data={'msg':'OK','URL':new_obj.url},status=200)
+        return Response(data={'msg':'OK','URL':new_obj.url},status=status.HTTP_200_OK)
 
 

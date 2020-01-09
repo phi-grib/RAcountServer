@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 
 from rest_framework import serializers
-from .models import Projects, Nodes, Resources
+from .models import Projects, Nodes, Resources, ProblemDescription
 
 class ProjectSerializer (serializers.ModelSerializer):
 
@@ -31,3 +31,13 @@ class StatusSerializer(serializers.Serializer):
 
     node_seq = serializers.IntegerField()
     executed = serializers.URLField()
+
+class ProblemDescriptionSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = ProblemDescription
+        fields = "__all__"
+
+class ProblemDescriptionSerializerInput(serializers.Serializer):
+    project = serializers.IntegerField()
+    description = serializers.CharField(allow_blank=True, trim_whitespace=False)

@@ -29,6 +29,10 @@ class Nodes(models.Model):
             models.UniqueConstraint(fields=['project','node_seq'], name='unique_project_node_seq'),
         ]
 
+class ProblemDescription(models.Model):
+    project = models.ForeignKey(Projects,unique=True, null=False, on_delete=models.CASCADE)
+    description = models.TextField(blank=True,null=False,default='')
+
 class Resources(models.Model):
 
     node = models.IntegerField()
@@ -71,7 +75,7 @@ class ProblemDescriptionFile(models.Model):
     file = models.ForeignKey(File, on_delete=models.CASCADE)
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=['project','file'], name='unique_project_file'),
+            models.UniqueConstraint(fields=['project','file'], name='problem_unique_project_file'),
         ]
 
 class CommentFile(models.Model):

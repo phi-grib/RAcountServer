@@ -1,0 +1,17 @@
+--TRUNCATE API_commentfile            CASCADE;
+--TRUNCATE API_file                   CASCADE;
+--TRUNCATE API_filetype               CASCADE;
+--TRUNCATE API_nodes                  CASCADE;
+--TRUNCATE API_problemdescriptionfile CASCADE;
+--TRUNCATE API_projects               CASCADE;
+--TRUNCATE API_resources              CASCADE;
+TRUNCATE auth_group                 CASCADE;
+TRUNCATE auth_group_permissions     CASCADE;
+TRUNCATE auth_permission            CASCADE;
+TRUNCATE auth_user                  CASCADE;
+TRUNCATE auth_user_groups           CASCADE;
+TRUNCATE auth_user_user_permissions CASCADE;
+--TRUNCATE django_admin_log           CASCADE;
+TRUNCATE django_content_type        CASCADE;
+--TRUNCATE django_migrations          CASCADE;
+TRUNCATE django_session             CASCADE;

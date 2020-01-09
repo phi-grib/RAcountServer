@@ -34,7 +34,7 @@ class Migration(migrations.Migration):
         ),
         migrations.AddConstraint(
             model_name='problemdescriptionfile',
-            constraint=models.UniqueConstraint(fields=('project', 'file'), name='unique_project_file'),
+            constraint=models.UniqueConstraint(fields=('project', 'file'), name='problem_unique_project_file'),
         ),
         migrations.AddConstraint(
             model_name='projects',

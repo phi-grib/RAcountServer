@@ -97,8 +97,22 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'OPTIONS': {
+            'timeout': 200,
+        }
     }
 }
+
+""" DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'racount',
+        'USER': 'racount',
+        'PASSWORD': 'racount',
+        'HOST': 'localhost',
+        'PORT': '5432',
+    }
+} """
 
 # How django stores passwords
 #https://docs.djangoproject.com/en/2.2/topics/auth/passwords/#how-django-stores-passwords

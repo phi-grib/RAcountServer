@@ -2185,7 +2185,16 @@ let Node1ProblemFormulationComponent = class Node1ProblemFormulationComponent {
             this.Editor_config.CustomElement.items[i].component = this;
             i++;
         });
-        this.problem_description = this.info.inputs_comments;
+        this.service.getProblemDescription(this.info.project).subscribe(result => {
+            this.problem_description = result.description;
+        }, error => {
+            if (error.status === 404) {
+                this.problem_description = '';
+            }
+            else {
+                alert('Error getting problem description');
+            }
+        });
     }
     NodeCompleted() {
         const project_id = this.info.project;
@@ -2262,15 +2271,19 @@ let Node1ProblemFormulationService = class Node1ProblemFormulationService {
         this.loginService = loginService;
         this.globals = globals;
     }
-    saveNode(project, inputs, csrftoken) {
+    getProblemDescription(project) {
+        const url = _environments_environment__WEBPACK_IMPORTED_MODULE_3__["environment"].baseUrl + 'project/' + project + '/problem_description/';
+        return this.http.get(url, { withCredentials: true });
+    }
+    saveNode(project, description, csrftoken) {
         const node = 1;
         const formData = new FormData();
-        formData.append('inputs_comments', inputs);
+        formData.append('description', description);
         if (csrftoken !== null && csrftoken !== undefined) {
             formData.append(this.globals.csrftoken_form_input_name, csrftoken);
         }
         // formData.append('parameters',  this.model.parameters);
-        const url = _environments_environment__WEBPACK_IMPORTED_MODULE_3__["environment"].baseUrl + 'project/' + project + '/node/' + node + '/';
+        const url = _environments_environment__WEBPACK_IMPORTED_MODULE_3__["environment"].baseUrl + 'project/' + project + '/problem_description/';
         return this.http.post(url, formData, this.loginService.getPOSTHttpOptions());
     }
 };

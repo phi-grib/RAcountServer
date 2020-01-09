@@ -2266,7 +2266,16 @@ var Node1ProblemFormulationComponent = /** @class */ (function () {
             _this.Editor_config.CustomElement.items[i].component = _this;
             i++;
         });
-        this.problem_description = this.info.inputs_comments;
+        this.service.getProblemDescription(this.info.project).subscribe(function (result) {
+            _this.problem_description = result.description;
+        }, function (error) {
+            if (error.status === 404) {
+                _this.problem_description = '';
+            }
+            else {
+                alert('Error getting problem description');
+            }
+        });
     };
     Node1ProblemFormulationComponent.prototype.NodeCompleted = function () {
         var _this = this;
@@ -2345,15 +2354,19 @@ var Node1ProblemFormulationService = /** @class */ (function () {
         this.loginService = loginService;
         this.globals = globals;
     }
-    Node1ProblemFormulationService.prototype.saveNode = function (project, inputs, csrftoken) {
+    Node1ProblemFormulationService.prototype.getProblemDescription = function (project) {
+        var url = _environments_environment__WEBPACK_IMPORTED_MODULE_3__["environment"].baseUrl + 'project/' + project + '/problem_description/';
+        return this.http.get(url, { withCredentials: true });
+    };
+    Node1ProblemFormulationService.prototype.saveNode = function (project, description, csrftoken) {
         var node = 1;
         var formData = new FormData();
-        formData.append('inputs_comments', inputs);
+        formData.append('description', description);
         if (csrftoken !== null && csrftoken !== undefined) {
             formData.append(this.globals.csrftoken_form_input_name, csrftoken);
         }
         // formData.append('parameters',  this.model.parameters);
-        var url = _environments_environment__WEBPACK_IMPORTED_MODULE_3__["environment"].baseUrl + 'project/' + project + '/node/' + node + '/';
+        var url = _environments_environment__WEBPACK_IMPORTED_MODULE_3__["environment"].baseUrl + 'project/' + project + '/problem_description/';
         return this.http.post(url, formData, this.loginService.getPOSTHttpOptions());
     };
     Node1ProblemFormulationService.ctorParameters = function () { return [
