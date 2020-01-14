@@ -18,7 +18,7 @@ INSERT INTO API_nodes (name, description, inputs, inputs_comments, outputs, outp
 INSERT INTO API_nodes (name, description, inputs, inputs_comments, outputs, outputs_comments, node_seq, project_id, executed) VALUES('3.SCs identification', 'Cs identification','', '', '', '', 5, 1,0);
 INSERT INTO API_nodes (name, description, inputs, inputs_comments, outputs, outputs_comments, node_seq, project_id, executed) VALUES('4.SCs evaluation', 'SCs evaluation','', '', '', '', 6, 1,0);
 INSERT INTO API_nodes (name, description, inputs, inputs_comments, outputs, outputs_comments, node_seq, project_id, executed) VALUES('Overarching RAX hypothesis', 'Enough information','', '', '', '', 7, 1,0);
-INSERT INTO API_nodes (name, description, inputs, inputs_comments, outputs, outputs_comments, node_seq, project_id, executed) VALUES('NAM testing and evatuation(in vitro & in silico)', '','', '', '', '', 8, 1,0);
+INSERT INTO API_nodes (name, description, inputs, inputs_comments, outputs, outputs_comments, node_seq, project_id, executed) VALUES('NAM testing and evaluation (in vitro & in silico)', '','', '', '', '', 8, 1,0);
 INSERT INTO API_nodes (name, description, inputs, inputs_comments, outputs, outputs_comments, node_seq, project_id, executed) VALUES('TK', 'RA hypothesis','', '', '', '', 9, 1,0);
 INSERT INTO API_nodes (name, description, inputs, inputs_comments, outputs, outputs_comments, node_seq, project_id, executed) VALUES('TD', 'RA hypothesis','', '', '', '', 10, 1,0);
 INSERT INTO API_nodes (name, description, inputs, inputs_comments, outputs, outputs_comments, node_seq, project_id, executed) VALUES('5.Data gap filling', 'RA hypothesis 2','', '', '', '', 11, 1,0);
@@ -33,7 +33,7 @@ INSERT INTO API_nodes (name, description, inputs, inputs_comments, outputs, outp
 INSERT INTO API_nodes (name, description, inputs, inputs_comments, outputs, outputs_comments, node_seq, project_id, executed) VALUES('3.SCs identification', 'Cs identification','', '', '', '', 5, 2, 0);
 INSERT INTO API_nodes (name, description, inputs, inputs_comments, outputs, outputs_comments, node_seq, project_id, executed) VALUES('4.SCs evaluation', 'SCs evaluation','', '', '', '', 6, 2, 0);
 INSERT INTO API_nodes (name, description, inputs, inputs_comments, outputs, outputs_comments, node_seq, project_id, executed) VALUES('Overarching RAX hypothesis', 'Enough information','', '', '', '', 7, 2, 0);
-INSERT INTO API_nodes (name, description, inputs, inputs_comments, outputs, outputs_comments, node_seq, project_id, executed) VALUES('NAM testing and evatuation(in vitro & in silico)', '','', '', '', '', 8, 2, 0);
+INSERT INTO API_nodes (name, description, inputs, inputs_comments, outputs, outputs_comments, node_seq, project_id, executed) VALUES('NAM testing and evaluation (in vitro & in silico)', '','', '', '', '', 8, 2, 0);
 INSERT INTO API_nodes (name, description, inputs, inputs_comments, outputs, outputs_comments, node_seq, project_id, executed) VALUES('TK', 'RA hypothesis','', '', '', '', 9, 2, 0);
 INSERT INTO API_nodes (name, description, inputs, inputs_comments, outputs, outputs_comments, node_seq, project_id, executed) VALUES('TD', 'RA hypothesis','', '', '', '', 10, 2, 0);
 INSERT INTO API_nodes (name, description, inputs, inputs_comments, outputs, outputs_comments, node_seq, project_id, executed) VALUES('5.Data gap filling', 'RA hypothesis 2','', '', '', '', 11, 2, 0);
@@ -48,7 +48,7 @@ INSERT INTO API_nodes (name, description, inputs, inputs_comments, outputs, outp
 INSERT INTO API_nodes (name, description, inputs, inputs_comments, outputs, outputs_comments, node_seq, project_id, executed) VALUES('3.SCs identification', 'Cs identification','', '', '', '', 5, 3, 0);
 INSERT INTO API_nodes (name, description, inputs, inputs_comments, outputs, outputs_comments, node_seq, project_id, executed) VALUES('4.SCs evaluation', 'SCs evaluation','', '', '', '', 6, 3, 0);
 INSERT INTO API_nodes (name, description, inputs, inputs_comments, outputs, outputs_comments, node_seq, project_id, executed) VALUES('Overarching RAX hypothesis', 'Enough information','', '', '', '', 7, 3, 0);
-INSERT INTO API_nodes (name, description, inputs, inputs_comments, outputs, outputs_comments, node_seq, project_id, executed) VALUES('NAM testing and evatuation(in vitro & in silico)', '','', '', '', '', 8, 3, 0);
+INSERT INTO API_nodes (name, description, inputs, inputs_comments, outputs, outputs_comments, node_seq, project_id, executed) VALUES('NAM testing and evaluation (in vitro & in silico)', '','', '', '', '', 8, 3, 0);
 INSERT INTO API_nodes (name, description, inputs, inputs_comments, outputs, outputs_comments, node_seq, project_id, executed) VALUES('TK', 'RA hypothesis','', '', '', '', 9, 3, 0);
 INSERT INTO API_nodes (name, description, inputs, inputs_comments, outputs, outputs_comments, node_seq, project_id, executed) VALUES('TD', 'RA hypothesis','', '', '', '', 10, 3, 0);
 INSERT INTO API_nodes (name, description, inputs, inputs_comments, outputs, outputs_comments, node_seq, project_id, executed) VALUES('5.Data gap filling', 'RA hypothesis 2','', '', '', '', 11, 3, 0);
@@ -63,7 +63,7 @@ INSERT INTO API_nodes (name, description, inputs, inputs_comments, outputs, outp
 INSERT INTO API_nodes (name, description, inputs, inputs_comments, outputs, outputs_comments, node_seq, project_id, executed) VALUES('3.SCs identification', 'Cs identification','', '', '', '', 5, 4, 0);
 INSERT INTO API_nodes (name, description, inputs, inputs_comments, outputs, outputs_comments, node_seq, project_id, executed) VALUES('4.SCs evaluation', 'SCs evaluation','', '', '', '', 6, 4, 0);
 INSERT INTO API_nodes (name, description, inputs, inputs_comments, outputs, outputs_comments, node_seq, project_id, executed) VALUES('Overarching RAX hypothesis', 'Enough information','', '', '', '', 7, 4, 0);
-INSERT INTO API_nodes (name, description, inputs, inputs_comments, outputs, outputs_comments, node_seq, project_id, executed) VALUES('NAM testing and evatuation(in vitro & in silico)', '','', '', '', '', 8, 4, 0);
+INSERT INTO API_nodes (name, description, inputs, inputs_comments, outputs, outputs_comments, node_seq, project_id, executed) VALUES('NAM testing and evaluation (in vitro & in silico)', '','', '', '', '', 8, 4, 0);
 INSERT INTO API_nodes (name, description, inputs, inputs_comments, outputs, outputs_comments, node_seq, project_id, executed) VALUES('TK', 'RA hypothesis','', '', '', '', 9, 4, 0);
 INSERT INTO API_nodes (name, description, inputs, inputs_comments, outputs, outputs_comments, node_seq, project_id, executed) VALUES('TD', 'RA hypothesis','', '', '', '', 10, 4, 0);
 INSERT INTO API_nodes (name, description, inputs, inputs_comments, outputs, outputs_comments, node_seq, project_id, executed) VALUES('5.Data gap filling', 'RA hypothesis 2','', '', '', '', 11, 4, 0);
@@ -78,7 +78,7 @@ INSERT INTO API_nodes (name, description, inputs, inputs_comments, outputs, outp
 INSERT INTO API_nodes (name, description, inputs, inputs_comments, outputs, outputs_comments, node_seq, project_id, executed) VALUES('3.SCs identification', 'Cs identification','', '', '', '', 5, 5, 0);
 INSERT INTO API_nodes (name, description, inputs, inputs_comments, outputs, outputs_comments, node_seq, project_id, executed) VALUES('4.SCs evaluation', 'SCs evaluation','', '', '', '', 6, 5, 0);
 INSERT INTO API_nodes (name, description, inputs, inputs_comments, outputs, outputs_comments, node_seq, project_id, executed) VALUES('Overarching RAX hypothesis', 'Enough information','', '', '', '', 7, 5, 0);
-INSERT INTO API_nodes (name, description, inputs, inputs_comments, outputs, outputs_comments, node_seq, project_id, executed) VALUES('NAM testing and evatuation(in vitro & in silico)', '','', '', '', '', 8, 5, 0);
+INSERT INTO API_nodes (name, description, inputs, inputs_comments, outputs, outputs_comments, node_seq, project_id, executed) VALUES('NAM testing and evaluation (in vitro & in silico)', '','', '', '', '', 8, 5, 0);
 INSERT INTO API_nodes (name, description, inputs, inputs_comments, outputs, outputs_comments, node_seq, project_id, executed) VALUES('TK', 'RA hypothesis','', '', '', '', 9, 5, 0);
 INSERT INTO API_nodes (name, description, inputs, inputs_comments, outputs, outputs_comments, node_seq, project_id, executed) VALUES('TD', 'RA hypothesis','', '', '', '', 10, 5, 0);
 INSERT INTO API_nodes (name, description, inputs, inputs_comments, outputs, outputs_comments, node_seq, project_id, executed) VALUES('5.Data gap filling', 'RA hypothesis 2','', '', '', '', 11, 5, 0);
@@ -93,7 +93,7 @@ INSERT INTO API_nodes (name, description, inputs, inputs_comments, outputs, outp
 INSERT INTO API_nodes (name, description, inputs, inputs_comments, outputs, outputs_comments, node_seq, project_id, executed) VALUES('3.SCs identification', 'Cs identification','', '', '', '', 5, 6, 0);
 INSERT INTO API_nodes (name, description, inputs, inputs_comments, outputs, outputs_comments, node_seq, project_id, executed) VALUES('4.SCs evaluation', 'SCs evaluation','', '', '', '', 6, 6, 0);
 INSERT INTO API_nodes (name, description, inputs, inputs_comments, outputs, outputs_comments, node_seq, project_id, executed) VALUES('Overarching RAX hypothesis', 'Enough information','', '', '', '', 7, 6, 0);
-INSERT INTO API_nodes (name, description, inputs, inputs_comments, outputs, outputs_comments, node_seq, project_id, executed) VALUES('NAM testing and evatuation(in vitro & in silico)', '','', '', '', '', 8, 6, 0);
+INSERT INTO API_nodes (name, description, inputs, inputs_comments, outputs, outputs_comments, node_seq, project_id, executed) VALUES('NAM testing and evaluation (in vitro & in silico)', '','', '', '', '', 8, 6, 0);
 INSERT INTO API_nodes (name, description, inputs, inputs_comments, outputs, outputs_comments, node_seq, project_id, executed) VALUES('TK', 'RA hypothesis','', '', '', '', 9, 6, 0);
 INSERT INTO API_nodes (name, description, inputs, inputs_comments, outputs, outputs_comments, node_seq, project_id, executed) VALUES('TD', 'RA hypothesis','', '', '', '', 10, 6, 0);
 INSERT INTO API_nodes (name, description, inputs, inputs_comments, outputs, outputs_comments, node_seq, project_id, executed) VALUES('5.Data gap filling', 'RA hypothesis 2','', '', '', '', 11, 6, 0);
