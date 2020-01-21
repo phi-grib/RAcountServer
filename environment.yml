@@ -13,3 +13,5 @@ dependencies:
     - django-cors-headers==3.1.1
     - djangorestframework==3.8.2
     - argon2-cffi==19.1.0
+    - pytablereader
+    - pytablewriter

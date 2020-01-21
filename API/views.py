@@ -308,4 +308,51 @@ class FileUploadView(APIView):
             return Response(data={'detail':'File "%s" already exists.' % (filename),'URL':new_obj.url},status=400)
         return Response(data={'msg':'OK','URL':new_obj.url},status=status.HTTP_200_OK)
 
+@method_decorator((csrf_protect,ensure_csrf_cookie), name='dispatch')
+class CSVFileToHTML(APIView):
+    parser_classes = [MultiPartParser]
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated,IsProjectOwner]
+
+    # save_uploadedfile function from https://github.com/GPCRmd/GPCRmd
+    # Copyright (c) 2017 Ismael Rodríguez-Espigares et al., Jana Selent,
+    # UPF and IMIM
+    # Apache License 2.0 (http://www.apache.org/licenses/LICENSE-2.0)
+    def _save_uploadedfile(self,filepath,uploadedfile):
+        with open(filepath,'wb') as f:
+            if uploadedfile.multiple_chunks:
+                for chunk in uploadedfile.chunks():
+                    f.write(chunk)
+            else:
+                f.write(uploadedfile.read())
+            f.close()
+
+    def get(self, request, project, node, part):
+        respdata = {'msg': 'OK'}
+        respdata['CSRF_TOKEN'] = get_token(request) 
+        return JsonResponse(respdata, status=status.HTTP_200_OK)
+
+    def post(self, request, project, node, part, format=None):
+        filekey = 'file'
+        if filekey not in request.FILES:
+            return Response({"detail","%s file field is missing." % (filekey)},status=status.HTTP_400_BAD_REQUEST)
+        print(request.FILES.getlist(filekey))
+        file_list = request.FILES.getlist(filekey)
+        if len(file_list) > 1:
+            return Response({"detail","Only one file in %s is acceptable." % (filekey)},status=status.HTTP_400_BAD_REQUEST)
+        elif len(file_list) == 0:
+            return Response({"detail","%s has no files." % (filekey)},status=status.HTTP_400_BAD_REQUEST)
+
+        uploadedfile = file_list[0]
+        filename = uploadedfile.name
+        rootname,fileext = os.path.splitext(uploadedfile.name)
+
+        if uploadedfile.multiple_chunks:
+            for chunk in uploadedfile.chunks():
+                    f.write(chunk)
+        else:
+            f.write(uploadedfile.read())
+
+        return Response(data={'msg':'OK','URL':new_obj.url},status=status.HTTP_200_OK)
+
 
