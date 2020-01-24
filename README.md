@@ -30,4 +30,5 @@ At the root folder execute:
 
 `python manage.py runserver`
 
-and then navigate to <http:/127.0.0.1:8000>.
+and then navigate to <http://localhost:8000>
+(http://127.0.0.1:8000 does not work).
