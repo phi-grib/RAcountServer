@@ -6,6 +6,18 @@
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <script src="https://unpkg.com/smiles-drawer@1.0.2/dist/smiles-drawer.min.js"></script>
+  <script>
+      /* Copyright 2014
+      Under CC BY-SA 3.0 license (https://creativecommons.org/licenses/by-sa/3.0/legalcode) 
+      Adapted from Stack Overflow answer to Lance Pollard (https://stackoverflow.com/users/169992/lance-pollard)
+      by bobince (https://stackoverflow.com/users/18936/bobince) and nhahtdh (https://stackoverflow.com/users/1400768/nhahtdh)
+      with help of others' comments.
+      https://stackoverflow.com/a/3561711 */
+      var RegExpEscape = function(str) {
+        const reg = /[-{}()^\/\\.?+*|[\]$]/g;
+        return str.replace(reg, '\\$&');
+      };
+  </script>
 
   <!--<script src="//cdn.ckeditor.com/4.7.1/full/ckeditor.js"></script>-->
   <link rel="icon" type="image/x-icon" href="favicon.ico">
