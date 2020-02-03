@@ -5,7 +5,7 @@
   <title>RAcount</title>
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <script src="https://unpkg.com/smiles-drawer@1.0.2/dist/smiles-drawer.min.js"></script>
+  <!--<script src="https://unpkg.com/smiles-drawer@1.1.20/dist/smiles-drawer.min.js"></script>-->
   <script>
       /* Copyright 2014
       Under CC BY-SA 3.0 license (https://creativecommons.org/licenses/by-sa/3.0/legalcode) 
@@ -14,8 +14,8 @@
       with help of others' comments.
       https://stackoverflow.com/a/3561711 */
       var RegExpEscape = function(str) {
-        const reg = /[-{}()^\/\\.?+*|[\]$]/g;
-        return str.replace(reg, '\\$&');
+        const regscape = /[-{}()^\/\\.?+*|[\]$]/g;
+        return str.replace(regscape , '\\$&');
       };
   </script>
 
