@@ -116,12 +116,20 @@ class ManageNodes(GenericAPIView,UpdateModelMixin):
         history = list(qhistory)
         for i in range(0,len(history)):
             histi = dict(history[i])
+            content = histi['content']
+            if content != "":
+                content = "<b>Output:</b><br>"+histi['content']
             if history[i]['node_seq'] == 1:
                 try:
                     qproblem = ProblemDescription.objects.get(project=project)
-                    histi['content'] = "<b>Problem description:</b><br>"+qproblem.description
+                    histi['content'] = "<b>Problem description:</b><br>"+qproblem.description+content
                 except ProblemDescription.DoesNotExist:
-                    histi['content'] = ''
+                    histi['content'] = content
+            else:
+                if histi['inputs_comments'] != "":
+                    histi['content'] = "<b>Input:</b><br>"+histi['inputs_comments']+content
+                else:
+                    histi['content'] = content
             histi.pop('inputs_comments', None)
             histi.pop('node_seq', None)
             history[i] = histi
