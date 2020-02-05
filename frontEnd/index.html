@@ -12,11 +12,33 @@
       Adapted from Stack Overflow answer to Lance Pollard (https://stackoverflow.com/users/169992/lance-pollard)
       by bobince (https://stackoverflow.com/users/18936/bobince) and nhahtdh (https://stackoverflow.com/users/1400768/nhahtdh)
       with help of others' comments.
-      https://stackoverflow.com/a/3561711 */
+      https://stackoverflow.com/a/3561711
+      Probably trivial and non-copyrighted.*/
       var RegExpEscape = function(str) {
         const regscape = /[-{}()^\/\\.?+*|[\]$]/g;
         return str.replace(regscape , '\\$&');
       };
+
+      /* Copyright 2011-2017
+      Under CC BY-SA 3.0 license (https://creativecommons.org/licenses/by-sa/3.0/legalcode) 
+      Adapted from Stack Overflow answer to Bart van Heukelom (https://stackoverflow.com/users/169992/lance-pollard) and edited by
+      nhahtdh (https://stackoverflow.com/users/1400768/nhahtdh) by Kip (https://stackoverflow.com/users/18511/kip) and 
+      jbo5112 (https://stackoverflow.com/users/861178/jbo5112) with help of others' comments.
+      https://stackoverflow.com/a/3561711 */
+      function escapeHtmlString(str) {
+        var literal_2_html_amp_dict = {
+          "'": '&#039;',
+          '"': '&quot;',
+          '<': '&lt;',
+          '>': '&gt;',
+          '&': '&amp;'
+        };
+
+        function literal_2_html_amp(char) {
+          return literal_2_html_amp_dict[char];
+        }
+        return str.replace(/['"<>&]/g, literal_2_html_amp);
+      }
   </script>
 
   <!--<script src="//cdn.ckeditor.com/4.7.1/full/ckeditor.js"></script>-->
