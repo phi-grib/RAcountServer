@@ -170,7 +170,7 @@ module.exports = "<h1 mat-dialog-title style=\"margin-bottom: 0px;\"> {{this.inf
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"card\">\n        <h6 class=\"card-header bg-light p-1\">Problem description</h6>\n        <div class=\"smiles-micromodal-container\">\n                <app-smiles-micromodal [id]=\"this.ckeditor_id+'-smiles-micromodal'\"></app-smiles-micromodal>\n        </div>\n        <div class=\"upload-angular-container\" class=\"card-body p-0\">\n            <ckeditor [id]=\"this.ckeditor_id\" [editor]=\"Editor\" [config]=\"this.Editor_config\" [(ngModel)]=\"problem_description\" [disabled]=\"this.inline_problem_description\"></ckeditor>\n        </div>\n</div>\n"
+module.exports = "\n        <div class=\"smiles-micromodal-container\">\n                <app-smiles-micromodal [id]=\"this.ckeditor_id+'-smiles-micromodal'\"></app-smiles-micromodal>\n        </div>\n        <div class=\"upload-angular-container\" class=\"card-body p-0\">\n            <ckeditor [id]=\"this.ckeditor_id\" [editor]=\"Editor\" [config]=\"this.Editor_config\" [(ngModel)]=\"problem_description\" [disabled]=\"this.inline_problem_description\"></ckeditor>\n        </div>\n\n"
 
 /***/ }),
 
@@ -406,34 +406,36 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_material_dialog__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! @angular/material/dialog */ "./node_modules/@angular/material/esm2015/dialog.js");
 /* harmony import */ var _angular_material_card__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! @angular/material/card */ "./node_modules/@angular/material/esm2015/card.js");
 /* harmony import */ var _angular_material_checkbox__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! @angular/material/checkbox */ "./node_modules/@angular/material/esm2015/checkbox.js");
-/* harmony import */ var _globals__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! ./globals */ "./src/app/globals.ts");
-/* harmony import */ var _login_login_component__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! ./login/login.component */ "./src/app/login/login.component.ts");
-/* harmony import */ var _main_main_component__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! ./main/main.component */ "./src/app/main/main.component.ts");
-/* harmony import */ var _app_component__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! ./app.component */ "./src/app/app.component.ts");
-/* harmony import */ var _navbar_navbar_component__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(/*! ./navbar/navbar.component */ "./src/app/navbar/navbar.component.ts");
-/* harmony import */ var _sidebar_sidebar_component__WEBPACK_IMPORTED_MODULE_29__ = __webpack_require__(/*! ./sidebar/sidebar.component */ "./src/app/sidebar/sidebar.component.ts");
-/* harmony import */ var _tabs_tabs_component__WEBPACK_IMPORTED_MODULE_30__ = __webpack_require__(/*! ./tabs/tabs.component */ "./src/app/tabs/tabs.component.ts");
-/* harmony import */ var _workflows_workflows_component__WEBPACK_IMPORTED_MODULE_31__ = __webpack_require__(/*! ./workflows/workflows.component */ "./src/app/workflows/workflows.component.ts");
-/* harmony import */ var _each_workflow_each_workflow_component__WEBPACK_IMPORTED_MODULE_32__ = __webpack_require__(/*! ./each-workflow/each-workflow.component */ "./src/app/each-workflow/each-workflow.component.ts");
-/* harmony import */ var _welcome_welcome_component__WEBPACK_IMPORTED_MODULE_33__ = __webpack_require__(/*! ./welcome/welcome.component */ "./src/app/welcome/welcome.component.ts");
-/* harmony import */ var _smiles_micromodal_smiles_micromodal_component__WEBPACK_IMPORTED_MODULE_34__ = __webpack_require__(/*! ./smiles-micromodal/smiles-micromodal.component */ "./src/app/smiles-micromodal/smiles-micromodal.component.ts");
-/* harmony import */ var _node_info_node_info_component__WEBPACK_IMPORTED_MODULE_35__ = __webpack_require__(/*! ./node-info/node-info.component */ "./src/app/node-info/node-info.component.ts");
-/* harmony import */ var _editable_editable_component__WEBPACK_IMPORTED_MODULE_36__ = __webpack_require__(/*! ./editable/editable.component */ "./src/app/editable/editable.component.ts");
-/* harmony import */ var _node1_problem_formulation_node1_problem_formulation_component__WEBPACK_IMPORTED_MODULE_37__ = __webpack_require__(/*! ./node1-problem-formulation/node1-problem-formulation.component */ "./src/app/node1-problem-formulation/node1-problem-formulation.component.ts");
-/* harmony import */ var _tk_workflow_tk_workflow_component__WEBPACK_IMPORTED_MODULE_38__ = __webpack_require__(/*! ./tk-workflow/tk-workflow.component */ "./src/app/tk-workflow/tk-workflow.component.ts");
-/* harmony import */ var _td_workflow_td_workflow_component__WEBPACK_IMPORTED_MODULE_39__ = __webpack_require__(/*! ./td-workflow/td-workflow.component */ "./src/app/td-workflow/td-workflow.component.ts");
-/* harmony import */ var _tc_characteritzation_tc_characteritzation_component__WEBPACK_IMPORTED_MODULE_40__ = __webpack_require__(/*! ./tc-characteritzation/tc-characteritzation.component */ "./src/app/tc-characteritzation/tc-characteritzation.component.ts");
-/* harmony import */ var _keys_pipe__WEBPACK_IMPORTED_MODULE_41__ = __webpack_require__(/*! ./keys.pipe */ "./src/app/keys.pipe.ts");
-/* harmony import */ var _editable_view_mode_directive__WEBPACK_IMPORTED_MODULE_42__ = __webpack_require__(/*! ./editable/view-mode.directive */ "./src/app/editable/view-mode.directive.ts");
-/* harmony import */ var _editable_edit_mode_directive__WEBPACK_IMPORTED_MODULE_43__ = __webpack_require__(/*! ./editable/edit-mode.directive */ "./src/app/editable/edit-mode.directive.ts");
-/* harmony import */ var _editable_edit_on_enter_directive__WEBPACK_IMPORTED_MODULE_44__ = __webpack_require__(/*! ./editable/edit-on-enter.directive */ "./src/app/editable/edit-on-enter.directive.ts");
-/* harmony import */ var _login_login_service__WEBPACK_IMPORTED_MODULE_45__ = __webpack_require__(/*! ./login/login.service */ "./src/app/login/login.service.ts");
-/* harmony import */ var _tabs_tabs_service__WEBPACK_IMPORTED_MODULE_46__ = __webpack_require__(/*! ./tabs/tabs.service */ "./src/app/tabs/tabs.service.ts");
-/* harmony import */ var _each_workflow_each_workflow_service__WEBPACK_IMPORTED_MODULE_47__ = __webpack_require__(/*! ./each-workflow/each-workflow.service */ "./src/app/each-workflow/each-workflow.service.ts");
-/* harmony import */ var _node1_problem_formulation_node1_problem_formulation_service__WEBPACK_IMPORTED_MODULE_48__ = __webpack_require__(/*! ./node1-problem-formulation/node1-problem-formulation.service */ "./src/app/node1-problem-formulation/node1-problem-formulation.service.ts");
-/* harmony import */ var _node_info_node_info_service__WEBPACK_IMPORTED_MODULE_49__ = __webpack_require__(/*! ./node-info/node-info.service */ "./src/app/node-info/node-info.service.ts");
-/* harmony import */ var ngx_cookie_service__WEBPACK_IMPORTED_MODULE_50__ = __webpack_require__(/*! ngx-cookie-service */ "./node_modules/ngx-cookie-service/ngx-cookie-service.js");
-/* harmony import */ var _tc_characteritzation_tc_characteritzation_service__WEBPACK_IMPORTED_MODULE_51__ = __webpack_require__(/*! ./tc-characteritzation/tc-characteritzation.service */ "./src/app/tc-characteritzation/tc-characteritzation.service.ts");
+/* harmony import */ var _angular_cdk_overlay__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! @angular/cdk/overlay */ "./node_modules/@angular/cdk/esm2015/overlay.js");
+/* harmony import */ var _globals__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! ./globals */ "./src/app/globals.ts");
+/* harmony import */ var _login_login_component__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! ./login/login.component */ "./src/app/login/login.component.ts");
+/* harmony import */ var _main_main_component__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! ./main/main.component */ "./src/app/main/main.component.ts");
+/* harmony import */ var _app_component__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(/*! ./app.component */ "./src/app/app.component.ts");
+/* harmony import */ var _navbar_navbar_component__WEBPACK_IMPORTED_MODULE_29__ = __webpack_require__(/*! ./navbar/navbar.component */ "./src/app/navbar/navbar.component.ts");
+/* harmony import */ var _sidebar_sidebar_component__WEBPACK_IMPORTED_MODULE_30__ = __webpack_require__(/*! ./sidebar/sidebar.component */ "./src/app/sidebar/sidebar.component.ts");
+/* harmony import */ var _tabs_tabs_component__WEBPACK_IMPORTED_MODULE_31__ = __webpack_require__(/*! ./tabs/tabs.component */ "./src/app/tabs/tabs.component.ts");
+/* harmony import */ var _workflows_workflows_component__WEBPACK_IMPORTED_MODULE_32__ = __webpack_require__(/*! ./workflows/workflows.component */ "./src/app/workflows/workflows.component.ts");
+/* harmony import */ var _each_workflow_each_workflow_component__WEBPACK_IMPORTED_MODULE_33__ = __webpack_require__(/*! ./each-workflow/each-workflow.component */ "./src/app/each-workflow/each-workflow.component.ts");
+/* harmony import */ var _welcome_welcome_component__WEBPACK_IMPORTED_MODULE_34__ = __webpack_require__(/*! ./welcome/welcome.component */ "./src/app/welcome/welcome.component.ts");
+/* harmony import */ var _smiles_micromodal_smiles_micromodal_component__WEBPACK_IMPORTED_MODULE_35__ = __webpack_require__(/*! ./smiles-micromodal/smiles-micromodal.component */ "./src/app/smiles-micromodal/smiles-micromodal.component.ts");
+/* harmony import */ var _node_info_node_info_component__WEBPACK_IMPORTED_MODULE_36__ = __webpack_require__(/*! ./node-info/node-info.component */ "./src/app/node-info/node-info.component.ts");
+/* harmony import */ var _editable_editable_component__WEBPACK_IMPORTED_MODULE_37__ = __webpack_require__(/*! ./editable/editable.component */ "./src/app/editable/editable.component.ts");
+/* harmony import */ var _node1_problem_formulation_node1_problem_formulation_component__WEBPACK_IMPORTED_MODULE_38__ = __webpack_require__(/*! ./node1-problem-formulation/node1-problem-formulation.component */ "./src/app/node1-problem-formulation/node1-problem-formulation.component.ts");
+/* harmony import */ var _tk_workflow_tk_workflow_component__WEBPACK_IMPORTED_MODULE_39__ = __webpack_require__(/*! ./tk-workflow/tk-workflow.component */ "./src/app/tk-workflow/tk-workflow.component.ts");
+/* harmony import */ var _td_workflow_td_workflow_component__WEBPACK_IMPORTED_MODULE_40__ = __webpack_require__(/*! ./td-workflow/td-workflow.component */ "./src/app/td-workflow/td-workflow.component.ts");
+/* harmony import */ var _tc_characteritzation_tc_characteritzation_component__WEBPACK_IMPORTED_MODULE_41__ = __webpack_require__(/*! ./tc-characteritzation/tc-characteritzation.component */ "./src/app/tc-characteritzation/tc-characteritzation.component.ts");
+/* harmony import */ var _keys_pipe__WEBPACK_IMPORTED_MODULE_42__ = __webpack_require__(/*! ./keys.pipe */ "./src/app/keys.pipe.ts");
+/* harmony import */ var _editable_view_mode_directive__WEBPACK_IMPORTED_MODULE_43__ = __webpack_require__(/*! ./editable/view-mode.directive */ "./src/app/editable/view-mode.directive.ts");
+/* harmony import */ var _editable_edit_mode_directive__WEBPACK_IMPORTED_MODULE_44__ = __webpack_require__(/*! ./editable/edit-mode.directive */ "./src/app/editable/edit-mode.directive.ts");
+/* harmony import */ var _editable_edit_on_enter_directive__WEBPACK_IMPORTED_MODULE_45__ = __webpack_require__(/*! ./editable/edit-on-enter.directive */ "./src/app/editable/edit-on-enter.directive.ts");
+/* harmony import */ var _login_login_service__WEBPACK_IMPORTED_MODULE_46__ = __webpack_require__(/*! ./login/login.service */ "./src/app/login/login.service.ts");
+/* harmony import */ var _tabs_tabs_service__WEBPACK_IMPORTED_MODULE_47__ = __webpack_require__(/*! ./tabs/tabs.service */ "./src/app/tabs/tabs.service.ts");
+/* harmony import */ var _each_workflow_each_workflow_service__WEBPACK_IMPORTED_MODULE_48__ = __webpack_require__(/*! ./each-workflow/each-workflow.service */ "./src/app/each-workflow/each-workflow.service.ts");
+/* harmony import */ var _node1_problem_formulation_node1_problem_formulation_service__WEBPACK_IMPORTED_MODULE_49__ = __webpack_require__(/*! ./node1-problem-formulation/node1-problem-formulation.service */ "./src/app/node1-problem-formulation/node1-problem-formulation.service.ts");
+/* harmony import */ var _node_info_node_info_service__WEBPACK_IMPORTED_MODULE_50__ = __webpack_require__(/*! ./node-info/node-info.service */ "./src/app/node-info/node-info.service.ts");
+/* harmony import */ var ngx_cookie_service__WEBPACK_IMPORTED_MODULE_51__ = __webpack_require__(/*! ngx-cookie-service */ "./node_modules/ngx-cookie-service/ngx-cookie-service.js");
+/* harmony import */ var _tc_characteritzation_tc_characteritzation_service__WEBPACK_IMPORTED_MODULE_52__ = __webpack_require__(/*! ./tc-characteritzation/tc-characteritzation.service */ "./src/app/tc-characteritzation/tc-characteritzation.service.ts");
+
 
 
 
@@ -491,26 +493,26 @@ let AppModule = class AppModule {
 AppModule = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
     Object(_angular_core__WEBPACK_IMPORTED_MODULE_4__["NgModule"])({
         declarations: [
-            _app_component__WEBPACK_IMPORTED_MODULE_27__["AppComponent"],
-            _login_login_component__WEBPACK_IMPORTED_MODULE_25__["LoginComponent"],
-            _main_main_component__WEBPACK_IMPORTED_MODULE_26__["MainComponent"],
-            _navbar_navbar_component__WEBPACK_IMPORTED_MODULE_28__["NavbarComponent"],
-            _sidebar_sidebar_component__WEBPACK_IMPORTED_MODULE_29__["SidebarComponent"],
-            _tabs_tabs_component__WEBPACK_IMPORTED_MODULE_30__["TabsComponent"],
-            _workflows_workflows_component__WEBPACK_IMPORTED_MODULE_31__["WorkflowsComponent"],
-            _each_workflow_each_workflow_component__WEBPACK_IMPORTED_MODULE_32__["EachWorkflowComponent"],
-            _node_info_node_info_component__WEBPACK_IMPORTED_MODULE_35__["NodeInfoComponent"],
-            _editable_editable_component__WEBPACK_IMPORTED_MODULE_36__["EditableComponent"],
-            _editable_view_mode_directive__WEBPACK_IMPORTED_MODULE_42__["ViewModeDirective"],
-            _editable_edit_mode_directive__WEBPACK_IMPORTED_MODULE_43__["EditModeDirective"],
-            _editable_edit_on_enter_directive__WEBPACK_IMPORTED_MODULE_44__["EditableOnEnterDirective"],
-            _keys_pipe__WEBPACK_IMPORTED_MODULE_41__["KeysPipe"],
-            _node1_problem_formulation_node1_problem_formulation_component__WEBPACK_IMPORTED_MODULE_37__["Node1ProblemFormulationComponent"],
-            _welcome_welcome_component__WEBPACK_IMPORTED_MODULE_33__["WelcomeComponent"],
-            _smiles_micromodal_smiles_micromodal_component__WEBPACK_IMPORTED_MODULE_34__["SmilesMicromodalComponent"],
-            _tk_workflow_tk_workflow_component__WEBPACK_IMPORTED_MODULE_38__["TkWorkflowComponent"],
-            _td_workflow_td_workflow_component__WEBPACK_IMPORTED_MODULE_39__["TdWorkflowComponent"],
-            _tc_characteritzation_tc_characteritzation_component__WEBPACK_IMPORTED_MODULE_40__["TcCharacteritzationComponent"],
+            _app_component__WEBPACK_IMPORTED_MODULE_28__["AppComponent"],
+            _login_login_component__WEBPACK_IMPORTED_MODULE_26__["LoginComponent"],
+            _main_main_component__WEBPACK_IMPORTED_MODULE_27__["MainComponent"],
+            _navbar_navbar_component__WEBPACK_IMPORTED_MODULE_29__["NavbarComponent"],
+            _sidebar_sidebar_component__WEBPACK_IMPORTED_MODULE_30__["SidebarComponent"],
+            _tabs_tabs_component__WEBPACK_IMPORTED_MODULE_31__["TabsComponent"],
+            _workflows_workflows_component__WEBPACK_IMPORTED_MODULE_32__["WorkflowsComponent"],
+            _each_workflow_each_workflow_component__WEBPACK_IMPORTED_MODULE_33__["EachWorkflowComponent"],
+            _node_info_node_info_component__WEBPACK_IMPORTED_MODULE_36__["NodeInfoComponent"],
+            _editable_editable_component__WEBPACK_IMPORTED_MODULE_37__["EditableComponent"],
+            _editable_view_mode_directive__WEBPACK_IMPORTED_MODULE_43__["ViewModeDirective"],
+            _editable_edit_mode_directive__WEBPACK_IMPORTED_MODULE_44__["EditModeDirective"],
+            _editable_edit_on_enter_directive__WEBPACK_IMPORTED_MODULE_45__["EditableOnEnterDirective"],
+            _keys_pipe__WEBPACK_IMPORTED_MODULE_42__["KeysPipe"],
+            _node1_problem_formulation_node1_problem_formulation_component__WEBPACK_IMPORTED_MODULE_38__["Node1ProblemFormulationComponent"],
+            _welcome_welcome_component__WEBPACK_IMPORTED_MODULE_34__["WelcomeComponent"],
+            _smiles_micromodal_smiles_micromodal_component__WEBPACK_IMPORTED_MODULE_35__["SmilesMicromodalComponent"],
+            _tk_workflow_tk_workflow_component__WEBPACK_IMPORTED_MODULE_39__["TkWorkflowComponent"],
+            _td_workflow_td_workflow_component__WEBPACK_IMPORTED_MODULE_40__["TdWorkflowComponent"],
+            _tc_characteritzation_tc_characteritzation_component__WEBPACK_IMPORTED_MODULE_41__["TcCharacteritzationComponent"],
         ],
         imports: [
             _angular_platform_browser__WEBPACK_IMPORTED_MODULE_3__["BrowserModule"],
@@ -535,6 +537,7 @@ AppModule = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
             _angular_material_progress_spinner__WEBPACK_IMPORTED_MODULE_14__["MatProgressSpinnerModule"],
             _ckeditor_ckeditor5_angular__WEBPACK_IMPORTED_MODULE_8__["CKEditorModule"],
             _ng_bootstrap_ng_bootstrap__WEBPACK_IMPORTED_MODULE_15__["NgbModalModule"],
+            _angular_cdk_overlay__WEBPACK_IMPORTED_MODULE_24__["OverlayModule"],
             ngx_toastr__WEBPACK_IMPORTED_MODULE_10__["ToastrModule"].forRoot({
                 timeOut: 3000,
                 positionClass: 'toast-top-center',
@@ -542,17 +545,17 @@ AppModule = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
             }) // ToastrModule added
         ],
         providers: [
-            _globals__WEBPACK_IMPORTED_MODULE_24__["Globals"],
-            _login_login_service__WEBPACK_IMPORTED_MODULE_45__["LoginService"],
-            ngx_cookie_service__WEBPACK_IMPORTED_MODULE_50__["CookieService"],
-            _tabs_tabs_service__WEBPACK_IMPORTED_MODULE_46__["TabsService"],
-            _each_workflow_each_workflow_service__WEBPACK_IMPORTED_MODULE_47__["EachWorkflowService"],
-            _node_info_node_info_service__WEBPACK_IMPORTED_MODULE_49__["NodeInfoService"],
-            _node1_problem_formulation_node1_problem_formulation_service__WEBPACK_IMPORTED_MODULE_48__["Node1ProblemFormulationService"],
-            _tc_characteritzation_tc_characteritzation_service__WEBPACK_IMPORTED_MODULE_51__["TcCharacteritzationService"]
+            _globals__WEBPACK_IMPORTED_MODULE_25__["Globals"],
+            _login_login_service__WEBPACK_IMPORTED_MODULE_46__["LoginService"],
+            ngx_cookie_service__WEBPACK_IMPORTED_MODULE_51__["CookieService"],
+            _tabs_tabs_service__WEBPACK_IMPORTED_MODULE_47__["TabsService"],
+            _each_workflow_each_workflow_service__WEBPACK_IMPORTED_MODULE_48__["EachWorkflowService"],
+            _node_info_node_info_service__WEBPACK_IMPORTED_MODULE_50__["NodeInfoService"],
+            _node1_problem_formulation_node1_problem_formulation_service__WEBPACK_IMPORTED_MODULE_49__["Node1ProblemFormulationService"],
+            _tc_characteritzation_tc_characteritzation_service__WEBPACK_IMPORTED_MODULE_52__["TcCharacteritzationService"]
         ],
-        entryComponents: [_node_info_node_info_component__WEBPACK_IMPORTED_MODULE_35__["NodeInfoComponent"]],
-        bootstrap: [_app_component__WEBPACK_IMPORTED_MODULE_27__["AppComponent"]]
+        entryComponents: [_node_info_node_info_component__WEBPACK_IMPORTED_MODULE_36__["NodeInfoComponent"]],
+        bootstrap: [_app_component__WEBPACK_IMPORTED_MODULE_28__["AppComponent"]]
     })
 ], AppModule);
 
@@ -598,6 +601,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var css_element_queries__WEBPACK_IMPORTED_MODULE_12___default = /*#__PURE__*/__webpack_require__.n(css_element_queries__WEBPACK_IMPORTED_MODULE_12__);
 
 
+/* @import '~@angular/cdk/overlay-prebuilt.css';*/ /*uncomment if @angular/material is not used */
 
 
 
