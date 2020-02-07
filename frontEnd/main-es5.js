@@ -115,7 +115,7 @@ module.exports = "\n<router-outlet></router-outlet>\n"
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "\n<div class=\"limit\">\n    <div class=\"row p-5 justify-content-center\">\n        <div class=\"card node {{projectName}}\" [ngClass]=\"{'checked':this.checked.node1}\" id=\"{{projectName}}_id_1\"    (click)=\"nodeInfo_selected(projectName,1)\">\n            <div class=\"card-body\">\n                1.Problem formulation\n            </div>\n        </div>\n    </div>\n    <div class=\"row m-5 justify-content-center\">\n        <div class=\"card parent\"   >\n            <div class=\"card-body\">\n                <div class=\"card node m-5 {{projectName}}\" [ngClass]=\"{'checked':this.checked.node2}\" id=\"{{projectName}}_id_2\" (click)=\"nodeInfo_selected(projectName,2)\">\n                    <div class=\"card-body\">\n                    2.TC Characterization\n                    </div>\n                </div>\n                <div class=\"card node m-5 {{projectName}}\" [ngClass]=\"{'checked':this.checked.node3}\" id=\"{{projectName}}_id_3\" (click)=\"nodeInfo_selected(projectName,3)\">\n                    <div class=\"card-body\">\n                    Metabolism data gathering\n                    </div>\n                </div>\n                <div class=\"card node m-5 {{projectName}}\" [ngClass]=\"{'checked':this.checked.node4}\" id=\"{{projectName}}_id_4\" (click)=\"nodeInfo_selected(projectName,4)\">\n                    <div class=\"card-body\">\n                    Initial RAX hypothesis\n                    </div>\n                </div>\n                <div id=\"nam_title\" class=\"row m-1\" style=\"margin-right:0px;\">\n                    <div style=\"padding-right:0px;\" class=\"col text-right\" >Initial RAx hypothesis</div>\n                </div>\n            </div>\n        </div>\n    </div>\n    <div class=\"row m-5 justify-content-center\">\n        <div class=\"card node {{projectName}}\"  [ngClass]=\"{'checked':this.checked.node5}\" id=\"{{projectName}}_id_5\"    (click)=\"nodeInfo_selected(projectName,5)\">\n            <div class=\"card-body\">\n                3.SCs identification\n            </div>\n        </div>\n    </div>\n    <div class=\"row m-5 justify-content-center\">\n        <div class=\"card node {{projectName}}\"  [ngClass]=\"{'checked':this.checked.node6}\" id=\"{{projectName}}_id_6\"    (click)=\"nodeInfo_selected(projectName,6)\">\n            <div class=\"card-body\">\n                4.SCs evaluation\n            </div>\n        </div>\n    </div>\n    <div class=\"row m-5 justify-content-center\">\n        <div class=\"card node {{projectName}}\"  [ngClass]=\"{'checked':this.checked.node7}\" id=\"{{projectName}}_id_7\"    (click)=\"nodeInfo_selected(projectName,7)\">\n            <div class=\"card-body\">\n                Overarching RAX hypothesis\n            </div>\n        </div>\n    </div>\n    <div class=\"row m-5 justify-content-center\">\n        <div class=\"card parent2\"   >\n            <div class=\"card-body\">\n                <div id=\"nam_title\" class=\"row m-1\" style=\"color:rgb(245,245,245);margin-right:0px;\">\n                    <div class=\"col text-right\" >NAM based knowledge</div>\n                </div>\n                <div class=\"row\" style=\"margin-left:0px;margin-right:0px;\">\n                    <div class=\"card node m-5 {{projectName}}\" [ngClass]=\"{'checked':this.checked.node8}\"  id=\"{{projectName}}_id_8\"   (click)=\"nodeInfo_selected(projectName,8)\">\n                        <div style=\"padding-left:3rem;padding-right:3rem;\" class=\"card-body\">\n                        NAM testing and evaluation (in vitro & in silico)\n                        </div>\n                    </div>\n                </div>\n                <div class=\"row m-5\" style=\"margin-left:0px;margin-right:0px;\"> \n                    <div style=\"box-sizing:content-box\" class=\"col card node {{projectName}} text-center\" [ngClass]=\"{'checked':this.checked.node9}\" id=\"{{projectName}}_id_9\"   (click)=\"openTK()\">\n                        <div class=\"card-body\">\n                        TK\n                        </div>\n                    </div>\n                    <div class=\"col\"></div>\n                    <div style=\"box-sizing:content-box\" class=\"col card node {{projectName}} justify-content-end text-center\" [ngClass]=\"{'checked':this.checked.node10}\" id=\"{{projectName}}_id_10\"   (click)=\"openTD()\">\n                        <div class=\"card-body\">\n                        TD\n                        </div>\n                    </div>\n                </div>\n            </div>\n        </div>\n    </div>\n    <div class=\"row m-5 justify-content-center\">\n        <div class=\"card node {{projectName}}\" style=\"box-sizing:content-box\"  [ngClass]=\"{'checked':this.checked.node11}\" id=\"{{projectName}}_id_11\"    (click)=\"nodeInfo_selected(projectName,11)\">\n            <div class=\"card-body\">\n                5.Uncertainty assessment\n            </div>\n        </div>\n    </div>\n    <div class=\"row m-5 justify-content-center\">\n        <div class=\"card node {{projectName}}\"  [ngClass]=\"{'checked':this.checked.node12}\" id=\"{{projectName}}_id_12\"    (click)=\"nodeInfo_selected(projectName,12)\">\n            <div class=\"card-body\">\n                6.Data gap filling\n            </div>\n        </div>\n    </div>\n</div>\n\n"
+module.exports = "\n<div class=\"limit\">\n    <div class=\"row p-5 justify-content-center\">\n        <div class=\"card node {{projectName}}\" [ngClass]=\"{'checked':this.checked.node1}\" id=\"{{projectName}}_id_1\"    (click)=\"nodeInfo_selected(projectName,1)\">\n            <div class=\"card-body\">\n                1.Problem formulation\n            </div>\n        </div>\n    </div>\n    <div class=\"row m-5 justify-content-center\">\n        <div class=\"card parent\"   >\n            <div class=\"card-body\">\n                <div class=\"card node m-5 {{projectName}}\" [ngClass]=\"{'checked':this.checked.node2}\" id=\"{{projectName}}_id_2\" (click)=\"nodeInfo_selected(projectName,2)\">\n                    <div class=\"card-body\">\n                    2.TC Characterization\n                    </div>\n                </div>\n                <div class=\"card node m-5 {{projectName}}\" [ngClass]=\"{'checked':this.checked.node3}\" id=\"{{projectName}}_id_3\" (click)=\"nodeInfo_selected(projectName,3)\">\n                    <div class=\"card-body\">\n                    Metabolism data gathering\n                    </div>\n                </div>\n                <div class=\"card node m-5 {{projectName}}\" [ngClass]=\"{'checked':this.checked.node4}\" id=\"{{projectName}}_id_4\" (click)=\"nodeInfo_selected(projectName,4)\">\n                    <div class=\"card-body\">\n                    Initial RAX hypothesis\n                    </div>\n                </div>\n                <div id=\"nam_title\" class=\"row m-1\" style=\"margin-right:0px;\">\n                    <div style=\"padding-right:0px;\" class=\"col text-right\" >TC Characteritzation</div>\n                </div>\n            </div>\n        </div>\n    </div>\n    <div class=\"row m-5 justify-content-center\">\n        <div class=\"card node {{projectName}}\"  [ngClass]=\"{'checked':this.checked.node5}\" id=\"{{projectName}}_id_5\"    (click)=\"nodeInfo_selected(projectName,5)\">\n            <div class=\"card-body\">\n                3.SCs identification\n            </div>\n        </div>\n    </div>\n    <div class=\"row m-5 justify-content-center\">\n        <div class=\"card node {{projectName}}\"  [ngClass]=\"{'checked':this.checked.node6}\" id=\"{{projectName}}_id_6\"    (click)=\"nodeInfo_selected(projectName,6)\">\n            <div class=\"card-body\">\n                4.SCs evaluation\n            </div>\n        </div>\n    </div>\n    <div class=\"row m-5 justify-content-center\">\n        <div class=\"card node {{projectName}}\"  [ngClass]=\"{'checked':this.checked.node7}\" id=\"{{projectName}}_id_7\"    (click)=\"nodeInfo_selected(projectName,7)\">\n            <div class=\"card-body\">\n                Overarching RAX hypothesis\n            </div>\n        </div>\n    </div>\n    <div class=\"row m-5 justify-content-center\">\n        <div class=\"card parent2\"   >\n            <div class=\"card-body\">\n                <div id=\"nam_title\" class=\"row m-1\" style=\"color:rgb(245,245,245);margin-right:0px;\">\n                    <div class=\"col text-right\" >NAM based knowledge</div>\n                </div>\n                <div class=\"row\" style=\"margin-left:0px;margin-right:0px;\">\n                    <div class=\"card node m-5 {{projectName}}\" [ngClass]=\"{'checked':this.checked.node8}\"  id=\"{{projectName}}_id_8\"   (click)=\"nodeInfo_selected(projectName,8)\">\n                        <div style=\"padding-left:3rem;padding-right:3rem;\" class=\"card-body\">\n                        NAM testing and evaluation (in vitro & in silico)\n                        </div>\n                    </div>\n                </div>\n                <div class=\"row m-5\" style=\"margin-left:0px;margin-right:0px;\"> \n                    <div style=\"box-sizing:content-box\" class=\"col card node {{projectName}} text-center\" [ngClass]=\"{'checked':this.checked.node9}\" id=\"{{projectName}}_id_9\"   (click)=\"openTK()\">\n                        <div class=\"card-body\">\n                        TK\n                        </div>\n                    </div>\n                    <div class=\"col\"></div>\n                    <div style=\"box-sizing:content-box\" class=\"col card node {{projectName}} justify-content-end text-center\" [ngClass]=\"{'checked':this.checked.node10}\" id=\"{{projectName}}_id_10\"   (click)=\"openTD()\">\n                        <div class=\"card-body\">\n                        TD\n                        </div>\n                    </div>\n                </div>\n            </div>\n        </div>\n    </div>\n    <div class=\"row m-5 justify-content-center\">\n        <div class=\"card node {{projectName}}\" style=\"box-sizing:content-box\"  [ngClass]=\"{'checked':this.checked.node11}\" id=\"{{projectName}}_id_11\"    (click)=\"nodeInfo_selected(projectName,11)\">\n            <div class=\"card-body\">\n                5.Uncertainty assessment\n            </div>\n        </div>\n    </div>\n    <div class=\"row m-5 justify-content-center\">\n        <div class=\"card node {{projectName}}\"  [ngClass]=\"{'checked':this.checked.node12}\" id=\"{{projectName}}_id_12\"    (click)=\"nodeInfo_selected(projectName,12)\">\n            <div class=\"card-body\">\n                6.Data gap filling\n            </div>\n        </div>\n    </div>\n</div>\n\n"
 
 /***/ }),
 
@@ -410,36 +410,34 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_material_dialog__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! @angular/material/dialog */ "./node_modules/@angular/material/esm5/dialog.es5.js");
 /* harmony import */ var _angular_material_card__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! @angular/material/card */ "./node_modules/@angular/material/esm5/card.es5.js");
 /* harmony import */ var _angular_material_checkbox__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! @angular/material/checkbox */ "./node_modules/@angular/material/esm5/checkbox.es5.js");
-/* harmony import */ var _angular_cdk_overlay__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! @angular/cdk/overlay */ "./node_modules/@angular/cdk/esm5/overlay.es5.js");
-/* harmony import */ var _globals__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! ./globals */ "./src/app/globals.ts");
-/* harmony import */ var _login_login_component__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! ./login/login.component */ "./src/app/login/login.component.ts");
-/* harmony import */ var _main_main_component__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! ./main/main.component */ "./src/app/main/main.component.ts");
-/* harmony import */ var _app_component__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(/*! ./app.component */ "./src/app/app.component.ts");
-/* harmony import */ var _navbar_navbar_component__WEBPACK_IMPORTED_MODULE_29__ = __webpack_require__(/*! ./navbar/navbar.component */ "./src/app/navbar/navbar.component.ts");
-/* harmony import */ var _sidebar_sidebar_component__WEBPACK_IMPORTED_MODULE_30__ = __webpack_require__(/*! ./sidebar/sidebar.component */ "./src/app/sidebar/sidebar.component.ts");
-/* harmony import */ var _tabs_tabs_component__WEBPACK_IMPORTED_MODULE_31__ = __webpack_require__(/*! ./tabs/tabs.component */ "./src/app/tabs/tabs.component.ts");
-/* harmony import */ var _workflows_workflows_component__WEBPACK_IMPORTED_MODULE_32__ = __webpack_require__(/*! ./workflows/workflows.component */ "./src/app/workflows/workflows.component.ts");
-/* harmony import */ var _each_workflow_each_workflow_component__WEBPACK_IMPORTED_MODULE_33__ = __webpack_require__(/*! ./each-workflow/each-workflow.component */ "./src/app/each-workflow/each-workflow.component.ts");
-/* harmony import */ var _welcome_welcome_component__WEBPACK_IMPORTED_MODULE_34__ = __webpack_require__(/*! ./welcome/welcome.component */ "./src/app/welcome/welcome.component.ts");
-/* harmony import */ var _smiles_micromodal_smiles_micromodal_component__WEBPACK_IMPORTED_MODULE_35__ = __webpack_require__(/*! ./smiles-micromodal/smiles-micromodal.component */ "./src/app/smiles-micromodal/smiles-micromodal.component.ts");
-/* harmony import */ var _node_info_node_info_component__WEBPACK_IMPORTED_MODULE_36__ = __webpack_require__(/*! ./node-info/node-info.component */ "./src/app/node-info/node-info.component.ts");
-/* harmony import */ var _editable_editable_component__WEBPACK_IMPORTED_MODULE_37__ = __webpack_require__(/*! ./editable/editable.component */ "./src/app/editable/editable.component.ts");
-/* harmony import */ var _node1_problem_formulation_node1_problem_formulation_component__WEBPACK_IMPORTED_MODULE_38__ = __webpack_require__(/*! ./node1-problem-formulation/node1-problem-formulation.component */ "./src/app/node1-problem-formulation/node1-problem-formulation.component.ts");
-/* harmony import */ var _tk_workflow_tk_workflow_component__WEBPACK_IMPORTED_MODULE_39__ = __webpack_require__(/*! ./tk-workflow/tk-workflow.component */ "./src/app/tk-workflow/tk-workflow.component.ts");
-/* harmony import */ var _td_workflow_td_workflow_component__WEBPACK_IMPORTED_MODULE_40__ = __webpack_require__(/*! ./td-workflow/td-workflow.component */ "./src/app/td-workflow/td-workflow.component.ts");
-/* harmony import */ var _tc_characteritzation_tc_characteritzation_component__WEBPACK_IMPORTED_MODULE_41__ = __webpack_require__(/*! ./tc-characteritzation/tc-characteritzation.component */ "./src/app/tc-characteritzation/tc-characteritzation.component.ts");
-/* harmony import */ var _keys_pipe__WEBPACK_IMPORTED_MODULE_42__ = __webpack_require__(/*! ./keys.pipe */ "./src/app/keys.pipe.ts");
-/* harmony import */ var _editable_view_mode_directive__WEBPACK_IMPORTED_MODULE_43__ = __webpack_require__(/*! ./editable/view-mode.directive */ "./src/app/editable/view-mode.directive.ts");
-/* harmony import */ var _editable_edit_mode_directive__WEBPACK_IMPORTED_MODULE_44__ = __webpack_require__(/*! ./editable/edit-mode.directive */ "./src/app/editable/edit-mode.directive.ts");
-/* harmony import */ var _editable_edit_on_enter_directive__WEBPACK_IMPORTED_MODULE_45__ = __webpack_require__(/*! ./editable/edit-on-enter.directive */ "./src/app/editable/edit-on-enter.directive.ts");
-/* harmony import */ var _login_login_service__WEBPACK_IMPORTED_MODULE_46__ = __webpack_require__(/*! ./login/login.service */ "./src/app/login/login.service.ts");
-/* harmony import */ var _tabs_tabs_service__WEBPACK_IMPORTED_MODULE_47__ = __webpack_require__(/*! ./tabs/tabs.service */ "./src/app/tabs/tabs.service.ts");
-/* harmony import */ var _each_workflow_each_workflow_service__WEBPACK_IMPORTED_MODULE_48__ = __webpack_require__(/*! ./each-workflow/each-workflow.service */ "./src/app/each-workflow/each-workflow.service.ts");
-/* harmony import */ var _node1_problem_formulation_node1_problem_formulation_service__WEBPACK_IMPORTED_MODULE_49__ = __webpack_require__(/*! ./node1-problem-formulation/node1-problem-formulation.service */ "./src/app/node1-problem-formulation/node1-problem-formulation.service.ts");
-/* harmony import */ var _node_info_node_info_service__WEBPACK_IMPORTED_MODULE_50__ = __webpack_require__(/*! ./node-info/node-info.service */ "./src/app/node-info/node-info.service.ts");
-/* harmony import */ var ngx_cookie_service__WEBPACK_IMPORTED_MODULE_51__ = __webpack_require__(/*! ngx-cookie-service */ "./node_modules/ngx-cookie-service/ngx-cookie-service.es5.js");
-/* harmony import */ var _tc_characteritzation_tc_characteritzation_service__WEBPACK_IMPORTED_MODULE_52__ = __webpack_require__(/*! ./tc-characteritzation/tc-characteritzation.service */ "./src/app/tc-characteritzation/tc-characteritzation.service.ts");
-
+/* harmony import */ var _globals__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! ./globals */ "./src/app/globals.ts");
+/* harmony import */ var _login_login_component__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! ./login/login.component */ "./src/app/login/login.component.ts");
+/* harmony import */ var _main_main_component__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! ./main/main.component */ "./src/app/main/main.component.ts");
+/* harmony import */ var _app_component__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! ./app.component */ "./src/app/app.component.ts");
+/* harmony import */ var _navbar_navbar_component__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(/*! ./navbar/navbar.component */ "./src/app/navbar/navbar.component.ts");
+/* harmony import */ var _sidebar_sidebar_component__WEBPACK_IMPORTED_MODULE_29__ = __webpack_require__(/*! ./sidebar/sidebar.component */ "./src/app/sidebar/sidebar.component.ts");
+/* harmony import */ var _tabs_tabs_component__WEBPACK_IMPORTED_MODULE_30__ = __webpack_require__(/*! ./tabs/tabs.component */ "./src/app/tabs/tabs.component.ts");
+/* harmony import */ var _workflows_workflows_component__WEBPACK_IMPORTED_MODULE_31__ = __webpack_require__(/*! ./workflows/workflows.component */ "./src/app/workflows/workflows.component.ts");
+/* harmony import */ var _each_workflow_each_workflow_component__WEBPACK_IMPORTED_MODULE_32__ = __webpack_require__(/*! ./each-workflow/each-workflow.component */ "./src/app/each-workflow/each-workflow.component.ts");
+/* harmony import */ var _welcome_welcome_component__WEBPACK_IMPORTED_MODULE_33__ = __webpack_require__(/*! ./welcome/welcome.component */ "./src/app/welcome/welcome.component.ts");
+/* harmony import */ var _smiles_micromodal_smiles_micromodal_component__WEBPACK_IMPORTED_MODULE_34__ = __webpack_require__(/*! ./smiles-micromodal/smiles-micromodal.component */ "./src/app/smiles-micromodal/smiles-micromodal.component.ts");
+/* harmony import */ var _node_info_node_info_component__WEBPACK_IMPORTED_MODULE_35__ = __webpack_require__(/*! ./node-info/node-info.component */ "./src/app/node-info/node-info.component.ts");
+/* harmony import */ var _editable_editable_component__WEBPACK_IMPORTED_MODULE_36__ = __webpack_require__(/*! ./editable/editable.component */ "./src/app/editable/editable.component.ts");
+/* harmony import */ var _node1_problem_formulation_node1_problem_formulation_component__WEBPACK_IMPORTED_MODULE_37__ = __webpack_require__(/*! ./node1-problem-formulation/node1-problem-formulation.component */ "./src/app/node1-problem-formulation/node1-problem-formulation.component.ts");
+/* harmony import */ var _tk_workflow_tk_workflow_component__WEBPACK_IMPORTED_MODULE_38__ = __webpack_require__(/*! ./tk-workflow/tk-workflow.component */ "./src/app/tk-workflow/tk-workflow.component.ts");
+/* harmony import */ var _td_workflow_td_workflow_component__WEBPACK_IMPORTED_MODULE_39__ = __webpack_require__(/*! ./td-workflow/td-workflow.component */ "./src/app/td-workflow/td-workflow.component.ts");
+/* harmony import */ var _tc_characteritzation_tc_characteritzation_component__WEBPACK_IMPORTED_MODULE_40__ = __webpack_require__(/*! ./tc-characteritzation/tc-characteritzation.component */ "./src/app/tc-characteritzation/tc-characteritzation.component.ts");
+/* harmony import */ var _keys_pipe__WEBPACK_IMPORTED_MODULE_41__ = __webpack_require__(/*! ./keys.pipe */ "./src/app/keys.pipe.ts");
+/* harmony import */ var _editable_view_mode_directive__WEBPACK_IMPORTED_MODULE_42__ = __webpack_require__(/*! ./editable/view-mode.directive */ "./src/app/editable/view-mode.directive.ts");
+/* harmony import */ var _editable_edit_mode_directive__WEBPACK_IMPORTED_MODULE_43__ = __webpack_require__(/*! ./editable/edit-mode.directive */ "./src/app/editable/edit-mode.directive.ts");
+/* harmony import */ var _editable_edit_on_enter_directive__WEBPACK_IMPORTED_MODULE_44__ = __webpack_require__(/*! ./editable/edit-on-enter.directive */ "./src/app/editable/edit-on-enter.directive.ts");
+/* harmony import */ var _login_login_service__WEBPACK_IMPORTED_MODULE_45__ = __webpack_require__(/*! ./login/login.service */ "./src/app/login/login.service.ts");
+/* harmony import */ var _tabs_tabs_service__WEBPACK_IMPORTED_MODULE_46__ = __webpack_require__(/*! ./tabs/tabs.service */ "./src/app/tabs/tabs.service.ts");
+/* harmony import */ var _each_workflow_each_workflow_service__WEBPACK_IMPORTED_MODULE_47__ = __webpack_require__(/*! ./each-workflow/each-workflow.service */ "./src/app/each-workflow/each-workflow.service.ts");
+/* harmony import */ var _node1_problem_formulation_node1_problem_formulation_service__WEBPACK_IMPORTED_MODULE_48__ = __webpack_require__(/*! ./node1-problem-formulation/node1-problem-formulation.service */ "./src/app/node1-problem-formulation/node1-problem-formulation.service.ts");
+/* harmony import */ var _node_info_node_info_service__WEBPACK_IMPORTED_MODULE_49__ = __webpack_require__(/*! ./node-info/node-info.service */ "./src/app/node-info/node-info.service.ts");
+/* harmony import */ var ngx_cookie_service__WEBPACK_IMPORTED_MODULE_50__ = __webpack_require__(/*! ngx-cookie-service */ "./node_modules/ngx-cookie-service/ngx-cookie-service.es5.js");
+/* harmony import */ var _tc_characteritzation_tc_characteritzation_service__WEBPACK_IMPORTED_MODULE_51__ = __webpack_require__(/*! ./tc-characteritzation/tc-characteritzation.service */ "./src/app/tc-characteritzation/tc-characteritzation.service.ts");
 
 
 
@@ -498,26 +496,26 @@ var AppModule = /** @class */ (function () {
     AppModule = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_4__["NgModule"])({
             declarations: [
-                _app_component__WEBPACK_IMPORTED_MODULE_28__["AppComponent"],
-                _login_login_component__WEBPACK_IMPORTED_MODULE_26__["LoginComponent"],
-                _main_main_component__WEBPACK_IMPORTED_MODULE_27__["MainComponent"],
-                _navbar_navbar_component__WEBPACK_IMPORTED_MODULE_29__["NavbarComponent"],
-                _sidebar_sidebar_component__WEBPACK_IMPORTED_MODULE_30__["SidebarComponent"],
-                _tabs_tabs_component__WEBPACK_IMPORTED_MODULE_31__["TabsComponent"],
-                _workflows_workflows_component__WEBPACK_IMPORTED_MODULE_32__["WorkflowsComponent"],
-                _each_workflow_each_workflow_component__WEBPACK_IMPORTED_MODULE_33__["EachWorkflowComponent"],
-                _node_info_node_info_component__WEBPACK_IMPORTED_MODULE_36__["NodeInfoComponent"],
-                _editable_editable_component__WEBPACK_IMPORTED_MODULE_37__["EditableComponent"],
-                _editable_view_mode_directive__WEBPACK_IMPORTED_MODULE_43__["ViewModeDirective"],
-                _editable_edit_mode_directive__WEBPACK_IMPORTED_MODULE_44__["EditModeDirective"],
-                _editable_edit_on_enter_directive__WEBPACK_IMPORTED_MODULE_45__["EditableOnEnterDirective"],
-                _keys_pipe__WEBPACK_IMPORTED_MODULE_42__["KeysPipe"],
-                _node1_problem_formulation_node1_problem_formulation_component__WEBPACK_IMPORTED_MODULE_38__["Node1ProblemFormulationComponent"],
-                _welcome_welcome_component__WEBPACK_IMPORTED_MODULE_34__["WelcomeComponent"],
-                _smiles_micromodal_smiles_micromodal_component__WEBPACK_IMPORTED_MODULE_35__["SmilesMicromodalComponent"],
-                _tk_workflow_tk_workflow_component__WEBPACK_IMPORTED_MODULE_39__["TkWorkflowComponent"],
-                _td_workflow_td_workflow_component__WEBPACK_IMPORTED_MODULE_40__["TdWorkflowComponent"],
-                _tc_characteritzation_tc_characteritzation_component__WEBPACK_IMPORTED_MODULE_41__["TcCharacteritzationComponent"],
+                _app_component__WEBPACK_IMPORTED_MODULE_27__["AppComponent"],
+                _login_login_component__WEBPACK_IMPORTED_MODULE_25__["LoginComponent"],
+                _main_main_component__WEBPACK_IMPORTED_MODULE_26__["MainComponent"],
+                _navbar_navbar_component__WEBPACK_IMPORTED_MODULE_28__["NavbarComponent"],
+                _sidebar_sidebar_component__WEBPACK_IMPORTED_MODULE_29__["SidebarComponent"],
+                _tabs_tabs_component__WEBPACK_IMPORTED_MODULE_30__["TabsComponent"],
+                _workflows_workflows_component__WEBPACK_IMPORTED_MODULE_31__["WorkflowsComponent"],
+                _each_workflow_each_workflow_component__WEBPACK_IMPORTED_MODULE_32__["EachWorkflowComponent"],
+                _node_info_node_info_component__WEBPACK_IMPORTED_MODULE_35__["NodeInfoComponent"],
+                _editable_editable_component__WEBPACK_IMPORTED_MODULE_36__["EditableComponent"],
+                _editable_view_mode_directive__WEBPACK_IMPORTED_MODULE_42__["ViewModeDirective"],
+                _editable_edit_mode_directive__WEBPACK_IMPORTED_MODULE_43__["EditModeDirective"],
+                _editable_edit_on_enter_directive__WEBPACK_IMPORTED_MODULE_44__["EditableOnEnterDirective"],
+                _keys_pipe__WEBPACK_IMPORTED_MODULE_41__["KeysPipe"],
+                _node1_problem_formulation_node1_problem_formulation_component__WEBPACK_IMPORTED_MODULE_37__["Node1ProblemFormulationComponent"],
+                _welcome_welcome_component__WEBPACK_IMPORTED_MODULE_33__["WelcomeComponent"],
+                _smiles_micromodal_smiles_micromodal_component__WEBPACK_IMPORTED_MODULE_34__["SmilesMicromodalComponent"],
+                _tk_workflow_tk_workflow_component__WEBPACK_IMPORTED_MODULE_38__["TkWorkflowComponent"],
+                _td_workflow_td_workflow_component__WEBPACK_IMPORTED_MODULE_39__["TdWorkflowComponent"],
+                _tc_characteritzation_tc_characteritzation_component__WEBPACK_IMPORTED_MODULE_40__["TcCharacteritzationComponent"],
             ],
             imports: [
                 _angular_platform_browser__WEBPACK_IMPORTED_MODULE_3__["BrowserModule"],
@@ -542,7 +540,6 @@ var AppModule = /** @class */ (function () {
                 _angular_material_progress_spinner__WEBPACK_IMPORTED_MODULE_14__["MatProgressSpinnerModule"],
                 _ckeditor_ckeditor5_angular__WEBPACK_IMPORTED_MODULE_8__["CKEditorModule"],
                 _ng_bootstrap_ng_bootstrap__WEBPACK_IMPORTED_MODULE_15__["NgbModalModule"],
-                _angular_cdk_overlay__WEBPACK_IMPORTED_MODULE_24__["OverlayModule"],
                 ngx_toastr__WEBPACK_IMPORTED_MODULE_10__["ToastrModule"].forRoot({
                     timeOut: 3000,
                     positionClass: 'toast-top-center',
@@ -550,17 +547,17 @@ var AppModule = /** @class */ (function () {
                 }) // ToastrModule added
             ],
             providers: [
-                _globals__WEBPACK_IMPORTED_MODULE_25__["Globals"],
-                _login_login_service__WEBPACK_IMPORTED_MODULE_46__["LoginService"],
-                ngx_cookie_service__WEBPACK_IMPORTED_MODULE_51__["CookieService"],
-                _tabs_tabs_service__WEBPACK_IMPORTED_MODULE_47__["TabsService"],
-                _each_workflow_each_workflow_service__WEBPACK_IMPORTED_MODULE_48__["EachWorkflowService"],
-                _node_info_node_info_service__WEBPACK_IMPORTED_MODULE_50__["NodeInfoService"],
-                _node1_problem_formulation_node1_problem_formulation_service__WEBPACK_IMPORTED_MODULE_49__["Node1ProblemFormulationService"],
-                _tc_characteritzation_tc_characteritzation_service__WEBPACK_IMPORTED_MODULE_52__["TcCharacteritzationService"]
+                _globals__WEBPACK_IMPORTED_MODULE_24__["Globals"],
+                _login_login_service__WEBPACK_IMPORTED_MODULE_45__["LoginService"],
+                ngx_cookie_service__WEBPACK_IMPORTED_MODULE_50__["CookieService"],
+                _tabs_tabs_service__WEBPACK_IMPORTED_MODULE_46__["TabsService"],
+                _each_workflow_each_workflow_service__WEBPACK_IMPORTED_MODULE_47__["EachWorkflowService"],
+                _node_info_node_info_service__WEBPACK_IMPORTED_MODULE_49__["NodeInfoService"],
+                _node1_problem_formulation_node1_problem_formulation_service__WEBPACK_IMPORTED_MODULE_48__["Node1ProblemFormulationService"],
+                _tc_characteritzation_tc_characteritzation_service__WEBPACK_IMPORTED_MODULE_51__["TcCharacteritzationService"]
             ],
-            entryComponents: [_node_info_node_info_component__WEBPACK_IMPORTED_MODULE_36__["NodeInfoComponent"]],
-            bootstrap: [_app_component__WEBPACK_IMPORTED_MODULE_28__["AppComponent"]]
+            entryComponents: [_node_info_node_info_component__WEBPACK_IMPORTED_MODULE_35__["NodeInfoComponent"]],
+            bootstrap: [_app_component__WEBPACK_IMPORTED_MODULE_27__["AppComponent"]]
         })
     ], AppModule);
     return AppModule;
@@ -608,7 +605,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var css_element_queries__WEBPACK_IMPORTED_MODULE_12___default = /*#__PURE__*/__webpack_require__.n(css_element_queries__WEBPACK_IMPORTED_MODULE_12__);
 
 
-/* @import '~@angular/cdk/overlay-prebuilt.css';*/ /*uncomment if @angular/material is not used */
 
 
 
@@ -1766,7 +1762,7 @@ var NodeInfoComponent = /** @class */ (function () {
         this.inline_input = false;
         this.inline_output = false;
         this.show_inline = false;
-        this.smiles_drawer_size = 100;
+        this.smiles_drawer_size = 150;
         this.environment = _environments_environment__WEBPACK_IMPORTED_MODULE_7__["environment"];
         this.micromodal = micromodal__WEBPACK_IMPORTED_MODULE_8__["default"];
         this.part = 0;
