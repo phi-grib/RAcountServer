@@ -115,7 +115,7 @@ module.exports = "\n<router-outlet></router-outlet>\n"
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "\n<div class=\"limit\">\n    <div class=\"row p-5 justify-content-center\">\n        <div class=\"card node {{projectName}}\" [ngClass]=\"{'checked':this.checked.node1}\" id=\"{{projectName}}_id_1\"    (click)=\"nodeInfo_selected(projectName,1)\">\n            <div class=\"card-body\">\n                1.Problem formulation\n            </div>\n        </div>\n    </div>\n    <div class=\"row m-5 justify-content-center\">\n        <div class=\"card parent\"   >\n            <div class=\"card-body\">\n                <div class=\"card node m-5 {{projectName}}\" [ngClass]=\"{'checked':this.checked.node2}\" id=\"{{projectName}}_id_2\" (click)=\"nodeInfo_selected(projectName,2)\">\n                    <div class=\"card-body\">\n                    2.TC Characterization\n                    </div>\n                </div>\n                <div class=\"card node m-5 {{projectName}}\" [ngClass]=\"{'checked':this.checked.node3}\" id=\"{{projectName}}_id_3\" (click)=\"nodeInfo_selected(projectName,3)\">\n                    <div class=\"card-body\">\n                    Metabolism data gathering\n                    </div>\n                </div>\n                <div class=\"card node m-5 {{projectName}}\" [ngClass]=\"{'checked':this.checked.node4}\" id=\"{{projectName}}_id_4\" (click)=\"nodeInfo_selected(projectName,4)\">\n                    <div class=\"card-body\">\n                    Initial RAX hypothesis\n                    </div>\n                </div>\n                <div id=\"nam_title\" class=\"row m-1\" style=\"margin-right:0px;\">\n                    <div style=\"padding-right:0px;\" class=\"col text-right\" >TC Characteritzation</div>\n                </div>\n            </div>\n        </div>\n    </div>\n    <div class=\"row m-5 justify-content-center\">\n        <div class=\"card node {{projectName}}\"  [ngClass]=\"{'checked':this.checked.node5}\" id=\"{{projectName}}_id_5\"    (click)=\"nodeInfo_selected(projectName,5)\">\n            <div class=\"card-body\">\n                3.SCs identification\n            </div>\n        </div>\n    </div>\n    <div class=\"row m-5 justify-content-center\">\n        <div class=\"card node {{projectName}}\"  [ngClass]=\"{'checked':this.checked.node6}\" id=\"{{projectName}}_id_6\"    (click)=\"nodeInfo_selected(projectName,6)\">\n            <div class=\"card-body\">\n                4.SCs evaluation\n            </div>\n        </div>\n    </div>\n    <div class=\"row m-5 justify-content-center\">\n        <div class=\"card node {{projectName}}\"  [ngClass]=\"{'checked':this.checked.node7}\" id=\"{{projectName}}_id_7\"    (click)=\"nodeInfo_selected(projectName,7)\">\n            <div class=\"card-body\">\n                Overarching RAX hypothesis\n            </div>\n        </div>\n    </div>\n    <div class=\"row m-5 justify-content-center\">\n        <div class=\"card parent2\"   >\n            <div class=\"card-body\">\n                <div id=\"nam_title\" class=\"row m-1\" style=\"color:rgb(245,245,245);margin-right:0px;\">\n                    <div class=\"col text-right\" >NAM based knowledge</div>\n                </div>\n                <div class=\"row\" style=\"margin-left:0px;margin-right:0px;\">\n                    <div class=\"card node m-5 {{projectName}}\" [ngClass]=\"{'checked':this.checked.node8}\"  id=\"{{projectName}}_id_8\"   (click)=\"nodeInfo_selected(projectName,8)\">\n                        <div style=\"padding-left:3rem;padding-right:3rem;\" class=\"card-body\">\n                        NAM testing and evaluation (in vitro & in silico)\n                        </div>\n                    </div>\n                </div>\n                <div class=\"row m-5\" style=\"margin-left:0px;margin-right:0px;\"> \n                    <div style=\"box-sizing:content-box\" class=\"col card node {{projectName}} text-center\" [ngClass]=\"{'checked':this.checked.node9}\" id=\"{{projectName}}_id_9\"   (click)=\"openTK()\">\n                        <div class=\"card-body\">\n                        TK\n                        </div>\n                    </div>\n                    <div class=\"col\"></div>\n                    <div style=\"box-sizing:content-box\" class=\"col card node {{projectName}} justify-content-end text-center\" [ngClass]=\"{'checked':this.checked.node10}\" id=\"{{projectName}}_id_10\"   (click)=\"openTD()\">\n                        <div class=\"card-body\">\n                        TD\n                        </div>\n                    </div>\n                </div>\n            </div>\n        </div>\n    </div>\n    <div class=\"row m-5 justify-content-center\">\n        <div class=\"card node {{projectName}}\" style=\"box-sizing:content-box\"  [ngClass]=\"{'checked':this.checked.node11}\" id=\"{{projectName}}_id_11\"    (click)=\"nodeInfo_selected(projectName,11)\">\n            <div class=\"card-body\">\n                5.Uncertainty assessment\n            </div>\n        </div>\n    </div>\n    <div class=\"row m-5 justify-content-center\">\n        <div class=\"card node {{projectName}}\"  [ngClass]=\"{'checked':this.checked.node12}\" id=\"{{projectName}}_id_12\"    (click)=\"nodeInfo_selected(projectName,12)\">\n            <div class=\"card-body\">\n                6.Data gap filling\n            </div>\n        </div>\n    </div>\n</div>\n\n"
+module.exports = "\n<div class=\"limit\">\n    <div class=\"row p-5 justify-content-center\">\n        <div class=\"card node {{projectName}}\" [ngClass]=\"{'checked':this.checked.node1}\" id=\"{{projectName}}_id_1\"    (click)=\"nodeInfo_selected(projectName,1)\">\n            <div class=\"card-body\">\n                1.Problem formulation\n            </div>\n        </div>\n    </div>\n    <div class=\"row m-5 justify-content-center\">\n        <div class=\"card parent\"   >\n            <div class=\"card-body\">\n                <div class=\"card node m-5 {{projectName}}\" [ngClass]=\"{'checked':this.checked.node2}\" id=\"{{projectName}}_id_2\" (click)=\"nodeInfo_selected(projectName,2)\">\n                    <div class=\"card-body\">\n                    2.TC Characterization\n                    </div>\n                </div>\n                <div class=\"card node m-5 {{projectName}}\" [ngClass]=\"{'checked':this.checked.node3}\" id=\"{{projectName}}_id_3\" (click)=\"nodeInfo_selected(projectName,3)\">\n                    <div class=\"card-body\">\n                    Metabolism data gathering\n                    </div>\n                </div>\n                <div class=\"card node m-5 {{projectName}}\" [ngClass]=\"{'checked':this.checked.node4}\" id=\"{{projectName}}_id_4\" (click)=\"nodeInfo_selected(projectName,4)\">\n                    <div class=\"card-body\">\n                    Initial RAX hypothesis\n                    </div>\n                </div>\n                <div id=\"nam_title\" class=\"row m-1\" style=\"margin-right:0px;\">\n                    <div style=\"padding-right:0px;\" class=\"col text-right\" >TC Characterization</div>\n                </div>\n            </div>\n        </div>\n    </div>\n    <div class=\"row m-5 justify-content-center\">\n        <div class=\"card node {{projectName}}\"  [ngClass]=\"{'checked':this.checked.node5}\" id=\"{{projectName}}_id_5\"    (click)=\"nodeInfo_selected(projectName,5)\">\n            <div class=\"card-body\">\n                3.SCs identification\n            </div>\n        </div>\n    </div>\n    <div class=\"row m-5 justify-content-center\">\n        <div class=\"card node {{projectName}}\"  [ngClass]=\"{'checked':this.checked.node6}\" id=\"{{projectName}}_id_6\"    (click)=\"nodeInfo_selected(projectName,6)\">\n            <div class=\"card-body\">\n                4.SCs evaluation\n            </div>\n        </div>\n    </div>\n    <div class=\"row m-5 justify-content-center\">\n        <div class=\"card node {{projectName}}\"  [ngClass]=\"{'checked':this.checked.node7}\" id=\"{{projectName}}_id_7\"    (click)=\"nodeInfo_selected(projectName,7)\">\n            <div class=\"card-body\">\n                Overarching RAX hypothesis\n            </div>\n        </div>\n    </div>\n    <div class=\"row m-5 justify-content-center\">\n        <div class=\"card parent2\"   >\n            <div class=\"card-body\">\n                <div id=\"nam_title\" class=\"row m-1\" style=\"color:rgb(245,245,245);margin-right:0px;\">\n                    <div class=\"col text-right\" >NAM based knowledge</div>\n                </div>\n                <div class=\"row\" style=\"margin-left:0px;margin-right:0px;\">\n                    <div class=\"card node m-5 {{projectName}}\" [ngClass]=\"{'checked':this.checked.node8}\"  id=\"{{projectName}}_id_8\"   (click)=\"nodeInfo_selected(projectName,8)\">\n                        <div style=\"padding-left:3rem;padding-right:3rem;\" class=\"card-body\">\n                        NAM testing and evaluation (in vitro & in silico)\n                        </div>\n                    </div>\n                </div>\n                <div class=\"row m-5\" style=\"margin-left:0px;margin-right:0px;\"> \n                    <div style=\"box-sizing:content-box\" class=\"col card node {{projectName}} text-center\" [ngClass]=\"{'checked':this.checked.node9}\" id=\"{{projectName}}_id_9\"   (click)=\"openTK()\">\n                        <div class=\"card-body\">\n                        TK\n                        </div>\n                    </div>\n                    <div class=\"col\"></div>\n                    <div style=\"box-sizing:content-box\" class=\"col card node {{projectName}} justify-content-end text-center\" [ngClass]=\"{'checked':this.checked.node10}\" id=\"{{projectName}}_id_10\"   (click)=\"openTD()\">\n                        <div class=\"card-body\">\n                        TD\n                        </div>\n                    </div>\n                </div>\n            </div>\n        </div>\n    </div>\n    <div class=\"row m-5 justify-content-center\">\n        <div class=\"card node {{projectName}}\" style=\"box-sizing:content-box\"  [ngClass]=\"{'checked':this.checked.node11}\" id=\"{{projectName}}_id_11\"    (click)=\"nodeInfo_selected(projectName,11)\">\n            <div class=\"card-body\">\n                5.Uncertainty assessment\n            </div>\n        </div>\n    </div>\n    <div class=\"row m-5 justify-content-center\">\n        <div class=\"card node {{projectName}}\"  [ngClass]=\"{'checked':this.checked.node12}\" id=\"{{projectName}}_id_12\"    (click)=\"nodeInfo_selected(projectName,12)\">\n            <div class=\"card-body\">\n                6.Data gap filling\n            </div>\n        </div>\n    </div>\n</div>\n\n"
 
 /***/ }),
 
@@ -159,7 +159,7 @@ module.exports = "<nav class=\"navbar navbar-dark sticky-top bg-dark flex-md-now
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<h1 mat-dialog-title style=\"margin-bottom: 0px;\"> {{this.info.name}}</h1>\n<div mat-dialog-content>\n    <!--<div class=\"card\">-->\n      <div style=\"padding-top: 0px;\" class=\"card-body\">\n         {{this.info.description}}\n      </div>\n    <!--</div>-->\n    <div class=\"card\" *ngIf=\"this.info.inputs.length>0\">\n        <h5 class=\"card-header bg-light p-1\">Previous knowledge</h5>\n        <div class=\"card-body p-0\">\n            <div class=\"card m-0\" *ngFor=\"let info of this.info.inputs ; let i=index;\"> \n                <div class=\"card-header p-0\">\n                    \n                    <a class=\"btn m-0\" data-toggle=\"collapse\" href= \"#accordion_{{ i }}\" role=\"button\" aria-expanded=\"false\" >\n                        {{info.name}}\n                    </a> \n                   \n                </div>\n                <div class=\"collapse\" id= \"accordion_{{ i }}\">\n                    <div class=\"card-body\">\n                        <div class=\"row\">\n                            <div class=\"col-6\">\n                                <div>\n                                    <h6>Content:</h6>\n                                         <div [innerHTML]=\"info.content\"></div>\n                                </div>       \n                            </div>\n                            <div class=\"col-6\">\n                                <h6>Comments:</h6>\n                                    <div [innerHTML]=\"info.comment\">\n                                </div>\n                            </div>  \n                        </div>\n                    </div>\n                </div>\n            </div>\n        </div>\n    </div>\n    \n        \n        \n    <div class=\"card\">\n        <h5 class=\"card-header bg-light p-1\">Resources</h5>\n        <ng-container [ngSwitch]=\"this.info.node_seq\">\n            <app-tc-characteritzation [info]=\"this.info\" *ngSwitchCase=\"2\"></app-tc-characteritzation>\n        </ng-container>\n        \n        <div *ngIf=\"this.info.resources.length > 0\" class=\"card\" style=\"margin-bottom:0px\">\n            <h6 class=\"card-header bg-light p-1\">Links</h6>\n            <div class=\"card-body p-2\">\n                <ul class=\"list-group list-group-flush\">\n                    <li class=\"list-group-item p-1\" *ngFor=\"let info of this.info.resources ;\">\n                    {{this.info.resources_name}}  <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"{{this.info.resources_link}}\"> ( {{this.info.resources_link}} )</a>\n                    </li>\n                \n                </ul>\n            </div>\n        </div>\n         \n    </div>\n    <!--<div class=\"card\">\n            <h5 class=\"card-header bg-light p-1\">Input</h5>\n            <ng-container [ngSwitch]=\"this.info.node_seq\">\n                <ng-container *ngSwitchDefault>\n                    <div class=\"card-body p-0\">\n                    <ckeditor [editor]=\"Editor\" [(ngModel)]=\"this.info.inputs_comments\" [disabled]=\"inline_input\"></ckeditor>\n                    </div>\n                </ng-container>\n            </ng-container>\n    </div>-->\n           \n    \n    <div class=\"card\">\n            <h5 class=\"card-header bg-light p-1\">New knowledge</h5>\n            <ng-container [ngSwitch]=\"this.info.node_seq\">\n                <app-node1-problem-formulation [Editor]=\"this.Editor\" [Editor_config]=\"this.Editor_config_copy\" [info]=\"this.info\" *ngSwitchCase=\"1\"></app-node1-problem-formulation>\n                <ng-container *ngSwitchDefault>\n                    <div class=\"smiles-micromodal-container\">\n                        <app-smiles-micromodal [id]=\"this.ckeditor_id_outputs+'-smiles-micromodal'\"></app-smiles-micromodal>\n                    </div>\n                    <div class=\"upload-angular-container\" class=\"card-body p-0\">\n                        <ckeditor #ckeditor_dynamic_outputs [id]=\"this.ckeditor_id_outputs\" [editor]=\"Editor\" [config]=\"this.Editor_config_outputs\" [(ngModel)]=\"this.info.outputs\" [disabled]=\"inline_output\"></ckeditor>\n                    </div>\n                </ng-container>\n            </ng-container>\n    </div>\n    <div class=\"card\">\n        <h5 class=\"card-header bg-light p-1\">Comments</h5>\n        <div class=\"smiles-micromodal-container\">\n            <app-smiles-micromodal [id]=\"this.ckeditor_id_comments+'-smiles-micromodal'\"></app-smiles-micromodal>\n        </div>\n        <div class=\"upload-angular-container\" class=\"card-body p-0\">\n           <!--<textarea class=\"form-control\" id=\"exampleFormControlTextarea1\" [(ngModel)]=\"this.info.outputs_comments\" rows=\"10\"></textarea>-->\n            <ckeditor #ckeditor_dynamic_comments [id]=\"this.ckeditor_id_comments\" [editor]=\"Editor\" [config]=\"this.Editor_config_comments\" [(ngModel)]=\"this.info.outputs_comments\" [disabled]=\"inline_comments\"></ckeditor>\n        </div>\n    </div>\n    <!--<footer class=\"text-right\" style=\"font-size:0.75rem\">Benzene icon made by <a href=\"https://www.flaticon.com/authors/freepik\" title=\"Freepik\">Freepik</a> from <a href=\"https://www.flaticon.com/\" title=\"Flaticon\"> www.flaticon.com</a></footer>-->\n</div>      \n      \n<div mat-dialog-actions>\n    <button mat-button [mat-dialog-close]=\"'cancel'\">Cancel</button>\n    <button mat-button (click)=\"NodeCompleted()\" [mat-dialog-close]=\"'OK'\">OK</button>\n</div>"
+module.exports = "<h1 mat-dialog-title style=\"margin-bottom: 0px;\"> {{this.info.name}}</h1>\n<div mat-dialog-content>\n    <!--<div class=\"card\">-->\n      <div style=\"padding-top: 0px;\" class=\"card-body\">\n         {{this.info.description}}\n      </div>\n    <!--</div>-->\n    <div class=\"card\" *ngIf=\"this.info.inputs.length>0\">\n        <h5 class=\"card-header bg-light p-1\">Previous knowledge</h5>\n        <div class=\"card-body p-0\">\n            <div class=\"card m-0\" *ngFor=\"let info of this.info.inputs ; let i=index;\"> \n                <div class=\"card-header p-0\">\n                    \n                    <a class=\"btn m-0\" data-toggle=\"collapse\" href= \"#accordion_{{ i }}\" role=\"button\" aria-expanded=\"false\" >\n                        {{info.name}}\n                    </a> \n                   \n                </div>\n                <div class=\"collapse\" id= \"accordion_{{ i }}\">\n                    <div class=\"card-body\">\n                        <div class=\"row\">\n                            <div class=\"col-6\">\n                                <div>\n                                    <h6>Content:</h6>\n                                         <div [innerHTML]=\"info.content\"></div>\n                                </div>       \n                            </div>\n                            <div class=\"col-6\">\n                                <h6>Comments:</h6>\n                                    <div [innerHTML]=\"info.comment\">\n                                </div>\n                            </div>  \n                        </div>\n                    </div>\n                </div>\n            </div>\n        </div>\n    </div>\n    \n        \n        \n    <div class=\"card\">\n        <h5 class=\"card-header bg-light p-1\">Resources</h5>\n        <ng-container [ngSwitch]=\"this.info.node_seq\">\n            <app-tc-characterization [info]=\"this.info\" *ngSwitchCase=\"2\"></app-tc-characterization>\n        </ng-container>\n        \n        <div *ngIf=\"this.info.resources.length > 0\" class=\"card\" style=\"margin-bottom:0px\">\n            <h6 class=\"card-header bg-light p-1\">Links</h6>\n            <div class=\"card-body p-2\">\n                <ul class=\"list-group list-group-flush\">\n                    <li class=\"list-group-item p-1\" *ngFor=\"let info of this.info.resources ;\">\n                    {{this.info.resources_name}}  <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"{{this.info.resources_link}}\"> ( {{this.info.resources_link}} )</a>\n                    </li>\n                \n                </ul>\n            </div>\n        </div>\n         \n    </div>\n    <!--<div class=\"card\">\n            <h5 class=\"card-header bg-light p-1\">Input</h5>\n            <ng-container [ngSwitch]=\"this.info.node_seq\">\n                <ng-container *ngSwitchDefault>\n                    <div class=\"card-body p-0\">\n                    <ckeditor [editor]=\"Editor\" [(ngModel)]=\"this.info.inputs_comments\" [disabled]=\"inline_input\"></ckeditor>\n                    </div>\n                </ng-container>\n            </ng-container>\n    </div>-->\n           \n    \n    <div class=\"card\">\n            <h5 class=\"card-header bg-light p-1\">New knowledge</h5>\n            <ng-container [ngSwitch]=\"this.info.node_seq\">\n                <app-node1-problem-formulation [Editor]=\"this.Editor\" [Editor_config]=\"this.Editor_config_copy\" [info]=\"this.info\" *ngSwitchCase=\"1\"></app-node1-problem-formulation>\n                <ng-container *ngSwitchDefault>\n                    <div class=\"smiles-micromodal-container\">\n                        <app-smiles-micromodal [id]=\"this.ckeditor_id_outputs+'-smiles-micromodal'\"></app-smiles-micromodal>\n                    </div>\n                    <div class=\"upload-angular-container\" class=\"card-body p-0\">\n                        <ckeditor #ckeditor_dynamic_outputs [id]=\"this.ckeditor_id_outputs\" [editor]=\"Editor\" [config]=\"this.Editor_config_outputs\" [(ngModel)]=\"this.info.outputs\" [disabled]=\"inline_output\"></ckeditor>\n                    </div>\n                </ng-container>\n            </ng-container>\n    </div>\n    <div class=\"card\">\n        <h5 class=\"card-header bg-light p-1\">Comments</h5>\n        <div class=\"smiles-micromodal-container\">\n            <app-smiles-micromodal [id]=\"this.ckeditor_id_comments+'-smiles-micromodal'\"></app-smiles-micromodal>\n        </div>\n        <div class=\"upload-angular-container\" class=\"card-body p-0\">\n           <!--<textarea class=\"form-control\" id=\"exampleFormControlTextarea1\" [(ngModel)]=\"this.info.outputs_comments\" rows=\"10\"></textarea>-->\n            <ckeditor #ckeditor_dynamic_comments [id]=\"this.ckeditor_id_comments\" [editor]=\"Editor\" [config]=\"this.Editor_config_comments\" [(ngModel)]=\"this.info.outputs_comments\" [disabled]=\"inline_comments\"></ckeditor>\n        </div>\n    </div>\n    <!--<footer class=\"text-right\" style=\"font-size:0.75rem\">Benzene icon made by <a href=\"https://www.flaticon.com/authors/freepik\" title=\"Freepik\">Freepik</a> from <a href=\"https://www.flaticon.com/\" title=\"Flaticon\"> www.flaticon.com</a></footer>-->\n</div>      \n      \n<div mat-dialog-actions>\n    <button mat-button [mat-dialog-close]=\"'cancel'\">Cancel</button>\n    <button mat-button (click)=\"NodeCompleted()\" [mat-dialog-close]=\"'OK'\">OK</button>\n</div>"
 
 /***/ }),
 
@@ -207,14 +207,14 @@ module.exports = "\n<div class=\"d-flex flex-row\">\n    <div>\n        \n      
 
 /***/ }),
 
-/***/ "./node_modules/raw-loader/index.js!./src/app/tc-characteritzation/tc-characteritzation.component.html":
-/*!****************************************************************************************************!*\
-  !*** ./node_modules/raw-loader!./src/app/tc-characteritzation/tc-characteritzation.component.html ***!
-  \****************************************************************************************************/
+/***/ "./node_modules/raw-loader/index.js!./src/app/tc-characterization/tc-characterization.component.html":
+/*!**************************************************************************************************!*\
+  !*** ./node_modules/raw-loader!./src/app/tc-characterization/tc-characterization.component.html ***!
+  \**************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"card\">\n    <h6 class=\"card-header bg-light p-1\">Name2CAS/SMILES resolver</h6>\n\n    <div class=\"row m-5 form-group\" style=\"margin-bottom:0px !important;margin-top:10px !important\">\n        <table style=\"width:100%;vertical-align:bottom\">\n            <tr>\n\n                    <td style=\"width:9rem\">\n                        <label style=\"margin-bottom:0px\" for=\"name2cas_search_string\" >Compound name:</label>\n                    </td>\n                    <td><input id=\"name2cas_search_string\" class=\"form-control\" name=\"search_string\" [(ngModel)]=\"search_string\" type=\"text\"></td>\n                    <td style=\"width:6rem\"><button class=\"btn btn-primary\" [disabled]=\"cas_from_name_running\" (click)=\"CASandSmilesFromNameButton()\">Search</button>\n                        <mat-spinner *ngIf=\"cas_from_name_running\" style=\"display:inline-block\" ProgressSpinnerMode=\"indeterminate\" diameter=\"14\"></mat-spinner>\n\n            </tr>\n            <tr>\n                <td></td>\n                <td><br>\n                    <div class=\"form-check\">\n                        <input class=\"form-check-input\" id=\"show-name2cas-data\" type=\"checkbox\" (change)=\"changeCASandSmilesShowCactvsData()\" [(ngModel)]=\"cas_show_cactvs_data\">\n                        <label class=\"form-check-label\" for=\"show-name2cas-data\">Show CACTVS data</label>\n                </div><br></td>\n                <td></td>\n            </tr>\n            <tr>\n\n                    <td style=\"width:9rem\"><label style=\"margin-bottom:0px\" for=\"name2cas_cas\" >CAS registry number(s):</label></td>\n                    <td style=\"width:auto\">\n                            <select id=\"name2cas_cas\" size=5 class=\"form-control\" name=\"selected_cas\" [(ngModel)]=\"selected_cas_int_id_list\" multiple>\n                            <ng-container *ngIf=\"cas_show_cactvs_data\"><option *ngFor=\"let cas of cas_list\" [ngValue]=\"cas.int_id\" [innerHTML]=\"cas.html_rep\"></option></ng-container>\n                            <ng-container *ngIf=\"!cas_show_cactvs_data\"><option *ngFor=\"let cas of cas_set\" [ngValue]=\"cas.int_id\">{{ cas.value }}</option></ng-container>\n                            </select>\n                            \n                    </td>\n                    <td style=\"width:auto\">\n                    </td>\n            </tr>\n            <tr>\n                <td><button class=\"btn\" [disabled]=\"cas_list.length === 0 || !cas_show_cactvs_data\" (click)=\"CASFromNameRemoveDuplicatesButton()\">Remove duplicates</button><br></td>\n                <td style=\"display:inline-block\"><button style=\"display:inline-block\" class=\"btn\" [disabled]=\"selected_cas_int_id_list.length === 0\" (click)=\"CASFromNameDeleteButton()\">Delete</button>\n                <button style=\"display:inline-block\" class=\"btn\" [disabled]=\"selected_cas_int_id_list.length === 0\" (click)=\"openCASCopy(contentCAS,true)\">Copy in clipboard</button>\n                <button style=\"display:inline-block\" class=\"btn\" [disabled]=\"cas_list.length === 0\" (click)=\"openCASCopy(contentCAS,false)\">Copy all in clipboard</button></td>\n\n            </tr>\n        </table>\n    </div>\n    <br>\n    <div class=\"row m-5\" style=\"margin-top:0px !important; margin-bottom:10px !important\">\n        <div *ngIf=\"cas_from_name_executed\">\n        <!--TODO: sentences about how many cas numbers have been found-->\n        <label *ngIf=\"cas_list.length !== 0 && selected_cas_int_id_list.length === 0 && !cas_from_name_running\" >\n            <ng-container *ngIf=\"cas_show_cactvs_data\">{{cas_list.length}}</ng-container>\n            <ng-container *ngIf=\"!cas_show_cactvs_data\">{{cas_set.length}}</ng-container> CAS registry number<!--\n         --><ng-container *ngIf=\"cas_list.length > 1\">s</ng-container> found.\n        </label>\n        <label *ngIf=\"selected_cas_int_id_list.length === 1 && cas_show_cactvs_data\" [innerHTML]=\"this.cas_current.html_rep\"></label>\n        <label *ngIf=\"selected_cas_int_id_list.length > 1 || selected_cas_int_id_list.length === 1 && !cas_show_cactvs_data\" >Selected {{selected_cas_int_id_list.length}} CAS registry numbers.</label>\n        </div>\n    </div>\n    \n    <div class=\"row m-5 form-group\" style=\"margin-bottom:0px !important;margin-top:10px !important\">\n        <table style=\"width:100%;vertical-align:bottom\">\n            <tr>\n\n                    <td style=\"width:9rem\"><label style=\"margin-bottom:0px\" for=\"name2smiles_smiles\" >SMILES:</label></td>\n                    <td style=\"width:auto\">\n                            <select id=\"name2smiles_smiles\" size=5 class=\"form-control\" name=\"selected_smiles\" [(ngModel)]=\"selected_smiles_int_id_list\" multiple>\n                            <ng-container *ngIf=\"smiles_show_cactvs_data\"><option *ngFor=\"let smiles of smiles_list\" [ngValue]=\"smiles.int_id\" [innerHTML]=\"smiles.html_rep\"></option></ng-container>\n                            <ng-container *ngIf=\"!smiles_show_cactvs_data\"><option *ngFor=\"let smiles of smiles_set\" [ngValue]=\"smiles.int_id\">{{smiles.value}}</option></ng-container>\n                            </select>\n                            \n                    </td>\n                    <td style=\"width:6rem\">\n                    </td>\n            </tr>\n            <tr>\n                <td><button class=\"btn\" [disabled]=\"smiles_list.length === 0 || !smiles_show_cactvs_data\" (click)=\"smilesFromNameRemoveDuplicatesButton()\">Remove duplicates</button><br></td>\n                <td style=\"display:inline-block\"><button style=\"display:inline-block\" class=\"btn\" [disabled]=\"selected_smiles_int_id_list.length === 0\" (click)=\"smilesFromNameDeleteButton()\">Delete</button>\n                <button style=\"display:inline-block\" class=\"btn\" [disabled]=\"selected_smiles_int_id_list.length === 0\" (click)=\"openSmilesCopy(contentSmiles,true)\">Copy in clipboard</button>\n                <button style=\"display:inline-block\" class=\"btn\" [disabled]=\"smiles_list.length === 0\" (click)=\"openSmilesCopy(contentSmiles,false)\">Copy all in clipboard</button></td>\n\n            </tr>\n        </table>\n    </div>\n    <br>\n    <div class=\"row m-5\" style=\"margin-top:0px !important; margin-bottom:10px !important\">\n        <div *ngIf=\"smiles_from_name_executed\">\n        <!--TODO: sentences about how many smiles numbers have been found-->\n        <label *ngIf=\"smiles_list.length !== 0 && selected_smiles_int_id_list.length === 0 && !smiles_from_name_running\" >\n            <ng-container *ngIf=\"smiles_show_cactvs_data\">{{smiles_list.length}} SMILES found.</ng-container>\n            <ng-container *ngIf=\"!smiles_show_cactvs_data\">{{smiles_set.length}} SMILES found.</ng-container>\n        </label>\n        <label *ngIf=\"selected_smiles_int_id_list.length === 1 && smiles_show_cactvs_data\" [innerHTML]=\"this.smiles_current.html_rep\"></label>\n        <label *ngIf=\"selected_smiles_int_id_list.length > 1 || selected_smiles_int_id_list.length === 1 && !smiles_show_cactvs_data\" >Selected {{selected_smiles_int_id_list.length}} SMILES.</label>\n        <label *ngIf=\"selected_smiles_int_id_list.length === 1 && !smiles_show_cactvs_data\" >Selected 1 SMILES.</label>\n\n        </div>\n    </div>\n\n\n</div>\n<ng-template #contentCAS let-modal>\n    <div class=\"modal-header\">\n        <h4 class=\"modal-title\" id=\"name2cas-copy-cliboard-basic-title\">CAS registry number(s)</h4>\n        <button type=\"button\" class=\"close\" aria-label=\"Close\" (click)=\"modal.dismiss('close')\">\n        <span aria-hidden=\"true\">&times;</span>\n        </button>\n    </div>\n    <div class=\"modal-body\">\n        <div class=\"form-group\">\n            <div class=\"input-group\">\n                <div class=\"form-check\">\n                    <input class=\"form-check-input\" id=\"show-name2cas-copy-data\" type=\"checkbox\" (change)=\"changeShowName2CasData()\" [(ngModel)]=\"cas_copy_show_cactvs_data\">\n                    <label class=\"form-check-label\" for=\"show-name2cas-copy-data\">Show CACTVS data</label>\n                </div>  \n            </div>\n            <br>\n            <div class=\"input-group\">\n                <p>The following CAS registry number data has been copied in your clipboard:</p>\n            </div>\n            <div class=\"input-group\">\n            <textarea id=\"name2cas-copy-textarea\" style=\"width:100%\" class=\"form-control\" rows=10 readonly =\"\">{{ cas_text_dump }}</textarea>\n            </div>\n        </div>\n    </div>\n    <div class=\"modal-footer\">\n        <button type=\"button\" class=\"btn btn-outline-dark\" (click)=\"modal.dismiss('close')\">Close</button>\n    </div>\n</ng-template>\n<ng-template #contentSmiles let-modal>\n        <div class=\"modal-header\">\n            <h4 class=\"modal-title\" id=\"name2smiles-copy-cliboard-basic-title\">smiles registry number(s)</h4>\n            <button type=\"button\" class=\"close\" aria-label=\"Close\" (click)=\"modal.dismiss('close')\">\n            <span aria-hidden=\"true\">&times;</span>\n            </button>\n        </div>\n        <div class=\"modal-body\">\n            <div class=\"form-group\">\n                <div class=\"input-group\">\n                    <div class=\"form-check\">\n                        <input class=\"form-check-input\" id=\"show-name2smiles-copy-data\" type=\"checkbox\" (change)=\"changeShowName2SmilesData()\" [(ngModel)]=\"smiles_copy_show_cactvs_data\">\n                        <label class=\"form-check-label\" for=\"show-name2smiles-copy-data\">Show CACTVS data</label>\n                    </div>  \n                </div>\n                <br>\n                <div class=\"input-group\">\n                    <p>The following SMILES data has been copied in your clipboard:</p>\n                </div>\n                <div class=\"input-group\">\n                <textarea id=\"name2smiles-copy-textarea\" style=\"width:100%\" class=\"form-control\" rows=10 readonly>{{ smiles_text_dump }}</textarea>\n                </div>\n            </div>\n        </div>\n        <div class=\"modal-footer\">\n            <button type=\"button\" class=\"btn btn-outline-dark\" (click)=\"modal.dismiss('close')\">Close</button>\n        </div>\n    </ng-template>"
+module.exports = "<div class=\"card\">\n    <h6 class=\"card-header bg-light p-1\">Name2CAS/SMILES resolver</h6>\n\n    <div class=\"row m-5 form-group\" style=\"margin-bottom:0px !important;margin-top:10px !important\">\n        <table style=\"width:100%;vertical-align:bottom\">\n            <tr>\n\n                    <td style=\"width:9rem\">\n                        <label style=\"margin-bottom:0px\" for=\"name2cas_search_string\" >Compound name:</label>\n                    </td>\n                    <td><input id=\"name2cas_search_string\" class=\"form-control\" name=\"search_string\" [(ngModel)]=\"search_string\" type=\"text\"></td>\n                    <td style=\"width:8rem\"><button class=\"btn btn-primary\" [disabled]=\"cas_from_name_running\" (click)=\"CASandSmilesFromNameButton()\">Search</button>\n                        <mat-spinner *ngIf=\"cas_from_name_running\" style=\"display:inline-block\" ProgressSpinnerMode=\"indeterminate\" diameter=\"14\"></mat-spinner>\n                    </td>\n\n            </tr>\n            <tr>\n                <td></td>\n                <td><br>\n                    <div class=\"form-check\">\n                        <input class=\"form-check-input\" id=\"show-name2cas-data\" type=\"checkbox\" (change)=\"changeCASandSmilesShowCactvsData()\" [(ngModel)]=\"cas_show_cactvs_data\">\n                        <label class=\"form-check-label\" for=\"show-name2cas-data\">Show CACTVS data</label>\n                </div><br></td>\n                <td></td>\n            </tr>\n            <tr>\n\n                    <td style=\"width:9rem\"><label style=\"margin-bottom:0px\" for=\"name2cas_cas\" >CAS registry number(s):</label></td>\n                    <td style=\"width:auto\">\n                            <select id=\"name2cas_cas\" size=5 class=\"form-control\" name=\"selected_cas\" [(ngModel)]=\"selected_cas_int_id_list\" multiple>\n                            <ng-container *ngIf=\"cas_show_cactvs_data\"><option *ngFor=\"let cas of cas_list\" [ngValue]=\"cas.int_id\" [innerHTML]=\"cas.html_rep\"></option></ng-container>\n                            <ng-container *ngIf=\"!cas_show_cactvs_data\"><option *ngFor=\"let cas of cas_set\" [ngValue]=\"cas.int_id\">{{ cas.value }}</option></ng-container>\n                            </select>\n                            \n                    </td>\n                    <td style=\"width:auto\">\n                    </td>\n            </tr>\n            <tr>\n                <td><button class=\"btn\" [disabled]=\"cas_list.length === 0 || !cas_show_cactvs_data\" (click)=\"CASFromNameRemoveDuplicatesButton()\">Remove duplicates</button><br></td>\n                <td style=\"display:inline-block\"><button style=\"display:inline-block\" class=\"btn\" [disabled]=\"selected_cas_int_id_list.length === 0\" (click)=\"CASFromNameDeleteButton()\">Delete</button>\n                <button style=\"display:inline-block\" class=\"btn\" [disabled]=\"selected_cas_int_id_list.length === 0\" (click)=\"openCASCopy(contentCAS,true)\">Copy in clipboard</button>\n                <button style=\"display:inline-block\" class=\"btn\" [disabled]=\"cas_list.length === 0\" (click)=\"openCASCopy(contentCAS,false)\">Copy all in clipboard</button></td>\n\n            </tr>\n        </table>\n    </div>\n    <br>\n    <div class=\"row m-5\" style=\"margin-top:0px !important; margin-bottom:10px !important\">\n        <div *ngIf=\"cas_from_name_executed\">\n        <!--TODO: sentences about how many cas numbers have been found-->\n        <label *ngIf=\"cas_list.length !== 0 && selected_cas_int_id_list.length === 0 && !cas_from_name_running\" >\n            <ng-container *ngIf=\"cas_show_cactvs_data\">{{cas_list.length}}</ng-container>\n            <ng-container *ngIf=\"!cas_show_cactvs_data\">{{cas_set.length}}</ng-container> CAS registry number<!--\n         --><ng-container *ngIf=\"cas_list.length > 1\">s</ng-container> found.\n        </label>\n        <label *ngIf=\"selected_cas_int_id_list.length === 1 && cas_show_cactvs_data\" [innerHTML]=\"this.cas_current.html_rep\"></label>\n        <label *ngIf=\"selected_cas_int_id_list.length > 1 || selected_cas_int_id_list.length === 1 && !cas_show_cactvs_data\" >Selected {{selected_cas_int_id_list.length}} CAS registry numbers.</label>\n        </div>\n    </div>\n    \n    <div class=\"row m-5 form-group\" style=\"margin-bottom:0px !important;margin-top:10px !important\">\n        <table style=\"width:100%;vertical-align:bottom\">\n            <tr>\n\n                    <td style=\"width:9rem\"><label style=\"margin-bottom:0px\" for=\"name2smiles_smiles\" >SMILES:</label></td>\n                    <td style=\"width:auto\">\n                            <select id=\"name2smiles_smiles\" size=5 class=\"form-control\" name=\"selected_smiles\" [(ngModel)]=\"selected_smiles_int_id_list\" multiple>\n                            <ng-container *ngIf=\"smiles_show_cactvs_data\"><option *ngFor=\"let smiles of smiles_list\" [ngValue]=\"smiles.int_id\" [innerHTML]=\"smiles.html_rep\"></option></ng-container>\n                            <ng-container *ngIf=\"!smiles_show_cactvs_data\"><option *ngFor=\"let smiles of smiles_set\" [ngValue]=\"smiles.int_id\">{{smiles.value}}</option></ng-container>\n                            </select>\n                            \n                    </td>\n                    <td style=\"width:8rem\">\n                    </td>\n            </tr>\n            <tr>\n                <td><button class=\"btn\" [disabled]=\"smiles_list.length === 0 || !smiles_show_cactvs_data\" (click)=\"smilesFromNameRemoveDuplicatesButton()\">Remove duplicates</button><br></td>\n                <td style=\"display:inline-block\"><button style=\"display:inline-block\" class=\"btn\" [disabled]=\"selected_smiles_int_id_list.length === 0\" (click)=\"smilesFromNameDeleteButton()\">Delete</button>\n                <button style=\"display:inline-block\" class=\"btn\" [disabled]=\"selected_smiles_int_id_list.length === 0\" (click)=\"openSmilesCopy(contentSmiles,true)\">Copy in clipboard</button>\n                <button style=\"display:inline-block\" class=\"btn\" [disabled]=\"smiles_list.length === 0\" (click)=\"openSmilesCopy(contentSmiles,false)\">Copy all in clipboard</button></td>\n\n            </tr>\n        </table>\n    </div>\n    <br>\n    <div class=\"row m-5\" style=\"margin-top:0px !important; margin-bottom:10px !important\">\n        <div *ngIf=\"smiles_from_name_executed\">\n        <!--TODO: sentences about how many smiles numbers have been found-->\n        <label *ngIf=\"smiles_list.length !== 0 && selected_smiles_int_id_list.length === 0 && !smiles_from_name_running\" >\n            <ng-container *ngIf=\"smiles_show_cactvs_data\">{{smiles_list.length}} SMILES found.</ng-container>\n            <ng-container *ngIf=\"!smiles_show_cactvs_data\">{{smiles_set.length}} SMILES found.</ng-container>\n        </label>\n        <label *ngIf=\"selected_smiles_int_id_list.length === 1 && smiles_show_cactvs_data\" [innerHTML]=\"this.smiles_current.html_rep\"></label>\n        <label *ngIf=\"selected_smiles_int_id_list.length > 1 || selected_smiles_int_id_list.length === 1 && !smiles_show_cactvs_data\" >Selected {{selected_smiles_int_id_list.length}} SMILES.</label>\n        <label *ngIf=\"selected_smiles_int_id_list.length === 1 && !smiles_show_cactvs_data\" >Selected 1 SMILES.</label>\n\n        </div>\n    </div>\n\n\n</div>\n<ng-template #contentCAS let-modal>\n    <div class=\"modal-header\">\n        <h4 class=\"modal-title\" id=\"name2cas-copy-cliboard-basic-title\">CAS registry number(s)</h4>\n        <button type=\"button\" class=\"close\" aria-label=\"Close\" (click)=\"modal.dismiss('close')\">\n        <span aria-hidden=\"true\">&times;</span>\n        </button>\n    </div>\n    <div class=\"modal-body\">\n        <div class=\"form-group\">\n            <div class=\"input-group\">\n                <div class=\"form-check\">\n                    <input class=\"form-check-input\" id=\"show-name2cas-copy-data\" type=\"checkbox\" (change)=\"changeShowName2CasData()\" [(ngModel)]=\"cas_copy_show_cactvs_data\">\n                    <label class=\"form-check-label\" for=\"show-name2cas-copy-data\">Show CACTVS data</label>\n                </div>  \n            </div>\n            <br>\n            <div class=\"input-group\">\n                <p>The following CAS registry number data has been copied in your clipboard:</p>\n            </div>\n            <div class=\"input-group\">\n            <textarea id=\"name2cas-copy-textarea\" style=\"width:100%\" class=\"form-control\" rows=10 readonly =\"\">{{ cas_text_dump }}</textarea>\n            </div>\n        </div>\n    </div>\n    <div class=\"modal-footer\">\n        <button type=\"button\" class=\"btn btn-outline-dark\" (click)=\"modal.dismiss('close')\">Close</button>\n    </div>\n</ng-template>\n<ng-template #contentSmiles let-modal>\n        <div class=\"modal-header\">\n            <h4 class=\"modal-title\" id=\"name2smiles-copy-cliboard-basic-title\">smiles registry number(s)</h4>\n            <button type=\"button\" class=\"close\" aria-label=\"Close\" (click)=\"modal.dismiss('close')\">\n            <span aria-hidden=\"true\">&times;</span>\n            </button>\n        </div>\n        <div class=\"modal-body\">\n            <div class=\"form-group\">\n                <div class=\"input-group\">\n                    <div class=\"form-check\">\n                        <input class=\"form-check-input\" id=\"show-name2smiles-copy-data\" type=\"checkbox\" (change)=\"changeShowName2SmilesData()\" [(ngModel)]=\"smiles_copy_show_cactvs_data\">\n                        <label class=\"form-check-label\" for=\"show-name2smiles-copy-data\">Show CACTVS data</label>\n                    </div>  \n                </div>\n                <br>\n                <div class=\"input-group\">\n                    <p>The following SMILES data has been copied in your clipboard:</p>\n                </div>\n                <div class=\"input-group\">\n                <textarea id=\"name2smiles-copy-textarea\" style=\"width:100%\" class=\"form-control\" rows=10 readonly>{{ smiles_text_dump }}</textarea>\n                </div>\n            </div>\n        </div>\n        <div class=\"modal-footer\">\n            <button type=\"button\" class=\"btn btn-outline-dark\" (click)=\"modal.dismiss('close')\">Close</button>\n        </div>\n    </ng-template>"
 
 /***/ }),
 
@@ -426,7 +426,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _node1_problem_formulation_node1_problem_formulation_component__WEBPACK_IMPORTED_MODULE_37__ = __webpack_require__(/*! ./node1-problem-formulation/node1-problem-formulation.component */ "./src/app/node1-problem-formulation/node1-problem-formulation.component.ts");
 /* harmony import */ var _tk_workflow_tk_workflow_component__WEBPACK_IMPORTED_MODULE_38__ = __webpack_require__(/*! ./tk-workflow/tk-workflow.component */ "./src/app/tk-workflow/tk-workflow.component.ts");
 /* harmony import */ var _td_workflow_td_workflow_component__WEBPACK_IMPORTED_MODULE_39__ = __webpack_require__(/*! ./td-workflow/td-workflow.component */ "./src/app/td-workflow/td-workflow.component.ts");
-/* harmony import */ var _tc_characteritzation_tc_characteritzation_component__WEBPACK_IMPORTED_MODULE_40__ = __webpack_require__(/*! ./tc-characteritzation/tc-characteritzation.component */ "./src/app/tc-characteritzation/tc-characteritzation.component.ts");
+/* harmony import */ var _tc_characterization_tc_characterization_component__WEBPACK_IMPORTED_MODULE_40__ = __webpack_require__(/*! ./tc-characterization/tc-characterization.component */ "./src/app/tc-characterization/tc-characterization.component.ts");
 /* harmony import */ var _keys_pipe__WEBPACK_IMPORTED_MODULE_41__ = __webpack_require__(/*! ./keys.pipe */ "./src/app/keys.pipe.ts");
 /* harmony import */ var _editable_view_mode_directive__WEBPACK_IMPORTED_MODULE_42__ = __webpack_require__(/*! ./editable/view-mode.directive */ "./src/app/editable/view-mode.directive.ts");
 /* harmony import */ var _editable_edit_mode_directive__WEBPACK_IMPORTED_MODULE_43__ = __webpack_require__(/*! ./editable/edit-mode.directive */ "./src/app/editable/edit-mode.directive.ts");
@@ -437,7 +437,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _node1_problem_formulation_node1_problem_formulation_service__WEBPACK_IMPORTED_MODULE_48__ = __webpack_require__(/*! ./node1-problem-formulation/node1-problem-formulation.service */ "./src/app/node1-problem-formulation/node1-problem-formulation.service.ts");
 /* harmony import */ var _node_info_node_info_service__WEBPACK_IMPORTED_MODULE_49__ = __webpack_require__(/*! ./node-info/node-info.service */ "./src/app/node-info/node-info.service.ts");
 /* harmony import */ var ngx_cookie_service__WEBPACK_IMPORTED_MODULE_50__ = __webpack_require__(/*! ngx-cookie-service */ "./node_modules/ngx-cookie-service/ngx-cookie-service.es5.js");
-/* harmony import */ var _tc_characteritzation_tc_characteritzation_service__WEBPACK_IMPORTED_MODULE_51__ = __webpack_require__(/*! ./tc-characteritzation/tc-characteritzation.service */ "./src/app/tc-characteritzation/tc-characteritzation.service.ts");
+/* harmony import */ var _tc_characterization_tc_characterization_service__WEBPACK_IMPORTED_MODULE_51__ = __webpack_require__(/*! ./tc-characterization/tc-characterization.service */ "./src/app/tc-characterization/tc-characterization.service.ts");
 
 
 
@@ -515,7 +515,7 @@ var AppModule = /** @class */ (function () {
                 _smiles_micromodal_smiles_micromodal_component__WEBPACK_IMPORTED_MODULE_34__["SmilesMicromodalComponent"],
                 _tk_workflow_tk_workflow_component__WEBPACK_IMPORTED_MODULE_38__["TkWorkflowComponent"],
                 _td_workflow_td_workflow_component__WEBPACK_IMPORTED_MODULE_39__["TdWorkflowComponent"],
-                _tc_characteritzation_tc_characteritzation_component__WEBPACK_IMPORTED_MODULE_40__["TcCharacteritzationComponent"],
+                _tc_characterization_tc_characterization_component__WEBPACK_IMPORTED_MODULE_40__["TcCharacterizationComponent"],
             ],
             imports: [
                 _angular_platform_browser__WEBPACK_IMPORTED_MODULE_3__["BrowserModule"],
@@ -554,7 +554,7 @@ var AppModule = /** @class */ (function () {
                 _each_workflow_each_workflow_service__WEBPACK_IMPORTED_MODULE_47__["EachWorkflowService"],
                 _node_info_node_info_service__WEBPACK_IMPORTED_MODULE_49__["NodeInfoService"],
                 _node1_problem_formulation_node1_problem_formulation_service__WEBPACK_IMPORTED_MODULE_48__["Node1ProblemFormulationService"],
-                _tc_characteritzation_tc_characteritzation_service__WEBPACK_IMPORTED_MODULE_51__["TcCharacteritzationService"]
+                _tc_characterization_tc_characterization_service__WEBPACK_IMPORTED_MODULE_51__["TcCharacterizationService"]
             ],
             entryComponents: [_node_info_node_info_component__WEBPACK_IMPORTED_MODULE_35__["NodeInfoComponent"]],
             bootstrap: [_app_component__WEBPACK_IMPORTED_MODULE_27__["AppComponent"]]
@@ -1762,7 +1762,7 @@ var NodeInfoComponent = /** @class */ (function () {
         this.inline_input = false;
         this.inline_output = false;
         this.show_inline = false;
-        this.smiles_drawer_size = 150;
+        this.smiles_drawer_size = 200;
         this.environment = _environments_environment__WEBPACK_IMPORTED_MODULE_7__["environment"];
         this.micromodal = micromodal__WEBPACK_IMPORTED_MODULE_8__["default"];
         this.part = 0;
@@ -2506,30 +2506,30 @@ var TabsService = /** @class */ (function () {
 
 /***/ }),
 
-/***/ "./src/app/tc-characteritzation/tc-characteritzation.component.css":
-/*!*************************************************************************!*\
-  !*** ./src/app/tc-characteritzation/tc-characteritzation.component.css ***!
-  \*************************************************************************/
+/***/ "./src/app/tc-characterization/tc-characterization.component.css":
+/*!***********************************************************************!*\
+  !*** ./src/app/tc-characterization/tc-characterization.component.css ***!
+  \***********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = ".block1 {\n    overflow: scroll;\n    display: block;\n    border: 1px solid #ccc;\n    width:100%;\n    height:100%;\n}\n    \n.block2 {\n    display: inline-block;\n    vertical-align: top;\n    overflow: visible;\n    border-right: 1px solid #a4a4a4;\n}\n    \n.btn {\n    text-align: left;\n}\n    \n#old_name2cas_cas {\n    width: 100% !important;\n    height:100% !important;\n    border : none !important;\n    margin-right:-5%;\n    overflow: visible;\n}\n    \n#name2cas_cas {\n    width: 100% !important;\n}\n    \n#ms-name2cas_cas {\n    width: 100% !important;\n}\n    \n.ms-container {\n    width: 100% !important;\n    \n}\n    \n.ms-list {\n    height: 100px !important;\n}\n    \n.cas2name-modal {\n    overflow-x: hidden !important;\n    overflow-y: hidden !important;\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvdGMtY2hhcmFjdGVyaXR6YXRpb24vdGMtY2hhcmFjdGVyaXR6YXRpb24uY29tcG9uZW50LmNzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtJQUNJLGdCQUFnQjtJQUNoQixjQUFjO0lBQ2Qsc0JBQXNCO0lBQ3RCLFVBQVU7SUFDVixXQUFXO0FBQ2Y7O0FBRUE7SUFDSSxxQkFBcUI7SUFDckIsbUJBQW1CO0lBQ25CLGlCQUFpQjtJQUNqQiwrQkFBK0I7QUFDbkM7O0FBRUE7SUFDSSxnQkFBZ0I7QUFDcEI7O0FBRUE7SUFDSSxzQkFBc0I7SUFDdEIsc0JBQXNCO0lBQ3RCLHdCQUF3QjtJQUN4QixnQkFBZ0I7SUFDaEIsaUJBQWlCO0FBQ3JCOztBQUVBO0lBQ0ksc0JBQXNCO0FBQzFCOztBQUVBO0lBQ0ksc0JBQXNCO0FBQzFCOztBQUVBO0lBQ0ksc0JBQXNCOztBQUUxQjs7QUFFQTtJQUNJLHdCQUF3QjtBQUM1Qjs7QUFFQTtJQUNJLDZCQUE2QjtJQUM3Qiw2QkFBNkI7QUFDakMiLCJmaWxlIjoic3JjL2FwcC90Yy1jaGFyYWN0ZXJpdHphdGlvbi90Yy1jaGFyYWN0ZXJpdHphdGlvbi5jb21wb25lbnQuY3NzIiwic291cmNlc0NvbnRlbnQiOlsiLmJsb2NrMSB7XG4gICAgb3ZlcmZsb3c6IHNjcm9sbDtcbiAgICBkaXNwbGF5OiBibG9jaztcbiAgICBib3JkZXI6IDFweCBzb2xpZCAjY2NjO1xuICAgIHdpZHRoOjEwMCU7XG4gICAgaGVpZ2h0OjEwMCU7XG59XG4gICAgXG4uYmxvY2syIHtcbiAgICBkaXNwbGF5OiBpbmxpbmUtYmxvY2s7XG4gICAgdmVydGljYWwtYWxpZ246IHRvcDtcbiAgICBvdmVyZmxvdzogdmlzaWJsZTtcbiAgICBib3JkZXItcmlnaHQ6IDFweCBzb2xpZCAjYTRhNGE0O1xufVxuXG4uYnRuIHtcbiAgICB0ZXh0LWFsaWduOiBsZWZ0O1xufVxuXG4jb2xkX25hbWUyY2FzX2NhcyB7XG4gICAgd2lkdGg6IDEwMCUgIWltcG9ydGFudDtcbiAgICBoZWlnaHQ6MTAwJSAhaW1wb3J0YW50O1xuICAgIGJvcmRlciA6IG5vbmUgIWltcG9ydGFudDtcbiAgICBtYXJnaW4tcmlnaHQ6LTUlO1xuICAgIG92ZXJmbG93OiB2aXNpYmxlO1xufVxuXG4jbmFtZTJjYXNfY2FzIHtcbiAgICB3aWR0aDogMTAwJSAhaW1wb3J0YW50O1xufVxuXG4jbXMtbmFtZTJjYXNfY2FzIHtcbiAgICB3aWR0aDogMTAwJSAhaW1wb3J0YW50O1xufVxuXG4ubXMtY29udGFpbmVyIHtcbiAgICB3aWR0aDogMTAwJSAhaW1wb3J0YW50O1xuICAgIFxufVxuXG4ubXMtbGlzdCB7XG4gICAgaGVpZ2h0OiAxMDBweCAhaW1wb3J0YW50O1xufVxuXG4uY2FzMm5hbWUtbW9kYWwge1xuICAgIG92ZXJmbG93LXg6IGhpZGRlbiAhaW1wb3J0YW50O1xuICAgIG92ZXJmbG93LXk6IGhpZGRlbiAhaW1wb3J0YW50O1xufSJdfQ== */"
+module.exports = ".block1 {\n    overflow: scroll;\n    display: block;\n    border: 1px solid #ccc;\n    width:100%;\n    height:100%;\n}\n    \n.block2 {\n    display: inline-block;\n    vertical-align: top;\n    overflow: visible;\n    border-right: 1px solid #a4a4a4;\n}\n    \n.btn {\n    text-align: left;\n}\n    \n#old_name2cas_cas {\n    width: 100% !important;\n    height:100% !important;\n    border : none !important;\n    margin-right:-5%;\n    overflow: visible;\n}\n    \n#name2cas_cas {\n    width: 100% !important;\n}\n    \n#ms-name2cas_cas {\n    width: 100% !important;\n}\n    \n.ms-container {\n    width: 100% !important;\n    \n}\n    \n.ms-list {\n    height: 100px !important;\n}\n    \n.cas2name-modal {\n    overflow-x: hidden !important;\n    overflow-y: hidden !important;\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvdGMtY2hhcmFjdGVyaXphdGlvbi90Yy1jaGFyYWN0ZXJpemF0aW9uLmNvbXBvbmVudC5jc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7SUFDSSxnQkFBZ0I7SUFDaEIsY0FBYztJQUNkLHNCQUFzQjtJQUN0QixVQUFVO0lBQ1YsV0FBVztBQUNmOztBQUVBO0lBQ0kscUJBQXFCO0lBQ3JCLG1CQUFtQjtJQUNuQixpQkFBaUI7SUFDakIsK0JBQStCO0FBQ25DOztBQUVBO0lBQ0ksZ0JBQWdCO0FBQ3BCOztBQUVBO0lBQ0ksc0JBQXNCO0lBQ3RCLHNCQUFzQjtJQUN0Qix3QkFBd0I7SUFDeEIsZ0JBQWdCO0lBQ2hCLGlCQUFpQjtBQUNyQjs7QUFFQTtJQUNJLHNCQUFzQjtBQUMxQjs7QUFFQTtJQUNJLHNCQUFzQjtBQUMxQjs7QUFFQTtJQUNJLHNCQUFzQjs7QUFFMUI7O0FBRUE7SUFDSSx3QkFBd0I7QUFDNUI7O0FBRUE7SUFDSSw2QkFBNkI7SUFDN0IsNkJBQTZCO0FBQ2pDIiwiZmlsZSI6InNyYy9hcHAvdGMtY2hhcmFjdGVyaXphdGlvbi90Yy1jaGFyYWN0ZXJpemF0aW9uLmNvbXBvbmVudC5jc3MiLCJzb3VyY2VzQ29udGVudCI6WyIuYmxvY2sxIHtcbiAgICBvdmVyZmxvdzogc2Nyb2xsO1xuICAgIGRpc3BsYXk6IGJsb2NrO1xuICAgIGJvcmRlcjogMXB4IHNvbGlkICNjY2M7XG4gICAgd2lkdGg6MTAwJTtcbiAgICBoZWlnaHQ6MTAwJTtcbn1cbiAgICBcbi5ibG9jazIge1xuICAgIGRpc3BsYXk6IGlubGluZS1ibG9jaztcbiAgICB2ZXJ0aWNhbC1hbGlnbjogdG9wO1xuICAgIG92ZXJmbG93OiB2aXNpYmxlO1xuICAgIGJvcmRlci1yaWdodDogMXB4IHNvbGlkICNhNGE0YTQ7XG59XG5cbi5idG4ge1xuICAgIHRleHQtYWxpZ246IGxlZnQ7XG59XG5cbiNvbGRfbmFtZTJjYXNfY2FzIHtcbiAgICB3aWR0aDogMTAwJSAhaW1wb3J0YW50O1xuICAgIGhlaWdodDoxMDAlICFpbXBvcnRhbnQ7XG4gICAgYm9yZGVyIDogbm9uZSAhaW1wb3J0YW50O1xuICAgIG1hcmdpbi1yaWdodDotNSU7XG4gICAgb3ZlcmZsb3c6IHZpc2libGU7XG59XG5cbiNuYW1lMmNhc19jYXMge1xuICAgIHdpZHRoOiAxMDAlICFpbXBvcnRhbnQ7XG59XG5cbiNtcy1uYW1lMmNhc19jYXMge1xuICAgIHdpZHRoOiAxMDAlICFpbXBvcnRhbnQ7XG59XG5cbi5tcy1jb250YWluZXIge1xuICAgIHdpZHRoOiAxMDAlICFpbXBvcnRhbnQ7XG4gICAgXG59XG5cbi5tcy1saXN0IHtcbiAgICBoZWlnaHQ6IDEwMHB4ICFpbXBvcnRhbnQ7XG59XG5cbi5jYXMybmFtZS1tb2RhbCB7XG4gICAgb3ZlcmZsb3cteDogaGlkZGVuICFpbXBvcnRhbnQ7XG4gICAgb3ZlcmZsb3cteTogaGlkZGVuICFpbXBvcnRhbnQ7XG59Il19 */"
 
 /***/ }),
 
-/***/ "./src/app/tc-characteritzation/tc-characteritzation.component.ts":
-/*!************************************************************************!*\
-  !*** ./src/app/tc-characteritzation/tc-characteritzation.component.ts ***!
-  \************************************************************************/
-/*! exports provided: TcCharacteritzationComponent */
+/***/ "./src/app/tc-characterization/tc-characterization.component.ts":
+/*!**********************************************************************!*\
+  !*** ./src/app/tc-characterization/tc-characterization.component.ts ***!
+  \**********************************************************************/
+/*! exports provided: TcCharacterizationComponent */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TcCharacteritzationComponent", function() { return TcCharacteritzationComponent; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TcCharacterizationComponent", function() { return TcCharacterizationComponent; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
-/* harmony import */ var _tc_characteritzation_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./tc-characteritzation.service */ "./src/app/tc-characteritzation/tc-characteritzation.service.ts");
+/* harmony import */ var _tc_characterization_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./tc-characterization.service */ "./src/app/tc-characterization/tc-characterization.service.ts");
 /* harmony import */ var xml2js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! xml2js */ "./node_modules/xml2js/lib/xml2js.js");
 /* harmony import */ var xml2js__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(xml2js__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var _ng_bootstrap_ng_bootstrap__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @ng-bootstrap/ng-bootstrap */ "./node_modules/@ng-bootstrap/ng-bootstrap/fesm5/ng-bootstrap.js");
@@ -2538,8 +2538,8 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-var TcCharacteritzationComponent = /** @class */ (function () {
-    function TcCharacteritzationComponent(service, modalService) {
+var TcCharacterizationComponent = /** @class */ (function () {
+    function TcCharacterizationComponent(service, modalService) {
         this.service = service;
         this.modalService = modalService;
         this.search_type = 'compound_name';
@@ -2560,9 +2560,9 @@ var TcCharacteritzationComponent = /** @class */ (function () {
         //smiles_list: Array<Object> = [{value:'test',string_class:'test',resolver:'test',classification:'test'}];
         this.selected_smiles_int_id_list = [];
     }
-    TcCharacteritzationComponent.prototype.ngOnInit = function () {
+    TcCharacterizationComponent.prototype.ngOnInit = function () {
     };
-    TcCharacteritzationComponent.prototype.ngAfterViewInit = function () {
+    TcCharacterizationComponent.prototype.ngAfterViewInit = function () {
         $("#name2cas_cas").multiSelect({
             'afterInit': function () {
                 $("#name2cas_cas").children("[selected='selected']").removeAttr('selected');
@@ -2598,21 +2598,21 @@ var TcCharacteritzationComponent = /** @class */ (function () {
         });
         this.updateSmilesMultiselect();
     };
-    TcCharacteritzationComponent.prototype.CASandSmilesFromNameButton = function () {
+    TcCharacterizationComponent.prototype.CASandSmilesFromNameButton = function () {
         this.CASFromNameButton();
         this.smilesFromNameButton();
     };
-    TcCharacteritzationComponent.prototype.changeCASandSmilesShowCactvsData = function () {
+    TcCharacterizationComponent.prototype.changeCASandSmilesShowCactvsData = function () {
         this.smiles_show_cactvs_data = this.cas_show_cactvs_data;
         this.changeCASShowCactvsData();
         this.changeSmilesShowCactvsData();
     };
-    TcCharacteritzationComponent.prototype.updateCASMultiselect = function () {
+    TcCharacterizationComponent.prototype.updateCASMultiselect = function () {
         setTimeout(function () {
             $("#name2cas_cas").multiSelect('refresh');
         }, 0);
     };
-    TcCharacteritzationComponent.prototype.changeCASShowCactvsData = function () {
+    TcCharacterizationComponent.prototype.changeCASShowCactvsData = function () {
         this.selected_cas_int_id_list = [];
         this.cas_copy_show_cactvs_data = Boolean(this.cas_show_cactvs_data);
         this.updateCASMultiselect();
@@ -2620,7 +2620,7 @@ var TcCharacteritzationComponent = /** @class */ (function () {
             $("#name2cas_cas").multiSelect('deselect_all');
         }, 0);
     };
-    TcCharacteritzationComponent.prototype.updateCASSet = function (remove_duplicates) {
+    TcCharacterizationComponent.prototype.updateCASSet = function (remove_duplicates) {
         if (remove_duplicates === void 0) { remove_duplicates = true; }
         var cas_list = this.cas_list;
         if (remove_duplicates) {
@@ -2628,7 +2628,7 @@ var TcCharacteritzationComponent = /** @class */ (function () {
         }
         this.cas_set = cas_list;
     };
-    TcCharacteritzationComponent.prototype.CASFromNameButton = function () {
+    TcCharacterizationComponent.prototype.CASFromNameButton = function () {
         var _this = this;
         if (this.cas_from_name_running) {
             return;
@@ -2666,14 +2666,14 @@ var TcCharacteritzationComponent = /** @class */ (function () {
             _this.cas_from_name_subscription.unsubscribe();
         });
     };
-    TcCharacteritzationComponent.prototype.getSelectedCASFromMultiselect = function () {
+    TcCharacterizationComponent.prototype.getSelectedCASFromMultiselect = function () {
         var selected_cas_int_id_list = [];
         $("#name2cas_cas").children("[selected='selected']").each(function () {
             selected_cas_int_id_list.push(Number($(this).val().replace(/^[0-9]+:\s+/, '')) + 0);
         });
         return selected_cas_int_id_list;
     };
-    TcCharacteritzationComponent.prototype.setCurrentCasIntId = function () {
+    TcCharacterizationComponent.prototype.setCurrentCasIntId = function () {
         var _this = this;
         if (this.selected_cas_int_id_list.length === 1) {
             var current_cas_int_id_1 = this.selected_cas_int_id_list[0];
@@ -2692,7 +2692,7 @@ var TcCharacteritzationComponent = /** @class */ (function () {
             }
         }
     };
-    TcCharacteritzationComponent.prototype.removeCASDuplicates = function (cas_list) {
+    TcCharacterizationComponent.prototype.removeCASDuplicates = function (cas_list) {
         var j = {};
         var cas_list_set = cas_list.filter(function (value, index, array) {
             if (j.hasOwnProperty(value['value'])) {
@@ -2703,14 +2703,14 @@ var TcCharacteritzationComponent = /** @class */ (function () {
         });
         return cas_list_set;
     };
-    TcCharacteritzationComponent.prototype.CASFromNameRemoveDuplicatesButton = function () {
+    TcCharacterizationComponent.prototype.CASFromNameRemoveDuplicatesButton = function () {
         this.cas_list = this.removeCASDuplicates(this.cas_list);
         this.updateCASSet(false);
         this.cas_current = undefined;
         this.selected_cas_int_id_list = [];
         this.updateCASMultiselect();
     };
-    TcCharacteritzationComponent.prototype.filterObjectListByKey = function (object_list, key, values, inverted) {
+    TcCharacterizationComponent.prototype.filterObjectListByKey = function (object_list, key, values, inverted) {
         if (inverted === void 0) { inverted = false; }
         var j_key = {};
         values.forEach(function (value) {
@@ -2722,7 +2722,7 @@ var TcCharacteritzationComponent = /** @class */ (function () {
         });
         return filtered_object_list;
     };
-    TcCharacteritzationComponent.prototype.filterCASListByIntId = function (cas_list, cas_int_id_list, inverted) {
+    TcCharacterizationComponent.prototype.filterCASListByIntId = function (cas_list, cas_int_id_list, inverted) {
         if (inverted === void 0) { inverted = false; }
         var cas_int_id_list_number = [];
         cas_int_id_list.forEach(function (cas_int_id) {
@@ -2730,7 +2730,7 @@ var TcCharacteritzationComponent = /** @class */ (function () {
         });
         return this.filterObjectListByKey(cas_list, 'int_id', cas_int_id_list_number, inverted);
     };
-    TcCharacteritzationComponent.prototype.CASFromNameDeleteButton = function () {
+    TcCharacterizationComponent.prototype.CASFromNameDeleteButton = function () {
         if (this.cas_show_cactvs_data) {
             this.cas_list = this.filterCASListByIntId(this.cas_list, this.selected_cas_int_id_list, true);
         }
@@ -2747,7 +2747,7 @@ var TcCharacteritzationComponent = /** @class */ (function () {
         this.selected_cas_int_id_list = [];
         this.updateCASMultiselect();
     };
-    TcCharacteritzationComponent.prototype.updateCASTextDump = function (copy_selection_only, cas_rgn_only) {
+    TcCharacterizationComponent.prototype.updateCASTextDump = function (copy_selection_only, cas_rgn_only) {
         var _this = this;
         if (copy_selection_only === void 0) { copy_selection_only = true; }
         if (cas_rgn_only === void 0) { cas_rgn_only = false; }
@@ -2771,7 +2771,7 @@ var TcCharacteritzationComponent = /** @class */ (function () {
             _this.cas_text_dump += cas[key] + '\n';
         });
     };
-    TcCharacteritzationComponent.prototype.openCASCopy = function (content, copy_selection_only) {
+    TcCharacterizationComponent.prototype.openCASCopy = function (content, copy_selection_only) {
         if (copy_selection_only === void 0) { copy_selection_only = true; }
         var closeResult;
         this.cas_copy_copy_selection_only = copy_selection_only;
@@ -2786,15 +2786,15 @@ var TcCharacteritzationComponent = /** @class */ (function () {
             //ModalDismissReasons contains reason possible values
         });
     };
-    TcCharacteritzationComponent.prototype.changeShowName2CasData = function () {
+    TcCharacterizationComponent.prototype.changeShowName2CasData = function () {
         this.updateCASTextDump(this.cas_copy_copy_selection_only, !this.cas_copy_show_cactvs_data);
     };
-    TcCharacteritzationComponent.prototype.updateSmilesMultiselect = function () {
+    TcCharacterizationComponent.prototype.updateSmilesMultiselect = function () {
         setTimeout(function () {
             $("#name2smiles_smiles").multiSelect('refresh');
         }, 0);
     };
-    TcCharacteritzationComponent.prototype.changeSmilesShowCactvsData = function () {
+    TcCharacterizationComponent.prototype.changeSmilesShowCactvsData = function () {
         this.selected_smiles_int_id_list = [];
         this.smiles_copy_show_cactvs_data = Boolean(this.smiles_show_cactvs_data);
         this.updateSmilesMultiselect();
@@ -2802,7 +2802,7 @@ var TcCharacteritzationComponent = /** @class */ (function () {
             $("#name2smiles_smiles").multiSelect('deselect_all');
         }, 0);
     };
-    TcCharacteritzationComponent.prototype.updateSmilesSet = function (remove_duplicates) {
+    TcCharacterizationComponent.prototype.updateSmilesSet = function (remove_duplicates) {
         if (remove_duplicates === void 0) { remove_duplicates = true; }
         var smiles_list = this.smiles_list;
         if (remove_duplicates) {
@@ -2810,7 +2810,7 @@ var TcCharacteritzationComponent = /** @class */ (function () {
         }
         this.smiles_set = smiles_list;
     };
-    TcCharacteritzationComponent.prototype.smilesFromNameButton = function () {
+    TcCharacterizationComponent.prototype.smilesFromNameButton = function () {
         var _this = this;
         if (this.smiles_from_name_running) {
             return;
@@ -2848,14 +2848,14 @@ var TcCharacteritzationComponent = /** @class */ (function () {
             _this.smiles_from_name_subscription.unsubscribe();
         });
     };
-    TcCharacteritzationComponent.prototype.getSelectedSmilesFromMultiselect = function () {
+    TcCharacterizationComponent.prototype.getSelectedSmilesFromMultiselect = function () {
         var selected_smiles_int_id_list = [];
         $("#name2smiles_smiles").children("[selected='selected']").each(function () {
             selected_smiles_int_id_list.push(Number($(this).val().replace(/^[0-9]+:\s+/, '')) + 0);
         });
         return selected_smiles_int_id_list;
     };
-    TcCharacteritzationComponent.prototype.setCurrentSmilesIntId = function () {
+    TcCharacterizationComponent.prototype.setCurrentSmilesIntId = function () {
         var _this = this;
         if (this.selected_smiles_int_id_list.length === 1) {
             var current_smiles_int_id_1 = this.selected_smiles_int_id_list[0];
@@ -2874,7 +2874,7 @@ var TcCharacteritzationComponent = /** @class */ (function () {
             }
         }
     };
-    TcCharacteritzationComponent.prototype.removeSmilesDuplicates = function (smiles_list) {
+    TcCharacterizationComponent.prototype.removeSmilesDuplicates = function (smiles_list) {
         var j = {};
         var smiles_list_set = smiles_list.filter(function (value, index, array) {
             if (j.hasOwnProperty(value['value'])) {
@@ -2885,14 +2885,14 @@ var TcCharacteritzationComponent = /** @class */ (function () {
         });
         return smiles_list_set;
     };
-    TcCharacteritzationComponent.prototype.smilesFromNameRemoveDuplicatesButton = function () {
+    TcCharacterizationComponent.prototype.smilesFromNameRemoveDuplicatesButton = function () {
         this.smiles_list = this.removeSmilesDuplicates(this.smiles_list);
         this.updateSmilesSet(false);
         this.smiles_current = undefined;
         this.selected_smiles_int_id_list = [];
         this.updateSmilesMultiselect();
     };
-    TcCharacteritzationComponent.prototype.filterSmilesListByIntId = function (smiles_list, smiles_int_id_list, inverted) {
+    TcCharacterizationComponent.prototype.filterSmilesListByIntId = function (smiles_list, smiles_int_id_list, inverted) {
         if (inverted === void 0) { inverted = false; }
         var smiles_int_id_list_number = [];
         smiles_int_id_list.forEach(function (smiles_int_id) {
@@ -2900,7 +2900,7 @@ var TcCharacteritzationComponent = /** @class */ (function () {
         });
         return this.filterObjectListByKey(smiles_list, 'int_id', smiles_int_id_list_number, inverted);
     };
-    TcCharacteritzationComponent.prototype.smilesFromNameDeleteButton = function () {
+    TcCharacterizationComponent.prototype.smilesFromNameDeleteButton = function () {
         if (this.smiles_show_cactvs_data) {
             this.smiles_list = this.filterSmilesListByIntId(this.smiles_list, this.selected_smiles_int_id_list, true);
         }
@@ -2917,7 +2917,7 @@ var TcCharacteritzationComponent = /** @class */ (function () {
         this.selected_smiles_int_id_list = [];
         this.updateSmilesMultiselect();
     };
-    TcCharacteritzationComponent.prototype.updateSmilesTextDump = function (copy_selection_only, smiles_smiles_only) {
+    TcCharacterizationComponent.prototype.updateSmilesTextDump = function (copy_selection_only, smiles_smiles_only) {
         var _this = this;
         if (copy_selection_only === void 0) { copy_selection_only = true; }
         if (smiles_smiles_only === void 0) { smiles_smiles_only = false; }
@@ -2941,7 +2941,7 @@ var TcCharacteritzationComponent = /** @class */ (function () {
             _this.smiles_text_dump += smiles[key] + '\n';
         });
     };
-    TcCharacteritzationComponent.prototype.openSmilesCopy = function (content, copy_selection_only) {
+    TcCharacterizationComponent.prototype.openSmilesCopy = function (content, copy_selection_only) {
         if (copy_selection_only === void 0) { copy_selection_only = true; }
         var closeResult;
         this.smiles_copy_copy_selection_only = copy_selection_only;
@@ -2956,55 +2956,55 @@ var TcCharacteritzationComponent = /** @class */ (function () {
             //ModalDismissReasons contains reason possible values
         });
     };
-    TcCharacteritzationComponent.prototype.changeShowName2SmilesData = function () {
+    TcCharacterizationComponent.prototype.changeShowName2SmilesData = function () {
         this.updateSmilesTextDump(this.smiles_copy_copy_selection_only, !this.smiles_copy_show_cactvs_data);
     };
-    TcCharacteritzationComponent.ctorParameters = function () { return [
-        { type: _tc_characteritzation_service__WEBPACK_IMPORTED_MODULE_2__["TcCharacteritzationService"] },
+    TcCharacterizationComponent.ctorParameters = function () { return [
+        { type: _tc_characterization_service__WEBPACK_IMPORTED_MODULE_2__["TcCharacterizationService"] },
         { type: _ng_bootstrap_ng_bootstrap__WEBPACK_IMPORTED_MODULE_4__["NgbModal"] }
     ]; };
     tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Object)
-    ], TcCharacteritzationComponent.prototype, "info", void 0);
-    TcCharacteritzationComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+    ], TcCharacterizationComponent.prototype, "info", void 0);
+    TcCharacterizationComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
-            selector: 'app-tc-characteritzation',
-            template: __webpack_require__(/*! raw-loader!./tc-characteritzation.component.html */ "./node_modules/raw-loader/index.js!./src/app/tc-characteritzation/tc-characteritzation.component.html"),
-            styles: [__webpack_require__(/*! ./tc-characteritzation.component.css */ "./src/app/tc-characteritzation/tc-characteritzation.component.css")]
+            selector: 'app-tc-characterization',
+            template: __webpack_require__(/*! raw-loader!./tc-characterization.component.html */ "./node_modules/raw-loader/index.js!./src/app/tc-characterization/tc-characterization.component.html"),
+            styles: [__webpack_require__(/*! ./tc-characterization.component.css */ "./src/app/tc-characterization/tc-characterization.component.css")]
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_tc_characteritzation_service__WEBPACK_IMPORTED_MODULE_2__["TcCharacteritzationService"],
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_tc_characterization_service__WEBPACK_IMPORTED_MODULE_2__["TcCharacterizationService"],
             _ng_bootstrap_ng_bootstrap__WEBPACK_IMPORTED_MODULE_4__["NgbModal"]])
-    ], TcCharacteritzationComponent);
-    return TcCharacteritzationComponent;
+    ], TcCharacterizationComponent);
+    return TcCharacterizationComponent;
 }());
 
 
 
 /***/ }),
 
-/***/ "./src/app/tc-characteritzation/tc-characteritzation.service.ts":
-/*!**********************************************************************!*\
-  !*** ./src/app/tc-characteritzation/tc-characteritzation.service.ts ***!
-  \**********************************************************************/
-/*! exports provided: TcCharacteritzationService */
+/***/ "./src/app/tc-characterization/tc-characterization.service.ts":
+/*!********************************************************************!*\
+  !*** ./src/app/tc-characterization/tc-characterization.service.ts ***!
+  \********************************************************************/
+/*! exports provided: TcCharacterizationService */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TcCharacteritzationService", function() { return TcCharacteritzationService; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TcCharacterizationService", function() { return TcCharacterizationService; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
 
 
 
-var TcCharacteritzationService = /** @class */ (function () {
-    function TcCharacteritzationService(http) {
+var TcCharacterizationService = /** @class */ (function () {
+    function TcCharacterizationService(http) {
         this.http = http;
         this.cactus_webservice_URL = 'https://cactus.nci.nih.gov/chemical/structure/';
     }
-    TcCharacteritzationService.prototype.getCASFromName = function (search_string, search_type) {
+    TcCharacterizationService.prototype.getCASFromName = function (search_string, search_type) {
         if (search_type === void 0) { search_type = null; }
         var resolvers = {
             compound_name: 'name_by_opsin,name_by_cir',
@@ -3020,7 +3020,7 @@ var TcCharacteritzationService = /** @class */ (function () {
         }
         return this.http.get(url, { responseType: 'text', params: params });
     };
-    TcCharacteritzationService.prototype.getSmilesFromName = function (search_string, search_type) {
+    TcCharacterizationService.prototype.getSmilesFromName = function (search_string, search_type) {
         if (search_type === void 0) { search_type = null; }
         var resolvers = {
             compound_name: 'name_by_opsin,name_by_cir',
@@ -3036,7 +3036,7 @@ var TcCharacteritzationService = /** @class */ (function () {
         }
         return this.http.get(url, { responseType: 'text', params: params });
     };
-    TcCharacteritzationService.prototype.cactusXMLparsed = function (parseString_result, include_input_type) {
+    TcCharacterizationService.prototype.cactusXMLparsed = function (parseString_result, include_input_type) {
         if (include_input_type === void 0) { include_input_type = false; }
         var item_list = [];
         var counter = 0;
@@ -3083,16 +3083,16 @@ var TcCharacteritzationService = /** @class */ (function () {
         }
         return item_list;
     };
-    TcCharacteritzationService.ctorParameters = function () { return [
+    TcCharacterizationService.ctorParameters = function () { return [
         { type: _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpClient"] }
     ]; };
-    TcCharacteritzationService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+    TcCharacterizationService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
             providedIn: 'root'
         }),
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpClient"]])
-    ], TcCharacteritzationService);
-    return TcCharacteritzationService;
+    ], TcCharacterizationService);
+    return TcCharacterizationService;
 }());
 
 
