@@ -13,6 +13,11 @@ class Projects(models.Model):
             models.UniqueConstraint(fields=['name','owner'], name='unique_name_owner'),
         ]
 
+class NodeType(models.Model):
+    name = models.CharField(max_length=255)
+    description = models.TextField(blank=True,null=False,default='')
+    
+
 class Nodes(models.Model):
 
     project = models.ForeignKey(Projects, on_delete=models.CASCADE)
