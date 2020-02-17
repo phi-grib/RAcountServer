@@ -15,11 +15,17 @@ class UserSerializer (serializers.ModelSerializer):
         model = get_user_model()
         fields = ('id','email','first_name','last_name')
 
-class NodeSerializer (serializers.ModelSerializer):
-    
+class FullNodeSerializer (serializers.ModelSerializer):
+    name = serializers.CharField(allow_blank=False, trim_whitespace=True)
+    description = serializers.CharField(allow_blank=True, trim_whitespace=True)
     class Meta:
         model = Nodes
         fields = ('name', 'description','inputs_comments','outputs', 'outputs_comments', 'project', 'node_seq','executed')
+
+class NodeSerializer (serializers.ModelSerializer):
+    class Meta:
+        model = Nodes
+        fields = ('inputs_comments','outputs', 'outputs_comments', 'project', 'node_seq','executed')
 
 class ResourcesSerializer (serializers.ModelSerializer):
 

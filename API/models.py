@@ -14,20 +14,18 @@ class Projects(models.Model):
         ]
 
 class NodeType(models.Model):
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255,blank=True,null=False,default='Unnamed')
     description = models.TextField(blank=True,null=False,default='')
-    
+
 
 class Nodes(models.Model):
 
     project = models.ForeignKey(Projects, on_delete=models.CASCADE)
-    name = models.CharField(max_length=255)
-    description = models.TextField(blank=True,null=False,default='')
     inputs = models.TextField(blank=True,null=False,default='')
     inputs_comments = models.TextField(blank=True,null=False,default='')
     outputs = models.TextField(blank=True,null=False,default='')
     outputs_comments = models.TextField(blank=True,null=False,default='')
-    node_seq = models.IntegerField()
+    node_seq = models.ForeignKey(NodeType, on_delete=models.DO_NOTHING)
     executed = models.BooleanField(default=False)
     class Meta:
         constraints = [

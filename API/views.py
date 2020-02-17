@@ -38,7 +38,7 @@ from .models import Nodes as NodesModel
 from .models import Resources as ResourcesModel
 from .models import File, FileType
 
-from .serializer import ProjectSerializer, UserSerializer, NodeSerializer
+from .serializer import ProjectSerializer, UserSerializer, NodeSerializer, FullNodeSerializer
 from .serializer import StatusSerializer, ResourcesSerializer, ProblemDescriptionSerializer, ProblemDescriptionSerializerInput
 
 from .permissions import IsProjectOwner
@@ -103,8 +103,8 @@ class ManageNodes(GenericAPIView,UpdateModelMixin):
 
         newdict = {}
 
-        node_info = NodesModel.objects.get(project=project,node_seq=node)
-        newdict.update(NodeSerializer(node_info, many=False).data)
+        node_info = NodesModel.objects.annotate(name=F('node_seq__name'),description=F('node_seq__description')).get(project=project,node_seq=node)
+        newdict.update(FullNodeSerializer(node_info, many=False).data)
 
         resources = ResourcesModel.objects.filter(node=node)
         resources = ResourcesSerializer(resources, many=True).data
@@ -112,7 +112,7 @@ class ManageNodes(GenericAPIView,UpdateModelMixin):
         newdict['resources'] = resources
 
         qhistory = NodesModel.objects.filter(project=project, node_seq__lt=node).order_by('node_seq')
-        qhistory = qhistory.annotate(content=F('outputs'),comment=F('outputs_comments')).values('name','content','comment','inputs_comments','node_seq')
+        qhistory = qhistory.annotate(content=F('outputs'),comment=F('outputs_comments'), name=F('node_seq__name')).values('name','content','comment','inputs_comments','node_seq')
         history = list(qhistory)
         for i in range(0,len(history)):
             histi = dict(history[i])
