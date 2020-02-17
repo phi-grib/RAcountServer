@@ -19,6 +19,7 @@ from django.conf.urls import url, include
 from django.views.generic import RedirectView
 from django.contrib.staticfiles.views import serve as static_serve
 from django.views.static import serve as debug_serve
+from django.urls import include, path
 
 if settings.DEBUG:
     urlpatterns = [
@@ -28,6 +29,10 @@ if settings.DEBUG:
         url(r'^'+settings.MEDIA_URL[1:]+r'(?P<path>.*)$', debug_serve,
          kwargs={'document_root': settings.MEDIA_ROOT})
     ]
+    if settings.DEBUG_TOOLBAR:
+        import debug_toolbar
+        urlpatterns = [path('__debug__/', include(debug_toolbar.urls))] + urlpatterns
+    
 else:
     urlpatterns = []
 

@@ -25,6 +25,8 @@ SECRET_KEY = 'r^#22lr(m1!4y=zyt(z#t0dz4c-4451tph@1u7)s4(x(nhio(='
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+DEBUG_TOOLBAR = False
+
 ALLOWED_HOSTS = []
 
 
@@ -39,7 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'corsheaders',
     'rest_framework',
-    'API'
+    'API',
+    'debug_toolbar'
 ]
 
 MIDDLEWARE = [
@@ -53,9 +56,10 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "API.custom_middleware.ExtendUserSession",
     
-    
-    
 ]
+
+if DEBUG_TOOLBAR:
+    MIDDLEWARE = ['debug_toolbar.middleware.DebugToolbarMiddleware'] + MIDDLEWARE
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
@@ -197,3 +201,9 @@ if DEBUG:
         'http://localhost:4200',
         'http://localhost:8000',
     ]
+
+# django debug toolbar
+# https://django-debug-toolbar.readthedocs.io/en/latest/installation.html
+INTERNAL_IPS = [
+    '127.0.0.1',
+]
