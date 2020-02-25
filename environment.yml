@@ -15,4 +15,4 @@ dependencies:
     - argon2-cffi==19.1.0
     - pytablereader
     - pytablewriter
-    - 
+    - django-debug-toolbar
