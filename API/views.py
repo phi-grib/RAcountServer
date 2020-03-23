@@ -4,6 +4,8 @@ import datetime
 import os
 import time
 
+from .utils import order_queryset_list_by_values_list
+
 from django.db import IntegrityError
 from django.conf import settings
 from django.http import HttpResponse, JsonResponse
@@ -103,17 +105,27 @@ class ManageNodes(GenericAPIView,UpdateModelMixin):
 
         newdict = {}
 
-        node_info = NodesModel.objects.annotate(name=F('node_seq__name'),description=F('node_seq__description')).get(project=project,node_seq=node)
+        node_info = NodesModel.objects.annotate(name=F('node_seq__name'),description=F('node_seq__description'), history_node_list=F('node_seq__history_node_list')).get(project=project,node_seq=node)
         newdict.update(FullNodeSerializer(node_info, many=False).data)
 
         resources = ResourcesModel.objects.filter(node=node)
         resources = ResourcesSerializer(resources, many=True).data
 
         newdict['resources'] = resources
-
-        qhistory = NodesModel.objects.filter(project=project, node_seq__lt=node).order_by('node_seq')
+        
+        qhistory = NodesModel.objects.filter(project=project)
         qhistory = qhistory.annotate(content=F('outputs'),comment=F('outputs_comments'), name=F('node_seq__name')).values('name','content','comment','inputs_comments','node_seq')
-        history = list(qhistory)
+
+        if node_info.history_node_list is None:
+            qhistory = qhistory.filter(node_seq__lt=node).order_by('node_seq')
+            history = list(qhistory)
+        elif node_info.history_node_list == '':
+            history = []
+        else:
+            history_node_list_as_list = list(map(int,node_info.history_node_list.split(',')))
+            qhistory = qhistory.filter(node_seq__in=history_node_list_as_list)
+            history = order_queryset_list_by_values_list(qhistory,'node_seq', history_node_list_as_list)
+        
         for i in range(0,len(history)):
             histi = dict(history[i])
             content = histi['content']

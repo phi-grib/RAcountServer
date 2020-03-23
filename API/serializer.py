@@ -18,9 +18,10 @@ class UserSerializer (serializers.ModelSerializer):
 class FullNodeSerializer (serializers.ModelSerializer):
     name = serializers.CharField(allow_blank=False, trim_whitespace=True)
     description = serializers.CharField(allow_blank=True, trim_whitespace=True)
+    history_node_list = serializers.CharField(allow_null=True, allow_blank=True, trim_whitespace=True)
     class Meta:
         model = Nodes
-        fields = ('name', 'description','inputs_comments','outputs', 'outputs_comments', 'project', 'node_seq','executed')
+        fields = ('name', 'description','history_node_list','inputs_comments','outputs', 'outputs_comments', 'project', 'node_seq','executed')
 
 class NodeSerializer (serializers.ModelSerializer):
     class Meta:
