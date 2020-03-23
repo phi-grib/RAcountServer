@@ -16,6 +16,7 @@ class Projects(models.Model):
 class NodeType(models.Model):
     name = models.CharField(max_length=255,blank=True,null=False,default='Unnamed')
     description = models.TextField(blank=True,null=False,default='')
+    history_node_list = models.TextField(blank=True,null=True,default=None)
 
 
 class Nodes(models.Model):
