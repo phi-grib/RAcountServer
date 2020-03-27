@@ -1,18 +1,19 @@
 name: RAcount
 channels:
   - defaults
+  - conda-forge
+  - chembl
 dependencies:
-  - pip=19.3
-# - pip=10.0.1
-  - python=3.6.5
+  - pip=20.0.2
+  - python=3.6.10
   - django=2.2.5
-  - numpy=1.14.3
-  - pandas=0.23.0
-  - cython=0.29.13
+  - cython=0.29.15
+  - rdkit=2019.09.3
+  - chembl_structure_pipeline=1.0.0
   - pip:
     - django-cors-headers==3.1.1
-    - djangorestframework==3.8.2
-    - argon2-cffi==19.1.0
+    - djangorestframework==3.11.0
+    - argon2-cffi==19.2.0
     - pytablereader
     - pytablewriter
-    - django-debug-toolbar
+    - django-debug-toolbar==2.2

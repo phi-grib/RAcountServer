@@ -17,6 +17,7 @@ Including another URLconf
 from django.urls import path,re_path
 from .views import ListProjects, ProjectStatus, ManageProject, ManageNodes, User, Resources, FileUploadView
 from .views import ProblemDescriptionView
+from .chembl import ChEMBLSmilesToInChIKeyView
 
 urlpatterns = [
     #path("RX", ListModels.as_view()),
@@ -26,5 +27,7 @@ urlpatterns = [
     path("RX/project/<int:project>/node/<int:node>/", ManageNodes.as_view()),
     path("RX/node/<int:node>/resources/", Resources.as_view()),
     path("RX/project/<int:project>/problem_description/",ProblemDescriptionView.as_view()),
-    path("RX/upload/<int:project>/<int:node>/<int:part>/", FileUploadView.as_view())
+    path("RX/upload/<int:project>/<int:node>/<int:part>/", FileUploadView.as_view()),
+    path("RX/chembl/smiles2inchikey/", ChEMBLSmilesToInChIKeyView.as_view())
+
 ]
