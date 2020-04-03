@@ -5,11 +5,17 @@ from rdkit.Chem import rdinchi
 from chembl_structure_pipeline import standardizer as embl
 from chembl_structure_pipeline import checker
 
-from rest_framework import serializers
+from django.utils.decorators import method_decorator
+from django.views.decorators.http import require_http_methods
+from django.views.decorators.csrf import csrf_protect, ensure_csrf_cookie, csrf_exempt
+
+from rest_framework import serializers, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.exceptions import PermissionDenied
+
 
 def chembl_standarize_rdkitmol(mol, parent=False):
     std_molblock = embl.standardize_molblock(Chem.MolToMolBlock(mol))
@@ -37,9 +43,10 @@ def chembl_standarize_smiles_to_inchikey(smiles, parent=False, isomeric=True):
 class ChEMBLSmilesToInChIKeySerializer(serializers.Serializer):
     smiles = serializers.CharField(allow_blank=False, trim_whitespace=True)
 
+@method_decorator((csrf_exempt), name='dispatch')
 class ChEMBLSmilesToInChIKeyView(APIView):
-    authentication_classes = [SessionAuthentication]
-    permission_classes = [IsAuthenticated]
+    authentication_classes = []
+    permission_classes = []
     def post(self, request):
         parent=False
         isomeric=True
@@ -64,8 +71,7 @@ class ChEMBLSmilesToInChIKeyView(APIView):
                     parent = False
             except Exception:
                 pass
-        raw_data_dict = dict(request.data)
-        serializer = ChEMBLSmilesToInChIKeySerializer(data=raw_data_dict)
+        serializer = ChEMBLSmilesToInChIKeySerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         data = serializer.data
         smiles = data['smiles']
