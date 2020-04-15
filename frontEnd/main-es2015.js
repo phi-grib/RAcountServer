@@ -108,6 +108,17 @@ module.exports = "\n<router-outlet></router-outlet>\n"
 
 /***/ }),
 
+/***/ "./node_modules/raw-loader/index.js!./src/app/chembl/chembl.component.html":
+/*!************************************************************************!*\
+  !*** ./node_modules/raw-loader!./src/app/chembl/chembl.component.html ***!
+  \************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "<div class=\"row m-5 form-group\" style=\"margin-bottom:0px !important;margin-top:10px !important\">\n    <table style=\"width:100%;vertical-align:bottom\">\n        <tr>\n\n                <td style=\"width:9rem\">\n                    <label style=\"margin-bottom:0px\" for=\"chembl_search_string\" >SMILES:</label>\n                </td>\n                <td><input id=\"chembl_search_string\" class=\"form-control\" name=\"search_string\" [(ngModel)]=\"chembl_search_string\" type=\"text\"></td>\n                <td style=\"width:8rem\"><button class=\"btn btn-primary\" [disabled]=\"chembl_running\" (click)=\"chemblIdFromSmilesButton()\">Search</button>\n                    <mat-spinner *ngIf=\"chembl_running\" style=\"display:inline-block\" ProgressSpinnerMode=\"indeterminate\" diameter=\"14\"></mat-spinner>\n                </td>\n        <tr>\n\n                    <td style=\"width:9rem\"><label style=\"margin-bottom:0px\" for=\"chembl_chembl_ids\" >ChEMBL ID(s):</label></td>\n                    <td style=\"width:auto\">\n                            <select id=\"chembl_chembl_ids\" size=5 class=\"form-control\" name=\"selected_cas\" [(ngModel)]=\"chembl_selected_item_int_id_list\" multiple>\n                            <option *ngFor=\"let item of chembl_item_list\" [ngValue]=\"item.int_id\" [innerHTML]=\"item.html_rep\"></option>\n                            </select>\n                            \n                    </td>\n                    <td style=\"width:auto\">\n                    </td>\n        </tr>\n        <tr>\n            <td></td>\n            <td style=\"display:inline-block\"><button style=\"display:inline-block\" class=\"btn\" [disabled]=\"chembl_selected_item_int_id_list.length === 0\" (click)=\"chemblDeleteSelectedItems()\">Delete</button>\n            <button style=\"display:inline-block\" class=\"btn\" [disabled]=\"chembl_selected_item_int_id_list.length === 0\" (click)=\"openCopy(content,true)\">Copy in clipboard</button>\n            <button style=\"display:inline-block\" class=\"btn\" [disabled]=\"chembl_item_list.length === 0\" (click)=\"openCopy(content,false)\">Copy all in clipboard</button></td>\n        </tr>\n    </table>\n</div>\n<ng-template #content let-modal>\n    <div class=\"modal-header\">\n        <h4 class=\"modal-title\" id=\"chembl-copy-clipboard-basic-title\">ChEMBL(s)</h4>\n        <button type=\"button\" class=\"close\" aria-label=\"Close\" (click)=\"modal.dismiss('close')\">\n        <span aria-hidden=\"true\">&times;</span>\n        </button>\n    </div>\n    <div class=\"modal-body\">\n        <div class=\"form-group\">\n            <div class=\"input-group\">\n                <p>The following ChEMBL have been copied in your clipboard:</p>\n            </div>\n            <div class=\"input-group\">\n            <textarea id=\"chembl-copy-textarea\" style=\"width:100%\" class=\"form-control\" (change)=\"chemblChangeContentItemTextarea()\" [(ngModel)]=\"chembl_content_item_textarea\" rows=10></textarea>\n            </div>\n        </div>\n    </div>\n    <div class=\"modal-footer\">\n        <button type=\"button\" class=\"btn btn-outline-dark\" (click)=\"modal.dismiss('close')\">Close</button>\n    </div>\n</ng-template>"
+
+/***/ }),
+
 /***/ "./node_modules/raw-loader/index.js!./src/app/each-workflow/each-workflow.component.html":
 /*!**************************************************************************************!*\
   !*** ./node_modules/raw-loader!./src/app/each-workflow/each-workflow.component.html ***!
@@ -138,6 +149,17 @@ module.exports = "\n<head>\n    <meta charset=\"utf-8\">\n    <meta http-equiv=\
 /***/ (function(module, exports) {
 
 module.exports = "<app-navbar></app-navbar>\n<div class=\"container-fluid\">\n    <div class=\"d-flex flex-row\">\n        <div id=\"sidebar\" class=\"d-flex flex-column col-lg-2 bg-light active\">\n            <app-sidebar></app-sidebar>\n        </div>\n        <div class=\"d-flex flex-column col-lg\">\n            <div class=\"d-flex flex-row\">\n                <button type=\"button\" id=\"sidebarCollapse\" class=\"btn btn-primary\" (click)=\"change()\">\n                    <i class=\"fas fa-align-left\"></i>\n                    <h3><span>&#9776;</span></h3>\n                </button>\n            </div>\n            <app-tabs></app-tabs>\n            <app-workflows></app-workflows>   \n               \n        </div>\n    </div>      \n</div> \n\n"
+
+/***/ }),
+
+/***/ "./node_modules/raw-loader/index.js!./src/app/name2cas/name2cas.component.html":
+/*!****************************************************************************!*\
+  !*** ./node_modules/raw-loader!./src/app/name2cas/name2cas.component.html ***!
+  \****************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "<div class=\"row m-5 form-group\" style=\"margin-bottom:0px !important;margin-top:10px !important\">\n    <table style=\"width:100%;vertical-align:bottom\">\n        <tr>\n\n                <td style=\"width:9rem\">\n                    <label style=\"margin-bottom:0px\" for=\"name2cas_search_string\" >Compound name:</label>\n                </td>\n                <td><input id=\"name2cas_search_string\" class=\"form-control\" name=\"search_string\" [(ngModel)]=\"search_string\" type=\"text\"></td>\n                <td style=\"width:8rem\"><button class=\"btn btn-primary\" [disabled]=\"this.cas.from_name_running\" (click)=\"itemsFromNameButton()\">Search</button>\n                    <mat-spinner *ngIf=\"this.cas.from_name_running\" style=\"display:inline-block\" ProgressSpinnerMode=\"indeterminate\" diameter=\"14\"></mat-spinner>\n                </td>\n\n        </tr>\n        <tr>\n            <td></td>\n            <td><br>\n                <div class=\"form-check\">\n                    <input class=\"form-check-input\" id=\"show-name2cas-data\" type=\"checkbox\" (change)=\"changeItemsShowCactvsData()\" [(ngModel)]=\"show_cactvs_data\">\n                    <label class=\"form-check-label\" for=\"show-name2cas-data\">Show CACTVS data</label>\n            </div><br></td>\n            <td></td>\n        </tr>\n        <tr>\n\n                <td style=\"width:9rem\"><label style=\"margin-bottom:0px\" for=\"name2cas_cas\" >CAS registry number(s):</label></td>\n                <td style=\"width:auto\">\n                        <select id=\"name2cas_cas\" size=5 class=\"form-control\" name=\"selected_cas\" [(ngModel)]=\"this.cas.selected_item_int_id_list\" multiple>\n                        <ng-container *ngIf=\"this.cas.item_show_cactvs_data\"><option *ngFor=\"let item of this.cas.item_list\" [ngValue]=\"item.int_id\" [innerHTML]=\"item.html_rep\"></option></ng-container>\n                        <ng-container *ngIf=\"!this.cas.item_show_cactvs_data\"><option *ngFor=\"let item of this.cas.item_set\" [ngValue]=\"item.int_id\">{{ item.value }}</option></ng-container>\n                        </select>\n                        \n                </td>\n                <td style=\"width:auto\">\n                </td>\n        </tr>\n        <tr>\n            <td><button class=\"btn\" [disabled]=\"this.cas.item_list.length === 0 || !this.cas.item_show_cactvs_data\" (click)=\"this.cas.removeItemValueDuplicates();\">Remove duplicates</button><br></td>\n            <td style=\"display:inline-block\"><button style=\"display:inline-block\" class=\"btn\" [disabled]=\"this.cas.selected_item_int_id_list.length === 0\" (click)=\"this.cas.deleteSelectedItems()\">Delete</button>\n            <button style=\"display:inline-block\" class=\"btn\" [disabled]=\"this.cas.selected_item_int_id_list.length === 0\" (click)=\"openCopy(contentCAS,'cas',true)\">Copy in clipboard</button>\n            <button style=\"display:inline-block\" class=\"btn\" [disabled]=\"this.cas.item_list.length === 0\" (click)=\"openCopy(contentCAS,'cas',false)\">Copy all in clipboard</button></td>\n\n        </tr>\n    </table>\n</div>\n<br>\n<div class=\"row m-5\" style=\"margin-top:0px !important; margin-bottom:10px !important\">\n    <div *ngIf=\"this.cas.from_name_executed\">\n    <!--TODO: sentences about how many cas numbers have been found-->\n    <label *ngIf=\"this.cas.item_list.length !== 0 && this.cas.selected_item_int_id_list.length === 0 && !this.cas.from_name_running\" >\n        <ng-container *ngIf=\"this.cas.item_show_cactvs_data\">{{this.cas.item_list.length}} CAS registry number<!--\n        --><ng-container *ngIf=\"this.cas.item_list.length > 1\">s</ng-container> found.</ng-container> \n        <ng-container *ngIf=\"!this.cas.item_show_cactvs_data\">{{this.cas.item_set.length}} CAS registry number<!--\n        --><ng-container *ngIf=\"this.cas.item_set.length > 1\">s</ng-container> found.</ng-container>\n    </label>\n    <label *ngIf=\"this.cas.selected_item_int_id_list.length === 1 && this.cas.item_show_cactvs_data\" [innerHTML]=\"this.cas.current_item.html_rep\"></label>\n    <label *ngIf=\"this.cas.selected_item_int_id_list.length > 1 || this.cas.selected_item_int_id_list.length === 1 && !this.cas.item_show_cactvs_data\" >Selected {{this.cas.selected_item_int_id_list.length}} CAS registry numbers.</label>\n    </div>\n</div>\n\n<div class=\"row m-5 form-group\" style=\"margin-bottom:0px !important;margin-top:10px !important\">\n    <table style=\"width:100%;vertical-align:bottom\">\n        <tr>\n\n                <td style=\"width:9rem\"><label style=\"margin-bottom:0px\" for=\"name2smiles_smiles\" >SMILES:</label></td>\n                <td style=\"width:auto\">\n                        <select id=\"name2smiles_smiles\" size=5 class=\"form-control\" name=\"selected_smiles\" [(ngModel)]=\"this.smiles.selected_item_int_id_list\" multiple>\n                        <ng-container *ngIf=\"this.smiles.item_show_cactvs_data\"><option *ngFor=\"let item of this.smiles.item_list\" [ngValue]=\"item.int_id\" [innerHTML]=\"item.html_rep\"></option></ng-container>\n                        <ng-container *ngIf=\"!this.smiles.item_show_cactvs_data\"><option *ngFor=\"let item of this.smiles.item_set\" [ngValue]=\"item.int_id\">{{item.value}}</option></ng-container>\n                        </select>\n                        \n                </td>\n                <td style=\"width:8rem\">\n                </td>\n        </tr>\n        <tr>\n            <td><button class=\"btn\" [disabled]=\"this.smiles.item_list.length === 0 || !this.smiles.item_show_cactvs_data\" (click)=\"this.smiles.removeItemValueDuplicates();\">Remove duplicates</button><br></td>\n            <td style=\"display:inline-block\"><button style=\"display:inline-block\" class=\"btn\" [disabled]=\"this.smiles.selected_item_int_id_list.length === 0\" (click)=\"this.smiles.deleteSelectedItems()\">Delete</button>\n            <button style=\"display:inline-block\" class=\"btn\" [disabled]=\"this.smiles.selected_item_int_id_list.length === 0\" (click)=\"openCopy(contentSmiles,'smiles',true)\">Copy in clipboard</button>\n            <button style=\"display:inline-block\" class=\"btn\" [disabled]=\"this.smiles.item_list.length === 0\" (click)=\"openCopy(contentSmiles,'smiles',false)\">Copy all in clipboard</button></td>\n\n        </tr>\n    </table>\n</div>\n<br>\n<div class=\"row m-5\" style=\"margin-top:0px !important; margin-bottom:10px !important\">\n    <div *ngIf=\"this.smiles.from_name_executed\">\n    <!--TODO: sentences about how many smiles numbers have been found-->\n    <label *ngIf=\"this.smiles.item_list.length !== 0 && this.smiles.selected_item_int_id_list.length === 0 && !this.smiles.from_name_running\" >\n        <ng-container *ngIf=\"this.smiles.item_show_cactvs_data\">{{this.smiles.item_list.length}} SMILES found.</ng-container>\n        <ng-container *ngIf=\"!this.smiles.item_show_cactvs_data\">{{this.smiles.item_set.length}} SMILES found.</ng-container> \n    </label>\n    <label *ngIf=\"this.smiles.selected_item_int_id_list.length === 1 && this.smiles.item_show_cactvs_data\" [innerHTML]=\"this.smiles.current_item.html_rep\"></label>\n    <label *ngIf=\"this.smiles.selected_item_int_id_list.length > 1 || this.smiles.selected_item_int_id_list.length === 1 && !this.smiles.item_show_cactvs_data\" >Selected {{this.smiles.selected_item_int_id_list.length}} SMILES.</label>\n\n    </div>\n</div>\n\n<ng-template #contentCAS let-modal>\n    <div class=\"modal-header\">\n        <h4 class=\"modal-title\" id=\"name2cas-copy-clipboard-basic-title\">CAS registry number(s)</h4>\n        <button type=\"button\" class=\"close\" aria-label=\"Close\" (click)=\"modal.dismiss('close')\">\n        <span aria-hidden=\"true\">&times;</span>\n        </button>\n    </div>\n    <div class=\"modal-body\">\n        <div class=\"form-group\">\n            <div class=\"input-group\">\n                <div class=\"form-check\">\n                    <input class=\"form-check-input\" id=\"show-name2cas-copy-data\" type=\"checkbox\" (change)=\"changeShowName2ItemData(this.cas)\" [(ngModel)]=\"this.cas.item_copy_show_cactvs_data\">\n                    <label class=\"form-check-label\" for=\"show-name2cas-copy-data\">Show CACTVS data</label>\n                </div>  \n            </div>\n            <br>\n            <div class=\"input-group\">\n                <p>The following CAS registry number data has been copied in your clipboard:</p>\n            </div>\n            <div class=\"input-group\">\n            <textarea id=\"name2cas-copy-textarea\" style=\"width:100%\" class=\"form-control\" (change)=\"changeContentItemTextarea(this.cas)\" [(ngModel)]=\"this.cas.content_item_textarea\" rows=10></textarea>\n            </div>\n        </div>\n    </div>\n    <div class=\"modal-footer\">\n        <button type=\"button\" class=\"btn btn-outline-dark\" (click)=\"modal.dismiss('close')\">Close</button>\n    </div>\n</ng-template>\n<ng-template #contentSmiles let-modal>\n        <div class=\"modal-header\">\n            <h4 class=\"modal-title\" id=\"name2smiles-copy-clipboard-basic-title\">SMILES registry number(s)</h4>\n            <button type=\"button\" class=\"close\" aria-label=\"Close\" (click)=\"modal.dismiss('close')\">\n            <span aria-hidden=\"true\">&times;</span>\n            </button>\n        </div>\n        <div class=\"modal-body\">\n            <div class=\"form-group\">\n                <div class=\"input-group\">\n                    <div class=\"form-check\">\n                        <input class=\"form-check-input\" id=\"show-name2smiles-copy-data\" type=\"checkbox\" (change)=\"changeShowName2ItemData(this.smiles)\" [(ngModel)]=\"this.smiles.item_copy_show_cactvs_data\">\n                        <label class=\"form-check-label\" for=\"show-name2smiles-copy-data\">Show CACTVS data</label>\n                    </div>  \n                </div>\n                <br>\n                <div class=\"input-group\">\n                    <p>The following SMILES data has been copied in your clipboard:</p>\n                </div>\n                <div class=\"input-group\">\n                <textarea id=\"name2smiles-copy-textarea\" style=\"width:100%\" class=\"form-control\" (change)=\"changeContentItemTextarea(this.smiles)\" [(ngModel)]=\"this.smiles.content_item_textarea\" rows=10></textarea>\n                </div>\n            </div>\n        </div>\n        <div class=\"modal-footer\">\n            <button type=\"button\" class=\"btn btn-outline-dark\" (click)=\"modal.dismiss('close')\">Close</button>\n        </div>\n</ng-template>\n"
 
 /***/ }),
 
@@ -225,7 +247,7 @@ module.exports = "\n<div class=\"d-flex flex-row\">\n    <div>\n        \n      
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"card\">\n    <h6 class=\"card-header bg-light p-1\">Name2CAS/SMILES resolver</h6>\n\n    <div class=\"row m-5 form-group\" style=\"margin-bottom:0px !important;margin-top:10px !important\">\n        <table style=\"width:100%;vertical-align:bottom\">\n            <tr>\n\n                    <td style=\"width:9rem\">\n                        <label style=\"margin-bottom:0px\" for=\"name2cas_search_string\" >Compound name:</label>\n                    </td>\n                    <td><input id=\"name2cas_search_string\" class=\"form-control\" name=\"search_string\" [(ngModel)]=\"search_string\" type=\"text\"></td>\n                    <td style=\"width:8rem\"><button class=\"btn btn-primary\" [disabled]=\"this.cas.from_name_running\" (click)=\"itemsFromNameButton()\">Search</button>\n                        <mat-spinner *ngIf=\"this.cas.from_name_running\" style=\"display:inline-block\" ProgressSpinnerMode=\"indeterminate\" diameter=\"14\"></mat-spinner>\n                    </td>\n\n            </tr>\n            <tr>\n                <td></td>\n                <td><br>\n                    <div class=\"form-check\">\n                        <input class=\"form-check-input\" id=\"show-name2cas-data\" type=\"checkbox\" (change)=\"changeItemsShowCactvsData()\" [(ngModel)]=\"show_cactvs_data\">\n                        <label class=\"form-check-label\" for=\"show-name2cas-data\">Show CACTVS data</label>\n                </div><br></td>\n                <td></td>\n            </tr>\n            <tr>\n\n                    <td style=\"width:9rem\"><label style=\"margin-bottom:0px\" for=\"name2cas_cas\" >CAS registry number(s):</label></td>\n                    <td style=\"width:auto\">\n                            <select id=\"name2cas_cas\" size=5 class=\"form-control\" name=\"selected_cas\" [(ngModel)]=\"this.cas.selected_item_int_id_list\" multiple>\n                            <ng-container *ngIf=\"this.cas.item_show_cactvs_data\"><option *ngFor=\"let item of this.cas.item_list\" [ngValue]=\"item.int_id\" [innerHTML]=\"item.html_rep\"></option></ng-container>\n                            <ng-container *ngIf=\"!this.cas.item_show_cactvs_data\"><option *ngFor=\"let item of this.cas.item_set\" [ngValue]=\"item.int_id\">{{ item.value }}</option></ng-container>\n                            </select>\n                            \n                    </td>\n                    <td style=\"width:auto\">\n                    </td>\n            </tr>\n            <tr>\n                <td><button class=\"btn\" [disabled]=\"this.cas.item_list.length === 0 || !this.cas.item_show_cactvs_data\" (click)=\"this.cas.removeItemValueDuplicates();\">Remove duplicates</button><br></td>\n                <td style=\"display:inline-block\"><button style=\"display:inline-block\" class=\"btn\" [disabled]=\"this.cas.selected_item_int_id_list.length === 0\" (click)=\"this.cas.deleteSelectedItems()\">Delete</button>\n                <button style=\"display:inline-block\" class=\"btn\" [disabled]=\"this.cas.selected_item_int_id_list.length === 0\" (click)=\"openCopy(contentCAS,'cas',true)\">Copy in clipboard</button>\n                <button style=\"display:inline-block\" class=\"btn\" [disabled]=\"this.cas.item_list.length === 0\" (click)=\"openCopy(contentCAS,'cas',false)\">Copy all in clipboard</button></td>\n\n            </tr>\n        </table>\n    </div>\n    <br>\n    <div class=\"row m-5\" style=\"margin-top:0px !important; margin-bottom:10px !important\">\n        <div *ngIf=\"this.cas.from_name_executed\">\n        <!--TODO: sentences about how many cas numbers have been found-->\n        <label *ngIf=\"this.cas.item_list.length !== 0 && this.cas.selected_item_int_id_list.length === 0 && !this.cas.from_name_running\" >\n            <ng-container *ngIf=\"this.cas.item_show_cactvs_data\">{{this.cas.item_list.length}} CAS registry number<!--\n            --><ng-container *ngIf=\"this.cas.item_list.length > 1\">s</ng-container> found.</ng-container> \n            <ng-container *ngIf=\"!this.cas.item_show_cactvs_data\">{{this.cas.item_set.length}} CAS registry number<!--\n         --><ng-container *ngIf=\"this.cas.item_set.length > 1\">s</ng-container> found.</ng-container>\n        </label>\n        <label *ngIf=\"this.cas.selected_item_int_id_list.length === 1 && this.cas.item_show_cactvs_data\" [innerHTML]=\"this.cas.current_item.html_rep\"></label>\n        <label *ngIf=\"this.cas.selected_item_int_id_list.length > 1 || this.cas.selected_item_int_id_list.length === 1 && !this.cas.item_show_cactvs_data\" >Selected {{this.cas.selected_item_int_id_list.length}} CAS registry numbers.</label>\n        </div>\n    </div>\n    \n    <div class=\"row m-5 form-group\" style=\"margin-bottom:0px !important;margin-top:10px !important\">\n        <table style=\"width:100%;vertical-align:bottom\">\n            <tr>\n\n                    <td style=\"width:9rem\"><label style=\"margin-bottom:0px\" for=\"name2smiles_smiles\" >SMILES:</label></td>\n                    <td style=\"width:auto\">\n                            <select id=\"name2smiles_smiles\" size=5 class=\"form-control\" name=\"selected_smiles\" [(ngModel)]=\"this.smiles.selected_item_int_id_list\" multiple>\n                            <ng-container *ngIf=\"this.smiles.item_show_cactvs_data\"><option *ngFor=\"let item of this.smiles.item_list\" [ngValue]=\"item.int_id\" [innerHTML]=\"item.html_rep\"></option></ng-container>\n                            <ng-container *ngIf=\"!this.smiles.item_show_cactvs_data\"><option *ngFor=\"let item of this.smiles.item_set\" [ngValue]=\"item.int_id\">{{item.value}}</option></ng-container>\n                            </select>\n                            \n                    </td>\n                    <td style=\"width:8rem\">\n                    </td>\n            </tr>\n            <tr>\n                <td><button class=\"btn\" [disabled]=\"this.smiles.item_list.length === 0 || !this.smiles.item_show_cactvs_data\" (click)=\"this.smiles.removeItemValueDuplicates();\">Remove duplicates</button><br></td>\n                <td style=\"display:inline-block\"><button style=\"display:inline-block\" class=\"btn\" [disabled]=\"this.smiles.selected_item_int_id_list.length === 0\" (click)=\"this.smiles.deleteSelectedItems()\">Delete</button>\n                <button style=\"display:inline-block\" class=\"btn\" [disabled]=\"this.smiles.selected_item_int_id_list.length === 0\" (click)=\"openCopy(contentSmiles,'smiles',true)\">Copy in clipboard</button>\n                <button style=\"display:inline-block\" class=\"btn\" [disabled]=\"this.smiles.item_list.length === 0\" (click)=\"openCopy(contentSmiles,'smiles',false)\">Copy all in clipboard</button></td>\n\n            </tr>\n        </table>\n    </div>\n    <br>\n    <div class=\"row m-5\" style=\"margin-top:0px !important; margin-bottom:10px !important\">\n        <div *ngIf=\"this.smiles.from_name_executed\">\n        <!--TODO: sentences about how many smiles numbers have been found-->\n        <label *ngIf=\"this.smiles.item_list.length !== 0 && this.smiles.selected_item_int_id_list.length === 0 && !this.smiles.from_name_running\" >\n            <ng-container *ngIf=\"this.smiles.item_show_cactvs_data\">{{this.smiles.item_list.length}} SMILES found.</ng-container>\n            <ng-container *ngIf=\"!this.smiles.item_show_cactvs_data\">{{this.smiles.item_set.length}} SMILES found.</ng-container> \n        </label>\n        <label *ngIf=\"this.smiles.selected_item_int_id_list.length === 1 && this.smiles.item_show_cactvs_data\" [innerHTML]=\"this.smiles.current_item.html_rep\"></label>\n        <label *ngIf=\"this.smiles.selected_item_int_id_list.length > 1 || this.smiles.selected_item_int_id_list.length === 1 && !this.smiles.item_show_cactvs_data\" >Selected {{this.smiles.selected_item_int_id_list.length}} SMILES.</label>\n\n        </div>\n    </div>\n\n\n</div>\n<ng-template #contentCAS let-modal>\n    <div class=\"modal-header\">\n        <h4 class=\"modal-title\" id=\"name2cas-copy-clipboard-basic-title\">CAS registry number(s)</h4>\n        <button type=\"button\" class=\"close\" aria-label=\"Close\" (click)=\"modal.dismiss('close')\">\n        <span aria-hidden=\"true\">&times;</span>\n        </button>\n    </div>\n    <div class=\"modal-body\">\n        <div class=\"form-group\">\n            <div class=\"input-group\">\n                <div class=\"form-check\">\n                    <input class=\"form-check-input\" id=\"show-name2cas-copy-data\" type=\"checkbox\" (change)=\"changeShowName2ItemData(this.cas)\" [(ngModel)]=\"this.cas.item_copy_show_cactvs_data\">\n                    <label class=\"form-check-label\" for=\"show-name2cas-copy-data\">Show CACTVS data</label>\n                </div>  \n            </div>\n            <br>\n            <div class=\"input-group\">\n                <p>The following CAS registry number data has been copied in your clipboard:</p>\n            </div>\n            <div class=\"input-group\">\n            <textarea id=\"name2cas-copy-textarea\" style=\"width:100%\" class=\"form-control\" (change)=\"changeContentItemTextarea(this.cas)\" [(ngModel)]=\"this.cas.content_item_textarea\" rows=10></textarea>\n            </div>\n        </div>\n    </div>\n    <div class=\"modal-footer\">\n        <button type=\"button\" class=\"btn btn-outline-dark\" (click)=\"modal.dismiss('close')\">Close</button>\n    </div>\n</ng-template>\n<ng-template #contentSmiles let-modal>\n        <div class=\"modal-header\">\n            <h4 class=\"modal-title\" id=\"name2smiles-copy-clipboard-basic-title\">SMILES registry number(s)</h4>\n            <button type=\"button\" class=\"close\" aria-label=\"Close\" (click)=\"modal.dismiss('close')\">\n            <span aria-hidden=\"true\">&times;</span>\n            </button>\n        </div>\n        <div class=\"modal-body\">\n            <div class=\"form-group\">\n                <div class=\"input-group\">\n                    <div class=\"form-check\">\n                        <input class=\"form-check-input\" id=\"show-name2smiles-copy-data\" type=\"checkbox\" (change)=\"changeShowName2ItemData(this.smiles)\" [(ngModel)]=\"this.smiles.item_copy_show_cactvs_data\">\n                        <label class=\"form-check-label\" for=\"show-name2smiles-copy-data\">Show CACTVS data</label>\n                    </div>  \n                </div>\n                <br>\n                <div class=\"input-group\">\n                    <p>The following SMILES data has been copied in your clipboard:</p>\n                </div>\n                <div class=\"input-group\">\n                <textarea id=\"name2smiles-copy-textarea\" style=\"width:100%\" class=\"form-control\" (change)=\"changeContentItemTextarea(this.smiles)\" [(ngModel)]=\"this.smiles.content_item_textarea\" rows=10></textarea>\n                </div>\n            </div>\n        </div>\n        <div class=\"modal-footer\">\n            <button type=\"button\" class=\"btn btn-outline-dark\" (click)=\"modal.dismiss('close')\">Close</button>\n        </div>\n    </ng-template>"
+module.exports = "<div class=\"card\">\n    <h6 class=\"card-header bg-light p-1\">Name2CAS/SMILES resolver</h6>\n    <app-name2cas [info]=\"this.info\"></app-name2cas>\n</div>\n<div class=\"card\">\n    <h6 class=\"card-header bg-light p-1\">ChEMBL resolver</h6>\n    <app-chembl [info]=\"this.info\"></app-chembl>\n</div>"
 
 /***/ }),
 
@@ -437,17 +459,25 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _td_workflow_td_workflow_component__WEBPACK_IMPORTED_MODULE_41__ = __webpack_require__(/*! ./td-workflow/td-workflow.component */ "./src/app/td-workflow/td-workflow.component.ts");
 /* harmony import */ var _tc_characterization_tc_characterization_component__WEBPACK_IMPORTED_MODULE_42__ = __webpack_require__(/*! ./tc-characterization/tc-characterization.component */ "./src/app/tc-characterization/tc-characterization.component.ts");
 /* harmony import */ var _overlay_overlay_component__WEBPACK_IMPORTED_MODULE_43__ = __webpack_require__(/*! ./overlay/overlay.component */ "./src/app/overlay/overlay.component.ts");
-/* harmony import */ var _keys_pipe__WEBPACK_IMPORTED_MODULE_44__ = __webpack_require__(/*! ./keys.pipe */ "./src/app/keys.pipe.ts");
-/* harmony import */ var _editable_view_mode_directive__WEBPACK_IMPORTED_MODULE_45__ = __webpack_require__(/*! ./editable/view-mode.directive */ "./src/app/editable/view-mode.directive.ts");
-/* harmony import */ var _editable_edit_mode_directive__WEBPACK_IMPORTED_MODULE_46__ = __webpack_require__(/*! ./editable/edit-mode.directive */ "./src/app/editable/edit-mode.directive.ts");
-/* harmony import */ var _editable_edit_on_enter_directive__WEBPACK_IMPORTED_MODULE_47__ = __webpack_require__(/*! ./editable/edit-on-enter.directive */ "./src/app/editable/edit-on-enter.directive.ts");
-/* harmony import */ var _login_login_service__WEBPACK_IMPORTED_MODULE_48__ = __webpack_require__(/*! ./login/login.service */ "./src/app/login/login.service.ts");
-/* harmony import */ var _tabs_tabs_service__WEBPACK_IMPORTED_MODULE_49__ = __webpack_require__(/*! ./tabs/tabs.service */ "./src/app/tabs/tabs.service.ts");
-/* harmony import */ var _each_workflow_each_workflow_service__WEBPACK_IMPORTED_MODULE_50__ = __webpack_require__(/*! ./each-workflow/each-workflow.service */ "./src/app/each-workflow/each-workflow.service.ts");
-/* harmony import */ var _node1_problem_formulation_node1_problem_formulation_service__WEBPACK_IMPORTED_MODULE_51__ = __webpack_require__(/*! ./node1-problem-formulation/node1-problem-formulation.service */ "./src/app/node1-problem-formulation/node1-problem-formulation.service.ts");
-/* harmony import */ var _node_info_node_info_service__WEBPACK_IMPORTED_MODULE_52__ = __webpack_require__(/*! ./node-info/node-info.service */ "./src/app/node-info/node-info.service.ts");
-/* harmony import */ var ngx_cookie_service__WEBPACK_IMPORTED_MODULE_53__ = __webpack_require__(/*! ngx-cookie-service */ "./node_modules/ngx-cookie-service/ngx-cookie-service.js");
-/* harmony import */ var _tc_characterization_tc_characterization_service__WEBPACK_IMPORTED_MODULE_54__ = __webpack_require__(/*! ./tc-characterization/tc-characterization.service */ "./src/app/tc-characterization/tc-characterization.service.ts");
+/* harmony import */ var _name2cas_name2cas_component__WEBPACK_IMPORTED_MODULE_44__ = __webpack_require__(/*! ./name2cas/name2cas.component */ "./src/app/name2cas/name2cas.component.ts");
+/* harmony import */ var _chembl_chembl_component__WEBPACK_IMPORTED_MODULE_45__ = __webpack_require__(/*! ./chembl/chembl.component */ "./src/app/chembl/chembl.component.ts");
+/* harmony import */ var _keys_pipe__WEBPACK_IMPORTED_MODULE_46__ = __webpack_require__(/*! ./keys.pipe */ "./src/app/keys.pipe.ts");
+/* harmony import */ var _editable_view_mode_directive__WEBPACK_IMPORTED_MODULE_47__ = __webpack_require__(/*! ./editable/view-mode.directive */ "./src/app/editable/view-mode.directive.ts");
+/* harmony import */ var _editable_edit_mode_directive__WEBPACK_IMPORTED_MODULE_48__ = __webpack_require__(/*! ./editable/edit-mode.directive */ "./src/app/editable/edit-mode.directive.ts");
+/* harmony import */ var _editable_edit_on_enter_directive__WEBPACK_IMPORTED_MODULE_49__ = __webpack_require__(/*! ./editable/edit-on-enter.directive */ "./src/app/editable/edit-on-enter.directive.ts");
+/* harmony import */ var _login_login_service__WEBPACK_IMPORTED_MODULE_50__ = __webpack_require__(/*! ./login/login.service */ "./src/app/login/login.service.ts");
+/* harmony import */ var _tabs_tabs_service__WEBPACK_IMPORTED_MODULE_51__ = __webpack_require__(/*! ./tabs/tabs.service */ "./src/app/tabs/tabs.service.ts");
+/* harmony import */ var _each_workflow_each_workflow_service__WEBPACK_IMPORTED_MODULE_52__ = __webpack_require__(/*! ./each-workflow/each-workflow.service */ "./src/app/each-workflow/each-workflow.service.ts");
+/* harmony import */ var _node1_problem_formulation_node1_problem_formulation_service__WEBPACK_IMPORTED_MODULE_53__ = __webpack_require__(/*! ./node1-problem-formulation/node1-problem-formulation.service */ "./src/app/node1-problem-formulation/node1-problem-formulation.service.ts");
+/* harmony import */ var _node_info_node_info_service__WEBPACK_IMPORTED_MODULE_54__ = __webpack_require__(/*! ./node-info/node-info.service */ "./src/app/node-info/node-info.service.ts");
+/* harmony import */ var ngx_cookie_service__WEBPACK_IMPORTED_MODULE_55__ = __webpack_require__(/*! ngx-cookie-service */ "./node_modules/ngx-cookie-service/ngx-cookie-service.js");
+/* harmony import */ var _tc_characterization_tc_characterization_service__WEBPACK_IMPORTED_MODULE_56__ = __webpack_require__(/*! ./tc-characterization/tc-characterization.service */ "./src/app/tc-characterization/tc-characterization.service.ts");
+/* harmony import */ var _name2cas_name2cas_service__WEBPACK_IMPORTED_MODULE_57__ = __webpack_require__(/*! ./name2cas/name2cas.service */ "./src/app/name2cas/name2cas.service.ts");
+/* harmony import */ var _chembl_chembl_service__WEBPACK_IMPORTED_MODULE_58__ = __webpack_require__(/*! ./chembl/chembl.service */ "./src/app/chembl/chembl.service.ts");
+
+
+
+
 
 
 
@@ -518,10 +548,10 @@ AppModule = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
             _each_workflow_each_workflow_component__WEBPACK_IMPORTED_MODULE_34__["EachWorkflowComponent"],
             _node_info_node_info_component__WEBPACK_IMPORTED_MODULE_37__["NodeInfoComponent"],
             _editable_editable_component__WEBPACK_IMPORTED_MODULE_38__["EditableComponent"],
-            _editable_view_mode_directive__WEBPACK_IMPORTED_MODULE_45__["ViewModeDirective"],
-            _editable_edit_mode_directive__WEBPACK_IMPORTED_MODULE_46__["EditModeDirective"],
-            _editable_edit_on_enter_directive__WEBPACK_IMPORTED_MODULE_47__["EditableOnEnterDirective"],
-            _keys_pipe__WEBPACK_IMPORTED_MODULE_44__["KeysPipe"],
+            _editable_view_mode_directive__WEBPACK_IMPORTED_MODULE_47__["ViewModeDirective"],
+            _editable_edit_mode_directive__WEBPACK_IMPORTED_MODULE_48__["EditModeDirective"],
+            _editable_edit_on_enter_directive__WEBPACK_IMPORTED_MODULE_49__["EditableOnEnterDirective"],
+            _keys_pipe__WEBPACK_IMPORTED_MODULE_46__["KeysPipe"],
             _node1_problem_formulation_node1_problem_formulation_component__WEBPACK_IMPORTED_MODULE_39__["Node1ProblemFormulationComponent"],
             _welcome_welcome_component__WEBPACK_IMPORTED_MODULE_35__["WelcomeComponent"],
             _smiles_micromodal_smiles_micromodal_component__WEBPACK_IMPORTED_MODULE_36__["SmilesMicromodalComponent"],
@@ -529,10 +559,13 @@ AppModule = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
             _td_workflow_td_workflow_component__WEBPACK_IMPORTED_MODULE_41__["TdWorkflowComponent"],
             _tc_characterization_tc_characterization_component__WEBPACK_IMPORTED_MODULE_42__["TcCharacterizationComponent"],
             _overlay_overlay_component__WEBPACK_IMPORTED_MODULE_43__["OverlayComponent"],
+            _name2cas_name2cas_component__WEBPACK_IMPORTED_MODULE_44__["Name2casComponent"],
+            _chembl_chembl_component__WEBPACK_IMPORTED_MODULE_45__["ChemblComponent"],
         ],
         imports: [
             _angular_platform_browser__WEBPACK_IMPORTED_MODULE_3__["BrowserModule"],
             _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpClientModule"],
+            _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpClientJsonpModule"],
             _app_routing_module__WEBPACK_IMPORTED_MODULE_1__["AppRoutingModule"],
             ng_drag_drop__WEBPACK_IMPORTED_MODULE_6__["NgDragDropModule"].forRoot(),
             ngx_cytoscape__WEBPACK_IMPORTED_MODULE_7__["CytoscapeModule"],
@@ -563,19 +596,346 @@ AppModule = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         ],
         providers: [
             _globals__WEBPACK_IMPORTED_MODULE_26__["Globals"],
-            _login_login_service__WEBPACK_IMPORTED_MODULE_48__["LoginService"],
-            ngx_cookie_service__WEBPACK_IMPORTED_MODULE_53__["CookieService"],
-            _tabs_tabs_service__WEBPACK_IMPORTED_MODULE_49__["TabsService"],
-            _each_workflow_each_workflow_service__WEBPACK_IMPORTED_MODULE_50__["EachWorkflowService"],
-            _node_info_node_info_service__WEBPACK_IMPORTED_MODULE_52__["NodeInfoService"],
-            _node1_problem_formulation_node1_problem_formulation_service__WEBPACK_IMPORTED_MODULE_51__["Node1ProblemFormulationService"],
-            _tc_characterization_tc_characterization_service__WEBPACK_IMPORTED_MODULE_54__["TcCharacterizationService"],
+            _login_login_service__WEBPACK_IMPORTED_MODULE_50__["LoginService"],
+            ngx_cookie_service__WEBPACK_IMPORTED_MODULE_55__["CookieService"],
+            _tabs_tabs_service__WEBPACK_IMPORTED_MODULE_51__["TabsService"],
+            _each_workflow_each_workflow_service__WEBPACK_IMPORTED_MODULE_52__["EachWorkflowService"],
+            _node_info_node_info_service__WEBPACK_IMPORTED_MODULE_54__["NodeInfoService"],
+            _node1_problem_formulation_node1_problem_formulation_service__WEBPACK_IMPORTED_MODULE_53__["Node1ProblemFormulationService"],
+            _tc_characterization_tc_characterization_service__WEBPACK_IMPORTED_MODULE_56__["TcCharacterizationService"],
+            _name2cas_name2cas_service__WEBPACK_IMPORTED_MODULE_57__["Name2casService"],
+            _chembl_chembl_service__WEBPACK_IMPORTED_MODULE_58__["ChemblService"],
             { provide: _angular_cdk_overlay__WEBPACK_IMPORTED_MODULE_25__["OverlayContainer"], useClass: _angular_cdk_overlay__WEBPACK_IMPORTED_MODULE_25__["FullscreenOverlayContainer"] }
         ],
         entryComponents: [_node_info_node_info_component__WEBPACK_IMPORTED_MODULE_37__["NodeInfoComponent"], _overlay_overlay_component__WEBPACK_IMPORTED_MODULE_43__["OverlayComponent"]],
         bootstrap: [_app_component__WEBPACK_IMPORTED_MODULE_29__["AppComponent"]]
     })
 ], AppModule);
+
+
+
+/***/ }),
+
+/***/ "./src/app/chembl/chembl.component.css":
+/*!*********************************************!*\
+  !*** ./src/app/chembl/chembl.component.css ***!
+  \*********************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "#chembl_chembl_ids {\n    width: 100% !important;\n}\n\n#ms-chembl_chembl_ids {\n    width: 100% !important;\n}\n\n.ms-container {\n    width: 100% !important;\n    \n}\n\n.ms-list {\n    height: 100px !important;\n}\n\n.chembl-modal {\n    overflow-x: hidden !important;\n    overflow-y: hidden !important;\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvY2hlbWJsL2NoZW1ibC5jb21wb25lbnQuY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0lBQ0ksc0JBQXNCO0FBQzFCOztBQUVBO0lBQ0ksc0JBQXNCO0FBQzFCOztBQUVBO0lBQ0ksc0JBQXNCOztBQUUxQjs7QUFFQTtJQUNJLHdCQUF3QjtBQUM1Qjs7QUFFQTtJQUNJLDZCQUE2QjtJQUM3Qiw2QkFBNkI7QUFDakMiLCJmaWxlIjoic3JjL2FwcC9jaGVtYmwvY2hlbWJsLmNvbXBvbmVudC5jc3MiLCJzb3VyY2VzQ29udGVudCI6WyIjY2hlbWJsX2NoZW1ibF9pZHMge1xuICAgIHdpZHRoOiAxMDAlICFpbXBvcnRhbnQ7XG59XG5cbiNtcy1jaGVtYmxfY2hlbWJsX2lkcyB7XG4gICAgd2lkdGg6IDEwMCUgIWltcG9ydGFudDtcbn1cblxuLm1zLWNvbnRhaW5lciB7XG4gICAgd2lkdGg6IDEwMCUgIWltcG9ydGFudDtcbiAgICBcbn1cblxuLm1zLWxpc3Qge1xuICAgIGhlaWdodDogMTAwcHggIWltcG9ydGFudDtcbn1cblxuLmNoZW1ibC1tb2RhbCB7XG4gICAgb3ZlcmZsb3cteDogaGlkZGVuICFpbXBvcnRhbnQ7XG4gICAgb3ZlcmZsb3cteTogaGlkZGVuICFpbXBvcnRhbnQ7XG59Il19 */"
+
+/***/ }),
+
+/***/ "./src/app/chembl/chembl.component.ts":
+/*!********************************************!*\
+  !*** ./src/app/chembl/chembl.component.ts ***!
+  \********************************************/
+/*! exports provided: ChemblComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ChemblComponent", function() { return ChemblComponent; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm2015/core.js");
+/* harmony import */ var _ng_bootstrap_ng_bootstrap__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @ng-bootstrap/ng-bootstrap */ "./node_modules/@ng-bootstrap/ng-bootstrap/fesm2015/ng-bootstrap.js");
+/* harmony import */ var _chembl_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./chembl.service */ "./src/app/chembl/chembl.service.ts");
+
+
+
+
+let ChemblComponent = class ChemblComponent {
+    constructor(service, modalService) {
+        this.service = service;
+        this.modalService = modalService;
+        this.chembl_running = false;
+        this.chembl_item_list = [];
+        this.chembl_selected_item_int_id_list = [];
+        this.binded_multiselect_id = 'chembl_chembl_ids';
+        this.ngb_modal_opt = {
+            ariaLabelledBy: 'chembl-copy-clipboard-basic-title',
+            windowClass: 'chembl-modal',
+            centered: true
+        };
+    }
+    ngOnInit() {
+    }
+    ngAfterViewInit() {
+        this.setupMultiselect();
+    }
+    updateMultiSelect() {
+        if (typeof this.binded_multiselect_id !== 'undefined' && this.binded_multiselect_id !== null) {
+            const jquery_select = '#' + this.binded_multiselect_id;
+            setTimeout(function () {
+                $(jquery_select).multiSelect('refresh');
+            }.bind(this, jquery_select), 0);
+        }
+    }
+    getSelectedFromMultiselect() {
+        if (typeof this.binded_multiselect_id !== 'undefined' && this.binded_multiselect_id !== null) {
+            const jquery_select = '#' + this.binded_multiselect_id;
+            let selected_cas_int_id_list = [];
+            $(jquery_select).children("[selected='selected']").each(function () {
+                selected_cas_int_id_list.push(Number($(this).val().replace(/^[0-9]+:\s+/, '')) + 0);
+            });
+            return selected_cas_int_id_list;
+        }
+    }
+    setCurrentItemIntId() {
+        if (this.chembl_selected_item_int_id_list.length === 1) {
+            const current_cas_int_id = this.chembl_selected_item_int_id_list[0];
+            const BreakException = {};
+            try {
+                this.chembl_item_list.forEach((item) => {
+                    if (item['int_id'] === current_cas_int_id) {
+                        this.chembl_current_item = item;
+                        throw BreakException;
+                    }
+                });
+            }
+            catch (e) {
+                if (e !== BreakException)
+                    throw e;
+            }
+        }
+    }
+    initializeMultiSelect() {
+        const multiselect_id = this.binded_multiselect_id;
+        let jquery_select = '#' + multiselect_id;
+        let jquery_select_ms = "#ms-" + multiselect_id;
+        let selected_select_options = $(jquery_select).children();
+        selected_select_options.removeAttr('selected');
+        selected_select_options.prop('selected', false);
+        let ms = $(jquery_select_ms);
+        $(jquery_select_ms).css('width', '100%');
+        $(jquery_select_ms).find(".ms-list").css('height', '100px');
+    }
+    updateSelectedItemsFromMultiselect() {
+        this.chembl_selected_item_int_id_list = this.getSelectedFromMultiselect();
+        this.setCurrentItemIntId();
+    }
+    setupMultiselect() {
+        const that = this;
+        $('#' + this.binded_multiselect_id).multiSelect({
+            'afterInit': function () { that.initializeMultiSelect(); },
+            'afterSelect': function () { that.updateSelectedItemsFromMultiselect(); },
+            'afterDeselect': function () { that.updateSelectedItemsFromMultiselect(); }
+        });
+        this.updateMultiSelect();
+    }
+    deleteSelection() {
+        this.chembl_selected_item_int_id_list = [];
+        this.chembl_current_item = undefined;
+        this.updateMultiSelect();
+    }
+    setItemList(item_list, has_no_duplicates = false) {
+        this.chembl_item_list = item_list;
+        this.deleteSelection();
+    }
+    filterObjectListByKey(object_list, key, values, inverted = false) {
+        let j_key = {};
+        values.forEach((value) => {
+            j_key[value] = 0;
+        });
+        let filtered_object_list = object_list.filter((value, index, array) => {
+            let is_in_j_key = j_key.hasOwnProperty(value[key]);
+            return inverted ? !is_in_j_key : is_in_j_key;
+        });
+        return filtered_object_list;
+    }
+    filterListByIntId(item_list, item_int_id_list, inverted = false) {
+        let item_int_id_list_number = [];
+        item_int_id_list.forEach((item_int_id) => {
+            item_int_id_list_number.push(Number(item_int_id));
+        });
+        return this.filterObjectListByKey(item_list, 'int_id', item_int_id_list_number, inverted);
+    }
+    deleteItemsByIntId(int_id_list) {
+        let selected_item = this.filterListByIntId(this.chembl_item_list, int_id_list);
+        let value_list = [];
+        selected_item.forEach((item) => {
+            value_list.push(item['value']);
+        });
+        this.setItemList(this.filterObjectListByKey(this.chembl_item_list, 'value', value_list, true));
+    }
+    chemblDeleteSelectedItems() {
+        this.deleteItemsByIntId(this.chembl_selected_item_int_id_list);
+    }
+    updateTextDump(copy_selection_only = true, item_value_only = false) {
+        let item_list;
+        if (copy_selection_only) {
+            item_list = this.filterListByIntId(this.chembl_item_list, this.chembl_selected_item_int_id_list);
+        }
+        else {
+            item_list = this.chembl_item_list;
+        }
+        this.chembl_item_text_dump = '';
+        let key;
+        if (item_value_only) {
+            key = 'value';
+        }
+        else {
+            key = 'string_rep';
+        }
+        item_list.forEach((cas) => {
+            this.chembl_item_text_dump += cas[key] + '\n';
+        });
+    }
+    chemblIdFromSmilesButton() {
+        const subscript = this.service.chemblSmilesToInChIKey(this.chembl_search_string).subscribe(result => {
+            const chembl_subscript = this.service.uniChemGetSrcIdFromInChIKey(result.inchikey).subscribe((unichem_result) => {
+                const chembl_ids = this.service.getChEMBLIDFromUniChemData(unichem_result);
+                this.setItemList(this.service.arrayToItemList(chembl_ids));
+            }, error => {
+                alert('Error retrieving data from UniChem');
+            }, () => {
+                chembl_subscript.unsubscribe();
+            });
+        }, error => {
+            alert('Error standardizing or converting SMILES to InChiKey');
+        }, () => {
+            subscript.unsubscribe();
+        });
+    }
+    openCopy(content, cactus_interface_name, copy_selection_only = true) {
+        let closeResult;
+        let copy_textarea_id = 'chembl_copy_textarea';
+        let jquery_sel_copy_textarea_id = '#' + copy_textarea_id;
+        this.chembl_item_copy_copy_selection_only = copy_selection_only;
+        this.updateTextDump(copy_selection_only);
+        this.chembl_content_item_textarea = this.chembl_item_text_dump;
+        this.modalService.open(content, this.ngb_modal_opt).result.then((result) => {
+            closeResult = 'Closed with: ' + result;
+            $(jquery_sel_copy_textarea_id).off('input');
+        }, (reason) => {
+            //ModalDismissReasons contains reason possible values
+            $(jquery_sel_copy_textarea_id).off('input');
+        });
+        setTimeout(() => {
+            const that = this;
+            $(jquery_sel_copy_textarea_id).on('input', function (event) {
+                that.chembl_content_item_textarea = that.chembl_item_text_dump;
+            });
+        }, 0);
+        setTimeout(function (copy_textarea_id) {
+            document.getElementById(copy_textarea_id).select();
+            document.execCommand("copy");
+        }.bind(this, copy_textarea_id), 0);
+    }
+    chemblChangeContentItemTextarea() {
+        if (this.chembl_content_item_textarea !== this.chembl_item_text_dump) {
+            this.chembl_content_item_textarea = this.chembl_item_text_dump;
+        }
+    }
+};
+ChemblComponent.ctorParameters = () => [
+    { type: _chembl_service__WEBPACK_IMPORTED_MODULE_3__["ChemblService"] },
+    { type: _ng_bootstrap_ng_bootstrap__WEBPACK_IMPORTED_MODULE_2__["NgbModal"] }
+];
+tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+    Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Object)
+], ChemblComponent.prototype, "info", void 0);
+ChemblComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+    Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
+        selector: 'app-chembl',
+        template: __webpack_require__(/*! raw-loader!./chembl.component.html */ "./node_modules/raw-loader/index.js!./src/app/chembl/chembl.component.html"),
+        styles: [__webpack_require__(/*! ./chembl.component.css */ "./src/app/chembl/chembl.component.css")]
+    }),
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_chembl_service__WEBPACK_IMPORTED_MODULE_3__["ChemblService"],
+        _ng_bootstrap_ng_bootstrap__WEBPACK_IMPORTED_MODULE_2__["NgbModal"]])
+], ChemblComponent);
+
+
+
+/***/ }),
+
+/***/ "./src/app/chembl/chembl.service.ts":
+/*!******************************************!*\
+  !*** ./src/app/chembl/chembl.service.ts ***!
+  \******************************************/
+/*! exports provided: ChemblService */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ChemblService", function() { return ChemblService; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm2015/core.js");
+/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm2015/http.js");
+/* harmony import */ var ngx_cookie_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ngx-cookie-service */ "./node_modules/ngx-cookie-service/ngx-cookie-service.js");
+/* harmony import */ var _environments_environment__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../environments/environment */ "./src/environments/environment.ts");
+/* harmony import */ var _globals__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../globals */ "./src/app/globals.ts");
+
+
+
+
+
+
+let ChemblService = class ChemblService {
+    constructor(http, cookieService, globals) {
+        this.http = http;
+        this.cookieService = cookieService;
+        this.globals = globals;
+    }
+    encodeBoolean(bool) {
+        if (bool) {
+            return '1';
+        }
+        else {
+            return '0';
+        }
+    }
+    chemblSmilesToInChIKey(smiles, parent = false, isomeric = true) {
+        const url = _environments_environment__WEBPACK_IMPORTED_MODULE_4__["environment"].baseUrl + 'chembl/smiles2inchikey/';
+        const params = new _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpParams"]().append('parent', this.encodeBoolean(parent)).append('isomeric', this.encodeBoolean(isomeric));
+        const formData = new FormData();
+        formData.append('smiles', smiles);
+        return this.http.post(url, formData, { params: params, withCredentials: true });
+    }
+    uniChemGetSrcIdFromInChIKey(inchikey) {
+        const callback_get_param = 'callback';
+        const callback_get_param_value = 'get_src_ids';
+        let url = 'https://www.ebi.ac.uk/unichem/rest/inchikey/' + inchikey;
+        // const params = new HttpParams().append(callback_get_param, callback_get_param_value);
+        return this.http.jsonp(url, callback_get_param);
+    }
+    getChEMBLIDFromUniChemData(data) {
+        const src_id_key = 'src_id';
+        const src_compound_id_key = 'src_compound_id';
+        const chembl_src_id = 1;
+        let chembl_ids = [];
+        data.forEach(element => {
+            if (Number(element[src_id_key]) === chembl_src_id) {
+                chembl_ids.push(element[src_compound_id_key]);
+            }
+        });
+        return chembl_ids;
+    }
+    arrayToItemList(array) {
+        let item_list = [];
+        let i = 1;
+        array.forEach(value => {
+            item_list.push({ int_id: i, value: value, html_rep: value, string_rep: value });
+            i++;
+        });
+        return item_list;
+    }
+};
+ChemblService.ctorParameters = () => [
+    { type: _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpClient"] },
+    { type: ngx_cookie_service__WEBPACK_IMPORTED_MODULE_3__["CookieService"] },
+    { type: _globals__WEBPACK_IMPORTED_MODULE_5__["Globals"] }
+];
+ChemblService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+    Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
+        providedIn: 'root'
+    }),
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpClient"],
+        ngx_cookie_service__WEBPACK_IMPORTED_MODULE_3__["CookieService"],
+        _globals__WEBPACK_IMPORTED_MODULE_5__["Globals"]])
+], ChemblService);
 
 
 
@@ -1553,6 +1913,444 @@ MainComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
 
 /***/ }),
 
+/***/ "./src/app/name2cas/name2cas.component.css":
+/*!*************************************************!*\
+  !*** ./src/app/name2cas/name2cas.component.css ***!
+  \*************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = ".block1 {\n    overflow: scroll;\n    display: block;\n    border: 1px solid #ccc;\n    width:100%;\n    height:100%;\n}\n    \n.block2 {\n    display: inline-block;\n    vertical-align: top;\n    overflow: visible;\n    border-right: 1px solid #a4a4a4;\n}\n    \n.btn {\n    text-align: left;\n}\n    \n#old_name2cas_cas {\n    width: 100% !important;\n    height:100% !important;\n    border : none !important;\n    margin-right:-5%;\n    overflow: visible;\n}\n    \n#name2cas_cas {\n    width: 100% !important;\n}\n    \n#ms-name2cas_cas {\n    width: 100% !important;\n}\n    \n.ms-container {\n    width: 100% !important;\n    \n}\n    \n.ms-list {\n    height: 100px !important;\n}\n    \n.cas2name-modal {\n    overflow-x: hidden !important;\n    overflow-y: hidden !important;\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvbmFtZTJjYXMvbmFtZTJjYXMuY29tcG9uZW50LmNzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtJQUNJLGdCQUFnQjtJQUNoQixjQUFjO0lBQ2Qsc0JBQXNCO0lBQ3RCLFVBQVU7SUFDVixXQUFXO0FBQ2Y7O0FBRUE7SUFDSSxxQkFBcUI7SUFDckIsbUJBQW1CO0lBQ25CLGlCQUFpQjtJQUNqQiwrQkFBK0I7QUFDbkM7O0FBRUE7SUFDSSxnQkFBZ0I7QUFDcEI7O0FBRUE7SUFDSSxzQkFBc0I7SUFDdEIsc0JBQXNCO0lBQ3RCLHdCQUF3QjtJQUN4QixnQkFBZ0I7SUFDaEIsaUJBQWlCO0FBQ3JCOztBQUVBO0lBQ0ksc0JBQXNCO0FBQzFCOztBQUVBO0lBQ0ksc0JBQXNCO0FBQzFCOztBQUVBO0lBQ0ksc0JBQXNCOztBQUUxQjs7QUFFQTtJQUNJLHdCQUF3QjtBQUM1Qjs7QUFFQTtJQUNJLDZCQUE2QjtJQUM3Qiw2QkFBNkI7QUFDakMiLCJmaWxlIjoic3JjL2FwcC9uYW1lMmNhcy9uYW1lMmNhcy5jb21wb25lbnQuY3NzIiwic291cmNlc0NvbnRlbnQiOlsiLmJsb2NrMSB7XG4gICAgb3ZlcmZsb3c6IHNjcm9sbDtcbiAgICBkaXNwbGF5OiBibG9jaztcbiAgICBib3JkZXI6IDFweCBzb2xpZCAjY2NjO1xuICAgIHdpZHRoOjEwMCU7XG4gICAgaGVpZ2h0OjEwMCU7XG59XG4gICAgXG4uYmxvY2syIHtcbiAgICBkaXNwbGF5OiBpbmxpbmUtYmxvY2s7XG4gICAgdmVydGljYWwtYWxpZ246IHRvcDtcbiAgICBvdmVyZmxvdzogdmlzaWJsZTtcbiAgICBib3JkZXItcmlnaHQ6IDFweCBzb2xpZCAjYTRhNGE0O1xufVxuXG4uYnRuIHtcbiAgICB0ZXh0LWFsaWduOiBsZWZ0O1xufVxuXG4jb2xkX25hbWUyY2FzX2NhcyB7XG4gICAgd2lkdGg6IDEwMCUgIWltcG9ydGFudDtcbiAgICBoZWlnaHQ6MTAwJSAhaW1wb3J0YW50O1xuICAgIGJvcmRlciA6IG5vbmUgIWltcG9ydGFudDtcbiAgICBtYXJnaW4tcmlnaHQ6LTUlO1xuICAgIG92ZXJmbG93OiB2aXNpYmxlO1xufVxuXG4jbmFtZTJjYXNfY2FzIHtcbiAgICB3aWR0aDogMTAwJSAhaW1wb3J0YW50O1xufVxuXG4jbXMtbmFtZTJjYXNfY2FzIHtcbiAgICB3aWR0aDogMTAwJSAhaW1wb3J0YW50O1xufVxuXG4ubXMtY29udGFpbmVyIHtcbiAgICB3aWR0aDogMTAwJSAhaW1wb3J0YW50O1xuICAgIFxufVxuXG4ubXMtbGlzdCB7XG4gICAgaGVpZ2h0OiAxMDBweCAhaW1wb3J0YW50O1xufVxuXG4uY2FzMm5hbWUtbW9kYWwge1xuICAgIG92ZXJmbG93LXg6IGhpZGRlbiAhaW1wb3J0YW50O1xuICAgIG92ZXJmbG93LXk6IGhpZGRlbiAhaW1wb3J0YW50O1xufSJdfQ== */"
+
+/***/ }),
+
+/***/ "./src/app/name2cas/name2cas.component.ts":
+/*!************************************************!*\
+  !*** ./src/app/name2cas/name2cas.component.ts ***!
+  \************************************************/
+/*! exports provided: FromNameCACTVSInteface, Name2casComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "FromNameCACTVSInteface", function() { return FromNameCACTVSInteface; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Name2casComponent", function() { return Name2casComponent; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm2015/core.js");
+/* harmony import */ var _name2cas_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./name2cas.service */ "./src/app/name2cas/name2cas.service.ts");
+/* harmony import */ var xml2js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! xml2js */ "./node_modules/xml2js/lib/xml2js.js");
+/* harmony import */ var xml2js__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(xml2js__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _ng_bootstrap_ng_bootstrap__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @ng-bootstrap/ng-bootstrap */ "./node_modules/@ng-bootstrap/ng-bootstrap/fesm2015/ng-bootstrap.js");
+
+
+
+
+
+class FromNameCACTVSInteface {
+    constructor(cactus_output_key, binded_multiselect_id, service) {
+        this.from_name_running = false;
+        this.from_name_executed = false;
+        this.item_list = [];
+        this.item_set = [];
+        this.item_show_cactvs_data = true;
+        this.item_copy_show_cactvs_data = true;
+        this.selected_item_int_id_list = [];
+        this.cactus_output_key = cactus_output_key;
+        this.binded_multiselect_id = binded_multiselect_id;
+        this._service = service;
+    }
+    removeItemDuplicates(item_list) {
+        let j = {};
+        let item_list_set = item_list.filter((value, index, array) => {
+            if (j.hasOwnProperty(value['value'])) {
+                return false;
+            }
+            j[value['value']] = 0;
+            return true;
+        });
+        return item_list_set;
+    }
+    updateItemSet(remove_duplicates = true) {
+        let item_list = this.item_list;
+        if (remove_duplicates) {
+            item_list = this.removeItemDuplicates(item_list);
+        }
+        this.item_set = item_list;
+    }
+    updateMultiSelect() {
+        if (typeof this.binded_multiselect_id !== 'undefined' && this.binded_multiselect_id !== null) {
+            const jquery_select = '#' + this.binded_multiselect_id;
+            setTimeout(function () {
+                $(jquery_select).multiSelect('refresh');
+            }.bind(this, jquery_select), 0);
+        }
+    }
+    getSelectedFromMultiselect() {
+        if (typeof this.binded_multiselect_id !== 'undefined' && this.binded_multiselect_id !== null) {
+            const jquery_select = '#' + this.binded_multiselect_id;
+            let selected_cas_int_id_list = [];
+            $(jquery_select).children("[selected='selected']").each(function () {
+                selected_cas_int_id_list.push(Number($(this).val().replace(/^[0-9]+:\s+/, '')) + 0);
+            });
+            return selected_cas_int_id_list;
+        }
+    }
+    setCurrentItemIntId() {
+        if (this.selected_item_int_id_list.length === 1) {
+            const current_cas_int_id = this.selected_item_int_id_list[0];
+            const BreakException = {};
+            try {
+                this.item_list.forEach((item) => {
+                    if (item['int_id'] === current_cas_int_id) {
+                        this.current_item = item;
+                        throw BreakException;
+                    }
+                });
+            }
+            catch (e) {
+                if (e !== BreakException)
+                    throw e;
+            }
+        }
+    }
+    updateSelectedItemsFromMultiselect() {
+        this.selected_item_int_id_list = this.getSelectedFromMultiselect();
+        this.setCurrentItemIntId();
+    }
+    initializeMultiSelect() {
+        const multiselect_id = this.binded_multiselect_id;
+        let jquery_select = '#' + multiselect_id;
+        let jquery_select_ms = "#ms-" + multiselect_id;
+        let selected_select_options = $(jquery_select).children();
+        selected_select_options.removeAttr('selected');
+        selected_select_options.prop('selected', false);
+        let ms = $(jquery_select_ms);
+        $(jquery_select_ms).css('width', '100%');
+        $(jquery_select_ms).find(".ms-list").css('height', '100px');
+    }
+    setupMultiselect() {
+        const that = this;
+        $('#' + this.binded_multiselect_id).multiSelect({
+            'afterInit': function () { that.initializeMultiSelect(); },
+            'afterSelect': function () { that.updateSelectedItemsFromMultiselect(); },
+            'afterDeselect': function () { that.updateSelectedItemsFromMultiselect(); }
+        });
+        this.updateMultiSelect();
+    }
+    deleteSelection() {
+        this.selected_item_int_id_list = [];
+        this.current_item = undefined;
+        this.updateMultiSelect();
+    }
+    setItemList(item_list, has_no_duplicates = false) {
+        this.item_list = item_list;
+        if (item_list.length === 0) {
+            this.item_set = [];
+        }
+        else {
+            this.updateItemSet(!has_no_duplicates);
+        }
+        this.deleteSelection();
+    }
+    removeItemValueDuplicates() {
+        this.setItemList(this.removeItemDuplicates(this.item_list), true);
+    }
+    filterObjectListByKey(object_list, key, values, inverted = false) {
+        let j_key = {};
+        values.forEach((value) => {
+            j_key[value] = 0;
+        });
+        let filtered_object_list = object_list.filter((value, index, array) => {
+            let is_in_j_key = j_key.hasOwnProperty(value[key]);
+            return inverted ? !is_in_j_key : is_in_j_key;
+        });
+        return filtered_object_list;
+    }
+    filterListByIntId(item_list, item_int_id_list, inverted = false) {
+        let item_int_id_list_number = [];
+        item_int_id_list.forEach((item_int_id) => {
+            item_int_id_list_number.push(Number(item_int_id));
+        });
+        return this.filterObjectListByKey(item_list, 'int_id', item_int_id_list_number, inverted);
+    }
+    deleteItemsByIntId(int_id_list, delete_same_value = false) {
+        if (!delete_same_value) {
+            this.setItemList(this.item_list = this.filterListByIntId(this.item_list, int_id_list, true));
+        }
+        else {
+            let selected_item = this.filterListByIntId(this.item_list, int_id_list);
+            let value_list = [];
+            selected_item.forEach((item) => {
+                value_list.push(item['value']);
+            });
+            this.setItemList(this.filterObjectListByKey(this.item_list, 'value', value_list, true));
+        }
+    }
+    deleteSelectedItems() {
+        this.deleteItemsByIntId(this.selected_item_int_id_list, !this.item_show_cactvs_data);
+    }
+    fromName(search_string) {
+        if (this.from_name_running) {
+            return;
+        }
+        this.from_name_running = true;
+        this.setItemList([]);
+        this.item_from_name_subscription = this._service.getFromName(search_string, this.cactus_output_key, 'compound_name').subscribe(result => {
+            Object(xml2js__WEBPACK_IMPORTED_MODULE_3__["parseString"])(result, function (err, result) {
+                if (err !== null) {
+                    alert('Error while parsing CACTVS query');
+                    console.log('Error while parsing CACTVS query:');
+                    console.log(err);
+                    return;
+                }
+                if (!result.hasOwnProperty('request')) {
+                    alert("Error in CACTVS query");
+                    console.log("Error in CACTVS query. Response:");
+                    console.log(result);
+                }
+                else {
+                    this.setItemList(this._service.cactusXMLparsed(result));
+                    this.from_name_executed = true;
+                }
+            }.bind(this));
+        }, error => {
+            alert("Error in CACTVS query");
+        }, () => {
+            this.from_name_running = false;
+            this.item_from_name_subscription.unsubscribe();
+        });
+    }
+    updateTextDump(copy_selection_only = true, item_value_only = false) {
+        let item_list;
+        if (copy_selection_only) {
+            item_list = this.filterListByIntId(this.item_list, this.selected_item_int_id_list);
+        }
+        else {
+            item_list = this.item_list;
+        }
+        this.item_text_dump = '';
+        let key;
+        if (item_value_only) {
+            key = 'value';
+            item_list = this.removeItemDuplicates(item_list);
+        }
+        else {
+            key = 'string_rep';
+        }
+        item_list.forEach((cas) => {
+            this.item_text_dump += cas[key] + '\n';
+        });
+    }
+}
+FromNameCACTVSInteface.ctorParameters = () => [
+    { type: String },
+    { type: String },
+    { type: _name2cas_service__WEBPACK_IMPORTED_MODULE_2__["Name2casService"] }
+];
+let Name2casComponent = class Name2casComponent {
+    constructor(service, modalService) {
+        this.service = service;
+        this.modalService = modalService;
+        this.search_type = 'compound_name';
+        this.show_cactvs_data = true;
+        this.cas = new FromNameCACTVSInteface("cas", "name2cas_cas", this.service);
+        this.smiles = new FromNameCACTVSInteface("smiles", "name2smiles_smiles", this.service);
+        this.cactus_interfaces = {
+            cas: this.cas,
+            smiles: this.smiles
+        };
+        this.ngb_modal_opt_by_cactus_interface = {
+            cas: {
+                ariaLabelledBy: 'name2cas-copy-clipboard-basic-title',
+                windowClass: 'cas2name-modal'
+            },
+            smiles: {
+                ariaLabelledBy: 'name2smiles-copy-clipboard-basic-title',
+                windowClass: 'smiles2name-modal'
+            }
+        };
+        this.copy_textarea_id_by_cactus_interface = {
+            cas: 'name2cas-copy-textarea',
+            smiles: 'name2smiles-copy-textarea'
+        };
+    }
+    ngOnInit() {
+        Object.keys(this.cactus_interfaces).forEach((interf) => {
+            this.ngb_modal_opt_by_cactus_interface[interf]['centered'] = true;
+        });
+    }
+    ngAfterViewInit() {
+        Object.keys(this.cactus_interfaces).forEach((interface_name) => {
+            this.cactus_interfaces[interface_name].setupMultiselect();
+        });
+    }
+    itemsFromNameButton() {
+        Object.keys(this.cactus_interfaces).forEach((interface_name) => {
+            this.cactus_interfaces[interface_name].fromName(this.search_string);
+        });
+    }
+    changeItemsShowCactvsData() {
+        Object.keys(this.cactus_interfaces).forEach((interface_name) => {
+            this.cactus_interfaces[interface_name].item_show_cactvs_data = this.show_cactvs_data;
+            this.cactus_interfaces[interface_name].item_copy_show_cactvs_data = Boolean(this.cactus_interfaces[interface_name].item_show_cactvs_data);
+            this.cactus_interfaces[interface_name].deleteSelection();
+        });
+    }
+    openCopy(content, cactus_interface_name, copy_selection_only = true) {
+        let closeResult;
+        let item = this.cactus_interfaces[cactus_interface_name];
+        let copy_textarea_id = this.copy_textarea_id_by_cactus_interface[cactus_interface_name];
+        let jquery_sel_copy_textarea_id = '#' + copy_textarea_id;
+        item.item_copy_copy_selection_only = copy_selection_only;
+        item.updateTextDump(copy_selection_only, !item.item_copy_show_cactvs_data);
+        item.content_item_textarea = item.item_text_dump;
+        this.modalService.open(content, this.ngb_modal_opt_by_cactus_interface[cactus_interface_name]).result.then((result) => {
+            closeResult = 'Closed with: ' + result;
+            $(jquery_sel_copy_textarea_id).off('input');
+        }, (reason) => {
+            //ModalDismissReasons contains reason possible values
+            $(jquery_sel_copy_textarea_id).off('input');
+        });
+        setTimeout(() => {
+            const that = this;
+            $(jquery_sel_copy_textarea_id).on('input', function (event) {
+                item.content_item_textarea = item.item_text_dump;
+            });
+        }, 0);
+        setTimeout(function (copy_textarea_id) {
+            document.getElementById(copy_textarea_id).select();
+            document.execCommand("copy");
+        }.bind(this, copy_textarea_id), 0);
+    }
+    changeShowName2ItemData(item) {
+        item.updateTextDump(item.item_copy_copy_selection_only, !item.item_copy_show_cactvs_data);
+        item.content_item_textarea = item.item_text_dump;
+    }
+    changeContentItemTextarea(item) {
+        if (item.content_item_textarea !== item.item_text_dump) {
+            item.content_item_textarea = item.item_text_dump;
+        }
+    }
+};
+Name2casComponent.ctorParameters = () => [
+    { type: _name2cas_service__WEBPACK_IMPORTED_MODULE_2__["Name2casService"] },
+    { type: _ng_bootstrap_ng_bootstrap__WEBPACK_IMPORTED_MODULE_4__["NgbModal"] }
+];
+tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+    Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Object)
+], Name2casComponent.prototype, "info", void 0);
+Name2casComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+    Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
+        selector: 'app-name2cas',
+        template: __webpack_require__(/*! raw-loader!./name2cas.component.html */ "./node_modules/raw-loader/index.js!./src/app/name2cas/name2cas.component.html"),
+        styles: [__webpack_require__(/*! ./name2cas.component.css */ "./src/app/name2cas/name2cas.component.css")]
+    }),
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_name2cas_service__WEBPACK_IMPORTED_MODULE_2__["Name2casService"],
+        _ng_bootstrap_ng_bootstrap__WEBPACK_IMPORTED_MODULE_4__["NgbModal"]])
+], Name2casComponent);
+
+
+
+/***/ }),
+
+/***/ "./src/app/name2cas/name2cas.service.ts":
+/*!**********************************************!*\
+  !*** ./src/app/name2cas/name2cas.service.ts ***!
+  \**********************************************/
+/*! exports provided: Name2casService */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Name2casService", function() { return Name2casService; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm2015/core.js");
+/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm2015/http.js");
+
+
+
+let Name2casService = class Name2casService {
+    constructor(http) {
+        this.http = http;
+        this.cactus_webservice_URL = 'https://cactus.nci.nih.gov/chemical/structure/';
+    }
+    getFromName(search_string, search_output, search_type = null) {
+        const resolvers = {
+            compound_name: 'name_by_opsin,name_by_cir',
+            SMILES: 'smiles'
+        };
+        let params;
+        const url = this.cactus_webservice_URL + encodeURIComponent(search_string) + '/' + search_output + '/xml';
+        if (search_type !== null) {
+            params = new _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpParams"]().append('resolver', resolvers[search_type]);
+        }
+        else {
+            params = new _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpParams"]();
+        }
+        return this.http.get(url, { responseType: 'text', params: params });
+    }
+    cactusXMLparsed(parseString_result, include_input_type = false) {
+        let item_list = [];
+        let counter = 0;
+        if (parseString_result.request.hasOwnProperty('data')) {
+            parseString_result.request.data.forEach(dat => {
+                let resolver = dat.$.resolver;
+                let string_class = dat.$.string_class; // type of input string detected
+                if (dat.hasOwnProperty('item')) {
+                    dat.item.forEach(it => {
+                        let item = {
+                            int_id: counter,
+                            resolver: resolver,
+                            string_class: string_class,
+                            value: it._,
+                            classification: it.$.classification
+                        };
+                        let input_type_string = '';
+                        if (include_input_type) {
+                            input_type_string = 'input_type="' + item.string_class + '", ';
+                        }
+                        item['string_rep'] = item.value;
+                        item['html_rep'] = '<b>' + escapeHtmlString(item.value) + '</b>';
+                        if (typeof item.resolver === 'undefined' && typeof item.resolver === 'undefined') {
+                            item['string_rep'] = item.value;
+                            item['html_rep'] = '<b>' + item.value + '</b>';
+                        }
+                        else if (typeof item.resolver === 'undefined') {
+                            item['string_rep'] += ', ' + input_type_string + 'source="NA":"' + item.classification + '"';
+                            item['html_rep'] += ', ' + input_type_string + 'source="NA":"' + item.classification + '"';
+                        }
+                        else if (typeof item.classification === 'undefined') {
+                            item['string_rep'] += ', ' + input_type_string + 'source="' + item.resolver + '":"NA"';
+                            item['html_rep'] += ', ' + input_type_string + 'source="' + item.resolver + '":"NA"';
+                        }
+                        else {
+                            item['string_rep'] += ', ' + input_type_string + 'source="' + item.resolver + '":"' + item.classification + '"';
+                            item['html_rep'] += ', ' + input_type_string + 'source="' + item.resolver + '":"' + item.classification + '"';
+                        }
+                        item_list.push(item);
+                        counter++;
+                    });
+                }
+            });
+        }
+        return item_list;
+    }
+};
+Name2casService.ctorParameters = () => [
+    { type: _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpClient"] }
+];
+Name2casService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+    Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
+        providedIn: 'root'
+    }),
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpClient"]])
+], Name2casService);
+
+
+
+/***/ }),
+
 /***/ "./src/app/navbar/navbar.component.css":
 /*!*********************************************!*\
   !*** ./src/app/navbar/navbar.component.css ***!
@@ -2474,7 +3272,7 @@ TabsService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = ".block1 {\n    overflow: scroll;\n    display: block;\n    border: 1px solid #ccc;\n    width:100%;\n    height:100%;\n}\n    \n.block2 {\n    display: inline-block;\n    vertical-align: top;\n    overflow: visible;\n    border-right: 1px solid #a4a4a4;\n}\n    \n.btn {\n    text-align: left;\n}\n    \n#old_name2cas_cas {\n    width: 100% !important;\n    height:100% !important;\n    border : none !important;\n    margin-right:-5%;\n    overflow: visible;\n}\n    \n#name2cas_cas {\n    width: 100% !important;\n}\n    \n#ms-name2cas_cas {\n    width: 100% !important;\n}\n    \n.ms-container {\n    width: 100% !important;\n    \n}\n    \n.ms-list {\n    height: 100px !important;\n}\n    \n.cas2name-modal {\n    overflow-x: hidden !important;\n    overflow-y: hidden !important;\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvdGMtY2hhcmFjdGVyaXphdGlvbi90Yy1jaGFyYWN0ZXJpemF0aW9uLmNvbXBvbmVudC5jc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7SUFDSSxnQkFBZ0I7SUFDaEIsY0FBYztJQUNkLHNCQUFzQjtJQUN0QixVQUFVO0lBQ1YsV0FBVztBQUNmOztBQUVBO0lBQ0kscUJBQXFCO0lBQ3JCLG1CQUFtQjtJQUNuQixpQkFBaUI7SUFDakIsK0JBQStCO0FBQ25DOztBQUVBO0lBQ0ksZ0JBQWdCO0FBQ3BCOztBQUVBO0lBQ0ksc0JBQXNCO0lBQ3RCLHNCQUFzQjtJQUN0Qix3QkFBd0I7SUFDeEIsZ0JBQWdCO0lBQ2hCLGlCQUFpQjtBQUNyQjs7QUFFQTtJQUNJLHNCQUFzQjtBQUMxQjs7QUFFQTtJQUNJLHNCQUFzQjtBQUMxQjs7QUFFQTtJQUNJLHNCQUFzQjs7QUFFMUI7O0FBRUE7SUFDSSx3QkFBd0I7QUFDNUI7O0FBRUE7SUFDSSw2QkFBNkI7SUFDN0IsNkJBQTZCO0FBQ2pDIiwiZmlsZSI6InNyYy9hcHAvdGMtY2hhcmFjdGVyaXphdGlvbi90Yy1jaGFyYWN0ZXJpemF0aW9uLmNvbXBvbmVudC5jc3MiLCJzb3VyY2VzQ29udGVudCI6WyIuYmxvY2sxIHtcbiAgICBvdmVyZmxvdzogc2Nyb2xsO1xuICAgIGRpc3BsYXk6IGJsb2NrO1xuICAgIGJvcmRlcjogMXB4IHNvbGlkICNjY2M7XG4gICAgd2lkdGg6MTAwJTtcbiAgICBoZWlnaHQ6MTAwJTtcbn1cbiAgICBcbi5ibG9jazIge1xuICAgIGRpc3BsYXk6IGlubGluZS1ibG9jaztcbiAgICB2ZXJ0aWNhbC1hbGlnbjogdG9wO1xuICAgIG92ZXJmbG93OiB2aXNpYmxlO1xuICAgIGJvcmRlci1yaWdodDogMXB4IHNvbGlkICNhNGE0YTQ7XG59XG5cbi5idG4ge1xuICAgIHRleHQtYWxpZ246IGxlZnQ7XG59XG5cbiNvbGRfbmFtZTJjYXNfY2FzIHtcbiAgICB3aWR0aDogMTAwJSAhaW1wb3J0YW50O1xuICAgIGhlaWdodDoxMDAlICFpbXBvcnRhbnQ7XG4gICAgYm9yZGVyIDogbm9uZSAhaW1wb3J0YW50O1xuICAgIG1hcmdpbi1yaWdodDotNSU7XG4gICAgb3ZlcmZsb3c6IHZpc2libGU7XG59XG5cbiNuYW1lMmNhc19jYXMge1xuICAgIHdpZHRoOiAxMDAlICFpbXBvcnRhbnQ7XG59XG5cbiNtcy1uYW1lMmNhc19jYXMge1xuICAgIHdpZHRoOiAxMDAlICFpbXBvcnRhbnQ7XG59XG5cbi5tcy1jb250YWluZXIge1xuICAgIHdpZHRoOiAxMDAlICFpbXBvcnRhbnQ7XG4gICAgXG59XG5cbi5tcy1saXN0IHtcbiAgICBoZWlnaHQ6IDEwMHB4ICFpbXBvcnRhbnQ7XG59XG5cbi5jYXMybmFtZS1tb2RhbCB7XG4gICAgb3ZlcmZsb3cteDogaGlkZGVuICFpbXBvcnRhbnQ7XG4gICAgb3ZlcmZsb3cteTogaGlkZGVuICFpbXBvcnRhbnQ7XG59Il19 */"
+module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiJzcmMvYXBwL3RjLWNoYXJhY3Rlcml6YXRpb24vdGMtY2hhcmFjdGVyaXphdGlvbi5jb21wb25lbnQuY3NzIn0= */"
 
 /***/ }),
 
@@ -2482,316 +3280,19 @@ module.exports = ".block1 {\n    overflow: scroll;\n    display: block;\n    bor
 /*!**********************************************************************!*\
   !*** ./src/app/tc-characterization/tc-characterization.component.ts ***!
   \**********************************************************************/
-/*! exports provided: FromNameCACTVSInteface, TcCharacterizationComponent */
+/*! exports provided: TcCharacterizationComponent */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "FromNameCACTVSInteface", function() { return FromNameCACTVSInteface; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TcCharacterizationComponent", function() { return TcCharacterizationComponent; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm2015/core.js");
-/* harmony import */ var _tc_characterization_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./tc-characterization.service */ "./src/app/tc-characterization/tc-characterization.service.ts");
-/* harmony import */ var xml2js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! xml2js */ "./node_modules/xml2js/lib/xml2js.js");
-/* harmony import */ var xml2js__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(xml2js__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _ng_bootstrap_ng_bootstrap__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @ng-bootstrap/ng-bootstrap */ "./node_modules/@ng-bootstrap/ng-bootstrap/fesm2015/ng-bootstrap.js");
 
 
-
-
-
-class FromNameCACTVSInteface {
-    constructor(cactus_output_key, binded_multiselect_id = undefined, service) {
-        this.from_name_running = false;
-        this.from_name_executed = false;
-        this.item_list = [];
-        this.item_set = [];
-        this.item_show_cactvs_data = true;
-        this.item_copy_show_cactvs_data = true;
-        this.selected_item_int_id_list = [];
-        this.cactus_output_key = cactus_output_key;
-        this.binded_multiselect_id = binded_multiselect_id;
-        this._service = service;
-    }
-    removeItemDuplicates(item_list) {
-        let j = {};
-        let item_list_set = item_list.filter((value, index, array) => {
-            if (j.hasOwnProperty(value['value'])) {
-                return false;
-            }
-            j[value['value']] = 0;
-            return true;
-        });
-        return item_list_set;
-    }
-    updateItemSet(remove_duplicates = true) {
-        let item_list = this.item_list;
-        if (remove_duplicates) {
-            item_list = this.removeItemDuplicates(item_list);
-        }
-        this.item_set = item_list;
-    }
-    updateMultiSelect() {
-        if (typeof this.binded_multiselect_id !== 'undefined' && this.binded_multiselect_id !== null) {
-            const jquery_select = '#' + this.binded_multiselect_id;
-            setTimeout(function () {
-                $(jquery_select).multiSelect('refresh');
-            }.bind(this, jquery_select), 0);
-        }
-    }
-    getSelectedFromMultiselect() {
-        if (typeof this.binded_multiselect_id !== 'undefined' && this.binded_multiselect_id !== null) {
-            const jquery_select = '#' + this.binded_multiselect_id;
-            let selected_cas_int_id_list = [];
-            $(jquery_select).children("[selected='selected']").each(function () {
-                selected_cas_int_id_list.push(Number($(this).val().replace(/^[0-9]+:\s+/, '')) + 0);
-            });
-            return selected_cas_int_id_list;
-        }
-    }
-    setCurrentItemIntId() {
-        if (this.selected_item_int_id_list.length === 1) {
-            const current_cas_int_id = this.selected_item_int_id_list[0];
-            const BreakException = {};
-            try {
-                this.item_list.forEach((item) => {
-                    if (item['int_id'] === current_cas_int_id) {
-                        this.current_item = item;
-                        throw BreakException;
-                    }
-                });
-            }
-            catch (e) {
-                if (e !== BreakException)
-                    throw e;
-            }
-        }
-    }
-    updateSelectedItemsFromMultiselect() {
-        this.selected_item_int_id_list = this.getSelectedFromMultiselect();
-        this.setCurrentItemIntId();
-    }
-    initializeMultiSelect() {
-        const multiselect_id = this.binded_multiselect_id;
-        let jquery_select = '#' + multiselect_id;
-        let jquery_select_ms = "#ms-" + multiselect_id;
-        let selected_select_options = $(jquery_select).children();
-        selected_select_options.removeAttr('selected');
-        selected_select_options.prop('selected', false);
-        let ms = $(jquery_select_ms);
-        $(jquery_select_ms).css('width', '100%');
-        $(jquery_select_ms).find(".ms-list").css('height', '100px');
-    }
-    setupMultiselect() {
-        const that = this;
-        $('#' + this.binded_multiselect_id).multiSelect({
-            'afterInit': function () { that.initializeMultiSelect(); },
-            'afterSelect': function () { that.updateSelectedItemsFromMultiselect(); },
-            'afterDeselect': function () { that.updateSelectedItemsFromMultiselect(); }
-        });
-        this.updateMultiSelect();
-    }
-    deleteSelection() {
-        this.selected_item_int_id_list = [];
-        this.current_item = undefined;
-        this.updateMultiSelect();
-    }
-    ;
-    setItemList(item_list, has_no_duplicates = false) {
-        this.item_list = item_list;
-        if (item_list.length === 0) {
-            this.item_set = [];
-        }
-        else {
-            this.updateItemSet(!has_no_duplicates);
-        }
-        this.deleteSelection();
-    }
-    removeItemValueDuplicates() {
-        this.setItemList(this.removeItemDuplicates(this.item_list), true);
-    }
-    filterObjectListByKey(object_list, key, values, inverted = false) {
-        let j_key = {};
-        values.forEach((value) => {
-            j_key[value] = 0;
-        });
-        let filtered_object_list = object_list.filter((value, index, array) => {
-            let is_in_j_key = j_key.hasOwnProperty(value[key]);
-            return inverted ? !is_in_j_key : is_in_j_key;
-        });
-        return filtered_object_list;
-    }
-    filterListByIntId(item_list, item_int_id_list, inverted = false) {
-        let item_int_id_list_number = [];
-        item_int_id_list.forEach((item_int_id) => {
-            item_int_id_list_number.push(Number(item_int_id));
-        });
-        return this.filterObjectListByKey(item_list, 'int_id', item_int_id_list_number, inverted);
-    }
-    deleteItemsByIntId(int_id_list, delete_same_value = false) {
-        if (!delete_same_value) {
-            this.setItemList(this.item_list = this.filterListByIntId(this.item_list, int_id_list, true));
-        }
-        else {
-            let selected_item = this.filterListByIntId(this.item_list, int_id_list);
-            let value_list = [];
-            selected_item.forEach((item) => {
-                value_list.push(item['value']);
-            });
-            this.setItemList(this.filterObjectListByKey(this.item_list, 'value', value_list, true));
-        }
-    }
-    deleteSelectedItems() {
-        this.deleteItemsByIntId(this.selected_item_int_id_list, !this.item_show_cactvs_data);
-    }
-    fromName(search_string) {
-        if (this.from_name_running) {
-            return;
-        }
-        this.from_name_running = true;
-        this.setItemList([]);
-        this.item_from_name_subscription = this._service.getFromName(search_string, this.cactus_output_key, 'compound_name').subscribe(result => {
-            Object(xml2js__WEBPACK_IMPORTED_MODULE_3__["parseString"])(result, function (err, result) {
-                if (err !== null) {
-                    alert('Error while parsing CACTVS query');
-                    console.log('Error while parsing CACTVS query:');
-                    console.log(err);
-                    return;
-                }
-                if (!result.hasOwnProperty('request')) {
-                    alert("Error in CACTVS query");
-                    console.log("Error in CACTVS query. Response:");
-                    console.log(result);
-                }
-                else {
-                    this.setItemList(this._service.cactusXMLparsed(result));
-                    this.from_name_executed = true;
-                }
-            }.bind(this));
-        }, error => {
-            alert("Error in CACTVS query");
-        }, () => {
-            this.from_name_running = false;
-            this.item_from_name_subscription.unsubscribe();
-        });
-    }
-    updateTextDump(copy_selection_only = true, item_value_only = false) {
-        let item_list;
-        if (copy_selection_only) {
-            item_list = this.filterListByIntId(this.item_list, this.selected_item_int_id_list);
-        }
-        else {
-            item_list = this.item_list;
-        }
-        this.item_text_dump = '';
-        let key;
-        if (item_value_only) {
-            key = 'value';
-            item_list = this.removeItemDuplicates(item_list);
-        }
-        else {
-            key = 'string_rep';
-        }
-        item_list.forEach((cas) => {
-            this.item_text_dump += cas[key] + '\n';
-        });
-        this.item_text_dump;
-    }
-}
-FromNameCACTVSInteface.ctorParameters = () => [
-    { type: String },
-    { type: String },
-    { type: _tc_characterization_service__WEBPACK_IMPORTED_MODULE_2__["TcCharacterizationService"] }
-];
 let TcCharacterizationComponent = class TcCharacterizationComponent {
-    constructor(service, modalService) {
-        this.service = service;
-        this.modalService = modalService;
-        this.search_type = 'compound_name';
-        this.show_cactvs_data = true;
-        this.cas = new FromNameCACTVSInteface("cas", "name2cas_cas", this.service);
-        this.smiles = new FromNameCACTVSInteface("smiles", "name2smiles_smiles", this.service);
-        this.cactus_interfaces = {
-            cas: this.cas,
-            smiles: this.smiles
-        };
-        this.ngb_modal_opt_by_cactus_interface = {
-            cas: {
-                ariaLabelledBy: 'name2cas-copy-clipboard-basic-title',
-                windowClass: 'cas2name-modal'
-            },
-            smiles: {
-                ariaLabelledBy: 'name2smiles-copy-clipboard-basic-title',
-                windowClass: 'smiles2name-modal'
-            }
-        };
-        this.copy_textarea_id_by_cactus_interface = {
-            cas: 'name2cas-copy-textarea',
-            smiles: 'name2smiles-copy-textarea'
-        };
-    }
-    ngOnInit() {
-        Object.keys(this.cactus_interfaces).forEach((interf) => {
-            this.ngb_modal_opt_by_cactus_interface[interf]['centered'] = true;
-        });
-    }
-    ngAfterViewInit() {
-        Object.keys(this.cactus_interfaces).forEach((interface_name) => {
-            this.cactus_interfaces[interface_name].setupMultiselect();
-        });
-    }
-    itemsFromNameButton() {
-        Object.keys(this.cactus_interfaces).forEach((interface_name) => {
-            this.cactus_interfaces[interface_name].fromName(this.search_string);
-        });
-    }
-    changeItemsShowCactvsData() {
-        Object.keys(this.cactus_interfaces).forEach((interface_name) => {
-            this.cactus_interfaces[interface_name].item_show_cactvs_data = this.show_cactvs_data;
-            this.cactus_interfaces[interface_name].item_copy_show_cactvs_data = Boolean(this.cactus_interfaces[interface_name].item_show_cactvs_data);
-            this.cactus_interfaces[interface_name].deleteSelection();
-        });
-    }
-    openCopy(content, cactus_interface_name, copy_selection_only = true) {
-        let closeResult;
-        let item = this.cactus_interfaces[cactus_interface_name];
-        let copy_textarea_id = this.copy_textarea_id_by_cactus_interface[cactus_interface_name];
-        let jquery_sel_copy_textarea_id = '#' + copy_textarea_id;
-        item.item_copy_copy_selection_only = copy_selection_only;
-        item.updateTextDump(copy_selection_only, !item.item_copy_show_cactvs_data);
-        item.content_item_textarea = item.item_text_dump;
-        this.modalService.open(content, this.ngb_modal_opt_by_cactus_interface[cactus_interface_name]).result.then((result) => {
-            closeResult = 'Closed with: ' + result;
-            $(jquery_sel_copy_textarea_id).off('input');
-        }, (reason) => {
-            //ModalDismissReasons contains reason possible values
-            $(jquery_sel_copy_textarea_id).off('input');
-        });
-        setTimeout(() => {
-            const that = this;
-            $(jquery_sel_copy_textarea_id).on('input', function (event) {
-                item.content_item_textarea = item.item_text_dump;
-            });
-        }, 0);
-        setTimeout(function (copy_textarea_id) {
-            document.getElementById(copy_textarea_id).select();
-            document.execCommand("copy");
-        }.bind(this, copy_textarea_id), 0);
-    }
-    changeShowName2ItemData(item) {
-        item.updateTextDump(item.item_copy_copy_selection_only, !item.item_copy_show_cactvs_data);
-        item.content_item_textarea = item.item_text_dump;
-    }
-    changeContentItemTextarea(item) {
-        if (item.content_item_textarea !== item.item_text_dump) {
-            item.content_item_textarea = item.item_text_dump;
-        }
-    }
+    ngOnInit() { }
 };
-TcCharacterizationComponent.ctorParameters = () => [
-    { type: _tc_characterization_service__WEBPACK_IMPORTED_MODULE_2__["TcCharacterizationService"] },
-    { type: _ng_bootstrap_ng_bootstrap__WEBPACK_IMPORTED_MODULE_4__["NgbModal"] }
-];
 tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
     Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
     tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Object)
@@ -2801,9 +3302,7 @@ TcCharacterizationComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         selector: 'app-tc-characterization',
         template: __webpack_require__(/*! raw-loader!./tc-characterization.component.html */ "./node_modules/raw-loader/index.js!./src/app/tc-characterization/tc-characterization.component.html"),
         styles: [__webpack_require__(/*! ./tc-characterization.component.css */ "./src/app/tc-characterization/tc-characterization.component.css")]
-    }),
-    tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_tc_characterization_service__WEBPACK_IMPORTED_MODULE_2__["TcCharacterizationService"],
-        _ng_bootstrap_ng_bootstrap__WEBPACK_IMPORTED_MODULE_4__["NgbModal"]])
+    })
 ], TcCharacterizationComponent);
 
 
@@ -2822,85 +3321,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TcCharacterizationService", function() { return TcCharacterizationService; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm2015/core.js");
-/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm2015/http.js");
-
 
 
 let TcCharacterizationService = class TcCharacterizationService {
-    constructor(http) {
-        this.http = http;
-        this.cactus_webservice_URL = 'https://cactus.nci.nih.gov/chemical/structure/';
-    }
-    getFromName(search_string, search_output, search_type = null) {
-        const resolvers = {
-            compound_name: 'name_by_opsin,name_by_cir',
-            SMILES: 'smiles'
-        };
-        let params;
-        const url = this.cactus_webservice_URL + encodeURIComponent(search_string) + '/' + search_output + '/xml';
-        if (search_type !== null) {
-            params = new _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpParams"]().append('resolver', resolvers[search_type]);
-        }
-        else {
-            params = new _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpParams"]();
-        }
-        return this.http.get(url, { responseType: 'text', params: params });
-    }
-    cactusXMLparsed(parseString_result, include_input_type = false) {
-        let item_list = [];
-        let counter = 0;
-        if (parseString_result.request.hasOwnProperty('data')) {
-            parseString_result.request.data.forEach(dat => {
-                let resolver = dat.$.resolver;
-                let string_class = dat.$.string_class; //type of input string detected
-                if (dat.hasOwnProperty('item')) {
-                    dat.item.forEach(it => {
-                        let item = {
-                            int_id: counter,
-                            resolver: resolver,
-                            string_class: string_class,
-                            value: it._,
-                            classification: it.$.classification
-                        };
-                        let input_type_string = '';
-                        if (include_input_type) {
-                            let input_type_string = 'input_type="' + item.string_class + '", ';
-                        }
-                        item['string_rep'] = item.value;
-                        item['html_rep'] = '<b>' + escapeHtmlString(item.value) + '</b>';
-                        if (typeof item.resolver === 'undefined' && typeof item.resolver === 'undefined') {
-                            item['string_rep'] = item.value;
-                            item['html_rep'] = '<b>' + item.value + '</b>';
-                        }
-                        else if (typeof item.resolver === 'undefined') {
-                            item['string_rep'] += ', ' + input_type_string + 'source="NA":"' + item.classification + '"';
-                            item['html_rep'] += ', ' + input_type_string + 'source="NA":"' + item.classification + '"';
-                        }
-                        else if (typeof item.classification === 'undefined') {
-                            item['string_rep'] += ', ' + input_type_string + 'source="' + item.resolver + '":"NA"';
-                            item['html_rep'] += ', ' + input_type_string + 'source="' + item.resolver + '":"NA"';
-                        }
-                        else {
-                            item['string_rep'] += ', ' + input_type_string + 'source="' + item.resolver + '":"' + item.classification + '"';
-                            item['html_rep'] += ', ' + input_type_string + 'source="' + item.resolver + '":"' + item.classification + '"';
-                        }
-                        item_list.push(item);
-                        counter++;
-                    });
-                }
-            });
-        }
-        return item_list;
-    }
+    constructor() { }
 };
-TcCharacterizationService.ctorParameters = () => [
-    { type: _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpClient"] }
-];
 TcCharacterizationService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
     Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
         providedIn: 'root'
     }),
-    tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpClient"]])
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [])
 ], TcCharacterizationService);
 
 
