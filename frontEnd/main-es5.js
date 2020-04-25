@@ -115,7 +115,7 @@ module.exports = "\n<router-outlet></router-outlet>\n"
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"row m-5 form-group\" style=\"margin-bottom:0px !important;margin-top:10px !important\">\n    <table style=\"width:100%;vertical-align:bottom\">\n        <tr>\n\n                <td style=\"width:9rem\">\n                    <label style=\"margin-bottom:0px\" for=\"chembl_search_string\" >SMILES:</label>\n                </td>\n                <td><input id=\"chembl_search_string\" class=\"form-control\" name=\"search_string\" [(ngModel)]=\"chembl_search_string\" type=\"text\"></td>\n                <td style=\"width:8rem\"><button class=\"btn btn-primary\" [disabled]=\"chembl_running\" (click)=\"chemblIdFromSmilesButton()\">Search</button>\n                    <mat-spinner *ngIf=\"chembl_running\" style=\"display:inline-block\" ProgressSpinnerMode=\"indeterminate\" diameter=\"14\"></mat-spinner>\n                </td>\n        <tr>\n\n                    <td style=\"width:9rem\"><label style=\"margin-bottom:0px\" for=\"chembl_chembl_ids\" >ChEMBL ID(s):</label></td>\n                    <td style=\"width:auto\">\n                            <select id=\"chembl_chembl_ids\" size=5 class=\"form-control\" name=\"selected_cas\" [(ngModel)]=\"chembl_selected_item_int_id_list\" multiple>\n                            <option *ngFor=\"let item of chembl_item_list\" [ngValue]=\"item.int_id\" [innerHTML]=\"item.html_rep\"></option>\n                            </select>\n                            \n                    </td>\n                    <td style=\"width:auto\">\n                    </td>\n        </tr>\n        <tr>\n            <td></td>\n            <td style=\"display:inline-block\"><button style=\"display:inline-block\" class=\"btn\" [disabled]=\"chembl_selected_item_int_id_list.length === 0\" (click)=\"chemblDeleteSelectedItems()\">Delete</button>\n            <button style=\"display:inline-block\" class=\"btn\" [disabled]=\"chembl_selected_item_int_id_list.length === 0\" (click)=\"openCopy(content,true)\">Copy in clipboard</button>\n            <button style=\"display:inline-block\" class=\"btn\" [disabled]=\"chembl_item_list.length === 0\" (click)=\"openCopy(content,false)\">Copy all in clipboard</button></td>\n        </tr>\n    </table>\n</div>\n<ng-template #content let-modal>\n    <div class=\"modal-header\">\n        <h4 class=\"modal-title\" id=\"chembl-copy-clipboard-basic-title\">ChEMBL(s)</h4>\n        <button type=\"button\" class=\"close\" aria-label=\"Close\" (click)=\"modal.dismiss('close')\">\n        <span aria-hidden=\"true\">&times;</span>\n        </button>\n    </div>\n    <div class=\"modal-body\">\n        <div class=\"form-group\">\n            <div class=\"input-group\">\n                <p>The following ChEMBL have been copied in your clipboard:</p>\n            </div>\n            <div class=\"input-group\">\n            <textarea id=\"chembl-copy-textarea\" style=\"width:100%\" class=\"form-control\" (change)=\"chemblChangeContentItemTextarea()\" [(ngModel)]=\"chembl_content_item_textarea\" rows=10></textarea>\n            </div>\n        </div>\n    </div>\n    <div class=\"modal-footer\">\n        <button type=\"button\" class=\"btn btn-outline-dark\" (click)=\"modal.dismiss('close')\">Close</button>\n    </div>\n</ng-template>"
+module.exports = "<div class=\"row m-5 form-group\" style=\"margin-bottom:0px !important;margin-top:10px !important\">\n    <table style=\"width:100%;vertical-align:bottom\">\n        <tr>\n\n                <td style=\"width:9rem\">\n                    <label style=\"margin-bottom:0px\" for=\"chembl_search_string\" >SMILES:</label>\n                </td>\n                <td><input id=\"chembl_search_string\" class=\"form-control\" name=\"search_string\" [(ngModel)]=\"chembl_search_string\" type=\"text\"></td>\n                <td style=\"width:8rem\"><button class=\"btn btn-primary\" [disabled]=\"chembl_running\" (click)=\"chemblIdFromSmilesButton()\">Search</button>\n                    <mat-spinner *ngIf=\"chembl_running\" style=\"display:inline-block\" ProgressSpinnerMode=\"indeterminate\" diameter=\"14\"></mat-spinner>\n                </td>\n        <tr>\n\n                    <td style=\"width:9rem\"><label style=\"margin-bottom:0px\" for=\"chembl_chembl_ids\" >ChEMBL ID(s):</label></td>\n                    <td style=\"width:auto\">\n                            <select id=\"chembl_chembl_ids\" size=5 class=\"form-control\" name=\"selected_cas\" [(ngModel)]=\"chembl_selected_item_int_id_list\" multiple>\n                            <option *ngFor=\"let item of chembl_item_list\" [ngValue]=\"item.int_id\" [innerHTML]=\"item.html_rep\"></option>\n                            </select>\n                            \n                    </td>\n                    <td style=\"width:auto\">\n                    </td>\n        </tr>\n        <tr>\n            <td></td>\n            <td style=\"display:inline-block\"><button style=\"display:inline-block\" class=\"btn\" [disabled]=\"chembl_selected_item_int_id_list.length === 0\" (click)=\"chemblDeleteSelectedItems()\">Delete</button>\n            <button style=\"display:inline-block\" class=\"btn\" [disabled]=\"chembl_selected_item_int_id_list.length === 0\" (click)=\"openCopy(content,true)\">Copy in clipboard</button>\n            <button style=\"display:inline-block\" class=\"btn\" [disabled]=\"chembl_item_list.length === 0\" (click)=\"openCopy(content,false)\">Copy all in clipboard</button></td>\n        </tr>\n    </table>\n    <div [innerHTML]=\"activity\"></div>\n</div>\n<ng-template #content let-modal>\n    <div class=\"modal-header\">\n        <h4 class=\"modal-title\" id=\"chembl-copy-clipboard-basic-title\">ChEMBL(s)</h4>\n        <button type=\"button\" class=\"close\" aria-label=\"Close\" (click)=\"modal.dismiss('close')\">\n        <span aria-hidden=\"true\">&times;</span>\n        </button>\n    </div>\n    <div class=\"modal-body\">\n        <div class=\"form-group\">\n            <div class=\"input-group\">\n                <p>The following ChEMBL have been copied in your clipboard:</p>\n            </div>\n            <div class=\"input-group\">\n            <textarea id=\"chembl_copy_textarea\" style=\"width:100%\" class=\"form-control\" (change)=\"chemblChangeContentItemTextarea()\" [(ngModel)]=\"chembl_content_item_textarea\" rows=10></textarea>\n            </div>\n        </div>\n    </div>\n    <div class=\"modal-footer\">\n        <button type=\"button\" class=\"btn btn-outline-dark\" (click)=\"modal.dismiss('close')\">Close</button>\n    </div>\n</ng-template>"
 
 /***/ }),
 
@@ -159,7 +159,7 @@ module.exports = "<app-navbar></app-navbar>\n<div class=\"container-fluid\">\n  
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"row m-5 form-group\" style=\"margin-bottom:0px !important;margin-top:10px !important\">\n    <table style=\"width:100%;vertical-align:bottom\">\n        <tr>\n\n                <td style=\"width:9rem\">\n                    <label style=\"margin-bottom:0px\" for=\"name2cas_search_string\" >Compound name:</label>\n                </td>\n                <td><input id=\"name2cas_search_string\" class=\"form-control\" name=\"search_string\" [(ngModel)]=\"search_string\" type=\"text\"></td>\n                <td style=\"width:8rem\"><button class=\"btn btn-primary\" [disabled]=\"this.cas.from_name_running\" (click)=\"itemsFromNameButton()\">Search</button>\n                    <mat-spinner *ngIf=\"this.cas.from_name_running\" style=\"display:inline-block\" ProgressSpinnerMode=\"indeterminate\" diameter=\"14\"></mat-spinner>\n                </td>\n\n        </tr>\n        <tr>\n            <td></td>\n            <td><br>\n                <div class=\"form-check\">\n                    <input class=\"form-check-input\" id=\"show-name2cas-data\" type=\"checkbox\" (change)=\"changeItemsShowCactvsData()\" [(ngModel)]=\"show_cactvs_data\">\n                    <label class=\"form-check-label\" for=\"show-name2cas-data\">Show CACTVS data</label>\n            </div><br></td>\n            <td></td>\n        </tr>\n        <tr>\n\n                <td style=\"width:9rem\"><label style=\"margin-bottom:0px\" for=\"name2cas_cas\" >CAS registry number(s):</label></td>\n                <td style=\"width:auto\">\n                        <select id=\"name2cas_cas\" size=5 class=\"form-control\" name=\"selected_cas\" [(ngModel)]=\"this.cas.selected_item_int_id_list\" multiple>\n                        <ng-container *ngIf=\"this.cas.item_show_cactvs_data\"><option *ngFor=\"let item of this.cas.item_list\" [ngValue]=\"item.int_id\" [innerHTML]=\"item.html_rep\"></option></ng-container>\n                        <ng-container *ngIf=\"!this.cas.item_show_cactvs_data\"><option *ngFor=\"let item of this.cas.item_set\" [ngValue]=\"item.int_id\">{{ item.value }}</option></ng-container>\n                        </select>\n                        \n                </td>\n                <td style=\"width:auto\">\n                </td>\n        </tr>\n        <tr>\n            <td><button class=\"btn\" [disabled]=\"this.cas.item_list.length === 0 || !this.cas.item_show_cactvs_data\" (click)=\"this.cas.removeItemValueDuplicates();\">Remove duplicates</button><br></td>\n            <td style=\"display:inline-block\"><button style=\"display:inline-block\" class=\"btn\" [disabled]=\"this.cas.selected_item_int_id_list.length === 0\" (click)=\"this.cas.deleteSelectedItems()\">Delete</button>\n            <button style=\"display:inline-block\" class=\"btn\" [disabled]=\"this.cas.selected_item_int_id_list.length === 0\" (click)=\"openCopy(contentCAS,'cas',true)\">Copy in clipboard</button>\n            <button style=\"display:inline-block\" class=\"btn\" [disabled]=\"this.cas.item_list.length === 0\" (click)=\"openCopy(contentCAS,'cas',false)\">Copy all in clipboard</button></td>\n\n        </tr>\n    </table>\n</div>\n<br>\n<div class=\"row m-5\" style=\"margin-top:0px !important; margin-bottom:10px !important\">\n    <div *ngIf=\"this.cas.from_name_executed\">\n    <!--TODO: sentences about how many cas numbers have been found-->\n    <label *ngIf=\"this.cas.item_list.length !== 0 && this.cas.selected_item_int_id_list.length === 0 && !this.cas.from_name_running\" >\n        <ng-container *ngIf=\"this.cas.item_show_cactvs_data\">{{this.cas.item_list.length}} CAS registry number<!--\n        --><ng-container *ngIf=\"this.cas.item_list.length > 1\">s</ng-container> found.</ng-container> \n        <ng-container *ngIf=\"!this.cas.item_show_cactvs_data\">{{this.cas.item_set.length}} CAS registry number<!--\n        --><ng-container *ngIf=\"this.cas.item_set.length > 1\">s</ng-container> found.</ng-container>\n    </label>\n    <label *ngIf=\"this.cas.selected_item_int_id_list.length === 1 && this.cas.item_show_cactvs_data\" [innerHTML]=\"this.cas.current_item.html_rep\"></label>\n    <label *ngIf=\"this.cas.selected_item_int_id_list.length > 1 || this.cas.selected_item_int_id_list.length === 1 && !this.cas.item_show_cactvs_data\" >Selected {{this.cas.selected_item_int_id_list.length}} CAS registry numbers.</label>\n    </div>\n</div>\n\n<div class=\"row m-5 form-group\" style=\"margin-bottom:0px !important;margin-top:10px !important\">\n    <table style=\"width:100%;vertical-align:bottom\">\n        <tr>\n\n                <td style=\"width:9rem\"><label style=\"margin-bottom:0px\" for=\"name2smiles_smiles\" >SMILES:</label></td>\n                <td style=\"width:auto\">\n                        <select id=\"name2smiles_smiles\" size=5 class=\"form-control\" name=\"selected_smiles\" [(ngModel)]=\"this.smiles.selected_item_int_id_list\" multiple>\n                        <ng-container *ngIf=\"this.smiles.item_show_cactvs_data\"><option *ngFor=\"let item of this.smiles.item_list\" [ngValue]=\"item.int_id\" [innerHTML]=\"item.html_rep\"></option></ng-container>\n                        <ng-container *ngIf=\"!this.smiles.item_show_cactvs_data\"><option *ngFor=\"let item of this.smiles.item_set\" [ngValue]=\"item.int_id\">{{item.value}}</option></ng-container>\n                        </select>\n                        \n                </td>\n                <td style=\"width:8rem\">\n                </td>\n        </tr>\n        <tr>\n            <td><button class=\"btn\" [disabled]=\"this.smiles.item_list.length === 0 || !this.smiles.item_show_cactvs_data\" (click)=\"this.smiles.removeItemValueDuplicates();\">Remove duplicates</button><br></td>\n            <td style=\"display:inline-block\"><button style=\"display:inline-block\" class=\"btn\" [disabled]=\"this.smiles.selected_item_int_id_list.length === 0\" (click)=\"this.smiles.deleteSelectedItems()\">Delete</button>\n            <button style=\"display:inline-block\" class=\"btn\" [disabled]=\"this.smiles.selected_item_int_id_list.length === 0\" (click)=\"openCopy(contentSmiles,'smiles',true)\">Copy in clipboard</button>\n            <button style=\"display:inline-block\" class=\"btn\" [disabled]=\"this.smiles.item_list.length === 0\" (click)=\"openCopy(contentSmiles,'smiles',false)\">Copy all in clipboard</button></td>\n\n        </tr>\n    </table>\n</div>\n<br>\n<div class=\"row m-5\" style=\"margin-top:0px !important; margin-bottom:10px !important\">\n    <div *ngIf=\"this.smiles.from_name_executed\">\n    <!--TODO: sentences about how many smiles numbers have been found-->\n    <label *ngIf=\"this.smiles.item_list.length !== 0 && this.smiles.selected_item_int_id_list.length === 0 && !this.smiles.from_name_running\" >\n        <ng-container *ngIf=\"this.smiles.item_show_cactvs_data\">{{this.smiles.item_list.length}} SMILES found.</ng-container>\n        <ng-container *ngIf=\"!this.smiles.item_show_cactvs_data\">{{this.smiles.item_set.length}} SMILES found.</ng-container> \n    </label>\n    <label *ngIf=\"this.smiles.selected_item_int_id_list.length === 1 && this.smiles.item_show_cactvs_data\" [innerHTML]=\"this.smiles.current_item.html_rep\"></label>\n    <label *ngIf=\"this.smiles.selected_item_int_id_list.length > 1 || this.smiles.selected_item_int_id_list.length === 1 && !this.smiles.item_show_cactvs_data\" >Selected {{this.smiles.selected_item_int_id_list.length}} SMILES.</label>\n\n    </div>\n</div>\n\n<ng-template #contentCAS let-modal>\n    <div class=\"modal-header\">\n        <h4 class=\"modal-title\" id=\"name2cas-copy-clipboard-basic-title\">CAS registry number(s)</h4>\n        <button type=\"button\" class=\"close\" aria-label=\"Close\" (click)=\"modal.dismiss('close')\">\n        <span aria-hidden=\"true\">&times;</span>\n        </button>\n    </div>\n    <div class=\"modal-body\">\n        <div class=\"form-group\">\n            <div class=\"input-group\">\n                <div class=\"form-check\">\n                    <input class=\"form-check-input\" id=\"show-name2cas-copy-data\" type=\"checkbox\" (change)=\"changeShowName2ItemData(this.cas)\" [(ngModel)]=\"this.cas.item_copy_show_cactvs_data\">\n                    <label class=\"form-check-label\" for=\"show-name2cas-copy-data\">Show CACTVS data</label>\n                </div>  \n            </div>\n            <br>\n            <div class=\"input-group\">\n                <p>The following CAS registry number data has been copied in your clipboard:</p>\n            </div>\n            <div class=\"input-group\">\n            <textarea id=\"name2cas-copy-textarea\" style=\"width:100%\" class=\"form-control\" (change)=\"changeContentItemTextarea(this.cas)\" [(ngModel)]=\"this.cas.content_item_textarea\" rows=10></textarea>\n            </div>\n        </div>\n    </div>\n    <div class=\"modal-footer\">\n        <button type=\"button\" class=\"btn btn-outline-dark\" (click)=\"modal.dismiss('close')\">Close</button>\n    </div>\n</ng-template>\n<ng-template #contentSmiles let-modal>\n        <div class=\"modal-header\">\n            <h4 class=\"modal-title\" id=\"name2smiles-copy-clipboard-basic-title\">SMILES registry number(s)</h4>\n            <button type=\"button\" class=\"close\" aria-label=\"Close\" (click)=\"modal.dismiss('close')\">\n            <span aria-hidden=\"true\">&times;</span>\n            </button>\n        </div>\n        <div class=\"modal-body\">\n            <div class=\"form-group\">\n                <div class=\"input-group\">\n                    <div class=\"form-check\">\n                        <input class=\"form-check-input\" id=\"show-name2smiles-copy-data\" type=\"checkbox\" (change)=\"changeShowName2ItemData(this.smiles)\" [(ngModel)]=\"this.smiles.item_copy_show_cactvs_data\">\n                        <label class=\"form-check-label\" for=\"show-name2smiles-copy-data\">Show CACTVS data</label>\n                    </div>  \n                </div>\n                <br>\n                <div class=\"input-group\">\n                    <p>The following SMILES data has been copied in your clipboard:</p>\n                </div>\n                <div class=\"input-group\">\n                <textarea id=\"name2smiles-copy-textarea\" style=\"width:100%\" class=\"form-control\" (change)=\"changeContentItemTextarea(this.smiles)\" [(ngModel)]=\"this.smiles.content_item_textarea\" rows=10></textarea>\n                </div>\n            </div>\n        </div>\n        <div class=\"modal-footer\">\n            <button type=\"button\" class=\"btn btn-outline-dark\" (click)=\"modal.dismiss('close')\">Close</button>\n        </div>\n</ng-template>\n"
+module.exports = "<div class=\"row m-5 form-group\" style=\"margin-bottom:0px !important;margin-top:10px !important\">\n    <table style=\"width:100%;vertical-align:bottom\">\n        <tr>\n\n                <td style=\"width:9rem\">\n                    <label style=\"margin-bottom:0px\" for=\"name2cas_search_string\" >Compound name:</label>\n                </td>\n                <td><input id=\"name2cas_search_string\" class=\"form-control\" name=\"search_string\" [(ngModel)]=\"search_string\" type=\"text\"></td>\n                <td style=\"width:8rem\"><button class=\"btn btn-primary\" [disabled]=\"this.cas.from_name_running || this.smiles.from_name_running\" (click)=\"itemsFromNameButton()\">Search</button>\n                    <mat-spinner *ngIf=\"this.cas.from_name_running || this.smiles.from_name_running\" style=\"display:inline-block\" ProgressSpinnerMode=\"indeterminate\" diameter=\"14\"></mat-spinner>\n                </td>\n\n        </tr>\n        <tr>\n            <td></td>\n            <td><br>\n                <div class=\"form-check\">\n                    <input class=\"form-check-input\" id=\"show-name2cas-data\" type=\"checkbox\" (change)=\"changeItemsShowCactvsData()\" [(ngModel)]=\"show_cactvs_data\">\n                    <label class=\"form-check-label\" for=\"show-name2cas-data\">Show CACTVS data</label>\n            </div><br></td>\n            <td></td>\n        </tr>\n        <tr>\n\n                <td style=\"width:9rem\"><label style=\"margin-bottom:0px\" for=\"name2cas_cas\" >CAS registry number(s):</label></td>\n                <td style=\"width:auto\">\n                        <select id=\"name2cas_cas\" size=5 class=\"form-control\" name=\"selected_cas\" [(ngModel)]=\"this.cas.selected_item_int_id_list\" multiple>\n                        <ng-container *ngIf=\"this.cas.item_show_cactvs_data\"><option *ngFor=\"let item of this.cas.item_list\" [ngValue]=\"item.int_id\" [innerHTML]=\"item.html_rep\"></option></ng-container>\n                        <ng-container *ngIf=\"!this.cas.item_show_cactvs_data\"><option *ngFor=\"let item of this.cas.item_set\" [ngValue]=\"item.int_id\">{{ item.value }}</option></ng-container>\n                        </select>\n                        \n                </td>\n                <td style=\"width:auto\">\n                </td>\n        </tr>\n        <tr>\n            <td><button class=\"btn\" [disabled]=\"this.cas.item_list.length === 0 || !this.cas.item_show_cactvs_data\" (click)=\"this.cas.removeItemValueDuplicates();\">Remove duplicates</button><br></td>\n            <td style=\"display:inline-block\"><button style=\"display:inline-block\" class=\"btn\" [disabled]=\"this.cas.selected_item_int_id_list.length === 0\" (click)=\"this.cas.deleteSelectedItems()\">Delete</button>\n            <button style=\"display:inline-block\" class=\"btn\" [disabled]=\"this.cas.selected_item_int_id_list.length === 0\" (click)=\"openCopy(contentCAS,'cas',true)\">Copy in clipboard</button>\n            <button style=\"display:inline-block\" class=\"btn\" [disabled]=\"this.cas.item_list.length === 0\" (click)=\"openCopy(contentCAS,'cas',false)\">Copy all in clipboard</button></td>\n\n        </tr>\n    </table>\n</div>\n<br>\n<div class=\"row m-5\" style=\"margin-top:0px !important; margin-bottom:10px !important\">\n    <div *ngIf=\"this.cas.from_name_executed\">\n    <!--TODO: sentences about how many cas numbers have been found-->\n    <label *ngIf=\"this.cas.item_list.length !== 0 && this.cas.selected_item_int_id_list.length === 0 && !this.cas.from_name_running\" >\n        <ng-container *ngIf=\"this.cas.item_show_cactvs_data\">{{this.cas.item_list.length}} CAS registry number<!--\n        --><ng-container *ngIf=\"this.cas.item_list.length > 1\">s</ng-container> found.</ng-container> \n        <ng-container *ngIf=\"!this.cas.item_show_cactvs_data\">{{this.cas.item_set.length}} CAS registry number<!--\n        --><ng-container *ngIf=\"this.cas.item_set.length > 1\">s</ng-container> found.</ng-container>\n    </label>\n    <label *ngIf=\"this.cas.selected_item_int_id_list.length === 1 && this.cas.item_show_cactvs_data\" [innerHTML]=\"this.cas.current_item.html_rep\"></label>\n    <label *ngIf=\"this.cas.selected_item_int_id_list.length > 1 || this.cas.selected_item_int_id_list.length === 1 && !this.cas.item_show_cactvs_data\" >Selected {{this.cas.selected_item_int_id_list.length}} CAS registry numbers.</label>\n    </div>\n</div>\n\n<div class=\"row m-5 form-group\" style=\"margin-bottom:0px !important;margin-top:10px !important\">\n    <table style=\"width:100%;vertical-align:bottom\">\n        <tr>\n\n                <td style=\"width:9rem\"><label style=\"margin-bottom:0px\" for=\"name2smiles_smiles\" >SMILES:</label></td>\n                <td style=\"width:auto\">\n                        <select id=\"name2smiles_smiles\" size=5 class=\"form-control\" name=\"selected_smiles\" [(ngModel)]=\"this.smiles.selected_item_int_id_list\" multiple>\n                        <ng-container *ngIf=\"this.smiles.item_show_cactvs_data\"><option *ngFor=\"let item of this.smiles.item_list\" [ngValue]=\"item.int_id\" [innerHTML]=\"item.html_rep\"></option></ng-container>\n                        <ng-container *ngIf=\"!this.smiles.item_show_cactvs_data\"><option *ngFor=\"let item of this.smiles.item_set\" [ngValue]=\"item.int_id\">{{item.value}}</option></ng-container>\n                        </select>\n                        \n                </td>\n                <td style=\"width:8rem\">\n                </td>\n        </tr>\n        <tr>\n            <td><button class=\"btn\" [disabled]=\"this.smiles.item_list.length === 0 || !this.smiles.item_show_cactvs_data\" (click)=\"this.smiles.removeItemValueDuplicates();\">Remove duplicates</button><br></td>\n            <td style=\"display:inline-block\"><button style=\"display:inline-block\" class=\"btn\" [disabled]=\"this.smiles.selected_item_int_id_list.length === 0\" (click)=\"this.smiles.deleteSelectedItems()\">Delete</button>\n            <button style=\"display:inline-block\" class=\"btn\" [disabled]=\"this.smiles.selected_item_int_id_list.length === 0\" (click)=\"openCopy(contentSmiles,'smiles',true)\">Copy in clipboard</button>\n            <button style=\"display:inline-block\" class=\"btn\" [disabled]=\"this.smiles.item_list.length === 0\" (click)=\"openCopy(contentSmiles,'smiles',false)\">Copy all in clipboard</button></td>\n\n        </tr>\n    </table>\n</div>\n<br>\n<div class=\"row m-5\" style=\"margin-top:0px !important; margin-bottom:10px !important\">\n    <div *ngIf=\"this.smiles.from_name_executed\">\n    <!--TODO: sentences about how many smiles numbers have been found-->\n    <label *ngIf=\"this.smiles.item_list.length !== 0 && this.smiles.selected_item_int_id_list.length === 0 && !this.smiles.from_name_running\" >\n        <ng-container *ngIf=\"this.smiles.item_show_cactvs_data\">{{this.smiles.item_list.length}} SMILES found.</ng-container>\n        <ng-container *ngIf=\"!this.smiles.item_show_cactvs_data\">{{this.smiles.item_set.length}} SMILES found.</ng-container> \n    </label>\n    <label *ngIf=\"this.smiles.selected_item_int_id_list.length === 1 && this.smiles.item_show_cactvs_data\" [innerHTML]=\"this.smiles.current_item.html_rep\"></label>\n    <label *ngIf=\"this.smiles.selected_item_int_id_list.length > 1 || this.smiles.selected_item_int_id_list.length === 1 && !this.smiles.item_show_cactvs_data\" >Selected {{this.smiles.selected_item_int_id_list.length}} SMILES.</label>\n\n    </div>\n</div>\n\n<ng-template #contentCAS let-modal>\n    <div class=\"modal-header\">\n        <h4 class=\"modal-title\" id=\"name2cas-copy-clipboard-basic-title\">CAS registry number(s)</h4>\n        <button type=\"button\" class=\"close\" aria-label=\"Close\" (click)=\"modal.dismiss('close')\">\n        <span aria-hidden=\"true\">&times;</span>\n        </button>\n    </div>\n    <div class=\"modal-body\">\n        <div class=\"form-group\">\n            <div class=\"input-group\">\n                <div class=\"form-check\">\n                    <input class=\"form-check-input\" id=\"show-name2cas-copy-data\" type=\"checkbox\" (change)=\"changeShowName2ItemData(this.cas)\" [(ngModel)]=\"this.cas.item_copy_show_cactvs_data\">\n                    <label class=\"form-check-label\" for=\"show-name2cas-copy-data\">Show CACTVS data</label>\n                </div>  \n            </div>\n            <br>\n            <div class=\"input-group\">\n                <p>The following CAS registry number data has been copied in your clipboard:</p>\n            </div>\n            <div class=\"input-group\">\n            <textarea id=\"name2cas-copy-textarea\" style=\"width:100%\" class=\"form-control\" (change)=\"changeContentItemTextarea(this.cas)\" [(ngModel)]=\"this.cas.content_item_textarea\" rows=10></textarea>\n            </div>\n        </div>\n    </div>\n    <div class=\"modal-footer\">\n        <button type=\"button\" class=\"btn btn-outline-dark\" (click)=\"modal.dismiss('close')\">Close</button>\n    </div>\n</ng-template>\n<ng-template #contentSmiles let-modal>\n        <div class=\"modal-header\">\n            <h4 class=\"modal-title\" id=\"name2smiles-copy-clipboard-basic-title\">SMILES registry number(s)</h4>\n            <button type=\"button\" class=\"close\" aria-label=\"Close\" (click)=\"modal.dismiss('close')\">\n            <span aria-hidden=\"true\">&times;</span>\n            </button>\n        </div>\n        <div class=\"modal-body\">\n            <div class=\"form-group\">\n                <div class=\"input-group\">\n                    <div class=\"form-check\">\n                        <input class=\"form-check-input\" id=\"show-name2smiles-copy-data\" type=\"checkbox\" (change)=\"changeShowName2ItemData(this.smiles)\" [(ngModel)]=\"this.smiles.item_copy_show_cactvs_data\">\n                        <label class=\"form-check-label\" for=\"show-name2smiles-copy-data\">Show CACTVS data</label>\n                    </div>  \n                </div>\n                <br>\n                <div class=\"input-group\">\n                    <p>The following SMILES data has been copied in your clipboard:</p>\n                </div>\n                <div class=\"input-group\">\n                <textarea id=\"name2smiles-copy-textarea\" style=\"width:100%\" class=\"form-control\" (change)=\"changeContentItemTextarea(this.smiles)\" [(ngModel)]=\"this.smiles.content_item_textarea\" rows=10></textarea>\n                </div>\n            </div>\n        </div>\n        <div class=\"modal-footer\">\n            <button type=\"button\" class=\"btn btn-outline-dark\" (click)=\"modal.dismiss('close')\">Close</button>\n        </div>\n</ng-template>\n"
 
 /***/ }),
 
@@ -469,15 +469,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _editable_view_mode_directive__WEBPACK_IMPORTED_MODULE_47__ = __webpack_require__(/*! ./editable/view-mode.directive */ "./src/app/editable/view-mode.directive.ts");
 /* harmony import */ var _editable_edit_mode_directive__WEBPACK_IMPORTED_MODULE_48__ = __webpack_require__(/*! ./editable/edit-mode.directive */ "./src/app/editable/edit-mode.directive.ts");
 /* harmony import */ var _editable_edit_on_enter_directive__WEBPACK_IMPORTED_MODULE_49__ = __webpack_require__(/*! ./editable/edit-on-enter.directive */ "./src/app/editable/edit-on-enter.directive.ts");
-/* harmony import */ var _login_login_service__WEBPACK_IMPORTED_MODULE_50__ = __webpack_require__(/*! ./login/login.service */ "./src/app/login/login.service.ts");
-/* harmony import */ var _tabs_tabs_service__WEBPACK_IMPORTED_MODULE_51__ = __webpack_require__(/*! ./tabs/tabs.service */ "./src/app/tabs/tabs.service.ts");
-/* harmony import */ var _each_workflow_each_workflow_service__WEBPACK_IMPORTED_MODULE_52__ = __webpack_require__(/*! ./each-workflow/each-workflow.service */ "./src/app/each-workflow/each-workflow.service.ts");
-/* harmony import */ var _node1_problem_formulation_node1_problem_formulation_service__WEBPACK_IMPORTED_MODULE_53__ = __webpack_require__(/*! ./node1-problem-formulation/node1-problem-formulation.service */ "./src/app/node1-problem-formulation/node1-problem-formulation.service.ts");
-/* harmony import */ var _node_info_node_info_service__WEBPACK_IMPORTED_MODULE_54__ = __webpack_require__(/*! ./node-info/node-info.service */ "./src/app/node-info/node-info.service.ts");
-/* harmony import */ var ngx_cookie_service__WEBPACK_IMPORTED_MODULE_55__ = __webpack_require__(/*! ngx-cookie-service */ "./node_modules/ngx-cookie-service/ngx-cookie-service.es5.js");
-/* harmony import */ var _tc_characterization_tc_characterization_service__WEBPACK_IMPORTED_MODULE_56__ = __webpack_require__(/*! ./tc-characterization/tc-characterization.service */ "./src/app/tc-characterization/tc-characterization.service.ts");
-/* harmony import */ var _name2cas_name2cas_service__WEBPACK_IMPORTED_MODULE_57__ = __webpack_require__(/*! ./name2cas/name2cas.service */ "./src/app/name2cas/name2cas.service.ts");
-/* harmony import */ var _chembl_chembl_service__WEBPACK_IMPORTED_MODULE_58__ = __webpack_require__(/*! ./chembl/chembl.service */ "./src/app/chembl/chembl.service.ts");
+/* harmony import */ var _http_interceptors_index__WEBPACK_IMPORTED_MODULE_50__ = __webpack_require__(/*! ./http-interceptors/index */ "./src/app/http-interceptors/index.ts");
+/* harmony import */ var _login_login_service__WEBPACK_IMPORTED_MODULE_51__ = __webpack_require__(/*! ./login/login.service */ "./src/app/login/login.service.ts");
+/* harmony import */ var _tabs_tabs_service__WEBPACK_IMPORTED_MODULE_52__ = __webpack_require__(/*! ./tabs/tabs.service */ "./src/app/tabs/tabs.service.ts");
+/* harmony import */ var _each_workflow_each_workflow_service__WEBPACK_IMPORTED_MODULE_53__ = __webpack_require__(/*! ./each-workflow/each-workflow.service */ "./src/app/each-workflow/each-workflow.service.ts");
+/* harmony import */ var _node1_problem_formulation_node1_problem_formulation_service__WEBPACK_IMPORTED_MODULE_54__ = __webpack_require__(/*! ./node1-problem-formulation/node1-problem-formulation.service */ "./src/app/node1-problem-formulation/node1-problem-formulation.service.ts");
+/* harmony import */ var _node_info_node_info_service__WEBPACK_IMPORTED_MODULE_55__ = __webpack_require__(/*! ./node-info/node-info.service */ "./src/app/node-info/node-info.service.ts");
+/* harmony import */ var ngx_cookie_service__WEBPACK_IMPORTED_MODULE_56__ = __webpack_require__(/*! ngx-cookie-service */ "./node_modules/ngx-cookie-service/ngx-cookie-service.es5.js");
+/* harmony import */ var _tc_characterization_tc_characterization_service__WEBPACK_IMPORTED_MODULE_57__ = __webpack_require__(/*! ./tc-characterization/tc-characterization.service */ "./src/app/tc-characterization/tc-characterization.service.ts");
+/* harmony import */ var _name2cas_name2cas_service__WEBPACK_IMPORTED_MODULE_58__ = __webpack_require__(/*! ./name2cas/name2cas.service */ "./src/app/name2cas/name2cas.service.ts");
+/* harmony import */ var _chembl_chembl_service__WEBPACK_IMPORTED_MODULE_59__ = __webpack_require__(/*! ./chembl/chembl.service */ "./src/app/chembl/chembl.service.ts");
+
 
 
 
@@ -600,16 +602,17 @@ var AppModule = /** @class */ (function () {
                 }) // ToastrModule added
             ],
             providers: [
+                _http_interceptors_index__WEBPACK_IMPORTED_MODULE_50__["httpInterceptorProviders"],
                 _globals__WEBPACK_IMPORTED_MODULE_26__["Globals"],
-                _login_login_service__WEBPACK_IMPORTED_MODULE_50__["LoginService"],
-                ngx_cookie_service__WEBPACK_IMPORTED_MODULE_55__["CookieService"],
-                _tabs_tabs_service__WEBPACK_IMPORTED_MODULE_51__["TabsService"],
-                _each_workflow_each_workflow_service__WEBPACK_IMPORTED_MODULE_52__["EachWorkflowService"],
-                _node_info_node_info_service__WEBPACK_IMPORTED_MODULE_54__["NodeInfoService"],
-                _node1_problem_formulation_node1_problem_formulation_service__WEBPACK_IMPORTED_MODULE_53__["Node1ProblemFormulationService"],
-                _tc_characterization_tc_characterization_service__WEBPACK_IMPORTED_MODULE_56__["TcCharacterizationService"],
-                _name2cas_name2cas_service__WEBPACK_IMPORTED_MODULE_57__["Name2casService"],
-                _chembl_chembl_service__WEBPACK_IMPORTED_MODULE_58__["ChemblService"],
+                _login_login_service__WEBPACK_IMPORTED_MODULE_51__["LoginService"],
+                ngx_cookie_service__WEBPACK_IMPORTED_MODULE_56__["CookieService"],
+                _tabs_tabs_service__WEBPACK_IMPORTED_MODULE_52__["TabsService"],
+                _each_workflow_each_workflow_service__WEBPACK_IMPORTED_MODULE_53__["EachWorkflowService"],
+                _node_info_node_info_service__WEBPACK_IMPORTED_MODULE_55__["NodeInfoService"],
+                _node1_problem_formulation_node1_problem_formulation_service__WEBPACK_IMPORTED_MODULE_54__["Node1ProblemFormulationService"],
+                _tc_characterization_tc_characterization_service__WEBPACK_IMPORTED_MODULE_57__["TcCharacterizationService"],
+                _name2cas_name2cas_service__WEBPACK_IMPORTED_MODULE_58__["Name2casService"],
+                _chembl_chembl_service__WEBPACK_IMPORTED_MODULE_59__["ChemblService"],
                 { provide: _angular_cdk_overlay__WEBPACK_IMPORTED_MODULE_25__["OverlayContainer"], useClass: _angular_cdk_overlay__WEBPACK_IMPORTED_MODULE_25__["FullscreenOverlayContainer"] }
             ],
             entryComponents: [_node_info_node_info_component__WEBPACK_IMPORTED_MODULE_37__["NodeInfoComponent"], _overlay_overlay_component__WEBPACK_IMPORTED_MODULE_43__["OverlayComponent"]],
@@ -648,6 +651,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _ng_bootstrap_ng_bootstrap__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @ng-bootstrap/ng-bootstrap */ "./node_modules/@ng-bootstrap/ng-bootstrap/fesm5/ng-bootstrap.js");
 /* harmony import */ var _chembl_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./chembl.service */ "./src/app/chembl/chembl.service.ts");
+/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
+
 
 
 
@@ -660,6 +665,9 @@ var ChemblComponent = /** @class */ (function () {
         this.chembl_item_list = [];
         this.chembl_selected_item_int_id_list = [];
         this.binded_multiselect_id = 'chembl_chembl_ids';
+        this.activity = '';
+        this.chembl_activity_fields = ['standard_type', 'standard_value', 'standard_units', 'assay_description'];
+        this.chembl_activity_rows = [];
         this.ngb_modal_opt = {
             ariaLabelledBy: 'chembl-copy-clipboard-basic-title',
             windowClass: 'chembl-modal',
@@ -682,21 +690,21 @@ var ChemblComponent = /** @class */ (function () {
     ChemblComponent.prototype.getSelectedFromMultiselect = function () {
         if (typeof this.binded_multiselect_id !== 'undefined' && this.binded_multiselect_id !== null) {
             var jquery_select = '#' + this.binded_multiselect_id;
-            var selected_cas_int_id_list_1 = [];
+            var selected_chembl_int_id_list_1 = [];
             $(jquery_select).children("[selected='selected']").each(function () {
-                selected_cas_int_id_list_1.push(Number($(this).val().replace(/^[0-9]+:\s+/, '')) + 0);
+                selected_chembl_int_id_list_1.push(Number($(this).val().replace(/^[0-9]+:\s+/, '')) + 0);
             });
-            return selected_cas_int_id_list_1;
+            return selected_chembl_int_id_list_1;
         }
     };
     ChemblComponent.prototype.setCurrentItemIntId = function () {
         var _this = this;
         if (this.chembl_selected_item_int_id_list.length === 1) {
-            var current_cas_int_id_1 = this.chembl_selected_item_int_id_list[0];
+            var current_chembl_int_id_1 = this.chembl_selected_item_int_id_list[0];
             var BreakException_1 = {};
             try {
                 this.chembl_item_list.forEach(function (item) {
-                    if (item['int_id'] === current_cas_int_id_1) {
+                    if (item['int_id'] === current_chembl_int_id_1) {
                         _this.chembl_current_item = item;
                         throw BreakException_1;
                     }
@@ -796,24 +804,120 @@ var ChemblComponent = /** @class */ (function () {
             _this.chembl_item_text_dump += cas[key] + '\n';
         });
     };
+    ChemblComponent.prototype.parseChEMBLGetADMETActivityData = function (chembl_result, activity_rows, chembl_activity_rows$, count, limit, fields) {
+        var _this = this;
+        if (count === void 0) { count = 0; }
+        if (limit === void 0) { limit = 1000000; }
+        if (fields === void 0) { fields = null; }
+        if (fields != null) {
+            chembl_result['activities'].forEach(function (activity) {
+                if (count > limit) {
+                    return;
+                }
+                var activity_row = {};
+                _this.chembl_activity_fields.forEach(function (field) {
+                    activity_row[field] = activity[field];
+                });
+                activity_rows.push(activity_row);
+                count++;
+            });
+        }
+        else {
+            if (count > limit) {
+                return;
+            }
+            var activity_num = chembl_result['activities'].length;
+            var activity_num_to_push = activity_num + count > limit ? limit - count : activity_num;
+            [].push.apply(activity_rows, chembl_result['activities'].slice(0, activity_num_to_push));
+            count += activity_num_to_push;
+        }
+        chembl_activity_rows$.next({ activities: activity_rows });
+        if (chembl_result.hasOwnProperty('page_meta')) {
+            if (chembl_result['page_meta'].hasOwnProperty('next')) {
+                var next = chembl_result['page_meta'].next;
+                if (typeof next !== 'undefined' && next !== null) {
+                    var subs_1 = this.service.chEMBLGetADMETActivityDataNext(next).subscribe(function (chembl_result2) {
+                        _this.parseChEMBLGetADMETActivityData(chembl_result2, activity_rows, chembl_activity_rows$, count, limit, fields);
+                        subs_1.unsubscribe();
+                    }, function (error) {
+                        alert('Error retrieving data from ChEMBL.');
+                        subs_1.unsubscribe();
+                        chembl_activity_rows$.error(error);
+                    });
+                }
+                else {
+                    chembl_activity_rows$.complete();
+                }
+            }
+            else {
+                chembl_activity_rows$.complete();
+            }
+        }
+        else {
+            chembl_activity_rows$.complete();
+        }
+    };
+    ChemblComponent.prototype.chEMBLGetADMETActivityDataByCompoundId = function (chembl_id, fields, limit, _count) {
+        var _this = this;
+        if (fields === void 0) { fields = null; }
+        if (limit === void 0) { limit = 1000000; }
+        if (_count === void 0) { _count = 0; }
+        var chembl_activity_rows$ = new rxjs__WEBPACK_IMPORTED_MODULE_4__["AsyncSubject"]();
+        var activity_rows = [];
+        var subs = this.service.chEMBLGetADMETActivityDataByCompoundId(chembl_id).subscribe(function (chembl_result) {
+            _this.parseChEMBLGetADMETActivityData(chembl_result, activity_rows, chembl_activity_rows$, _count, limit, fields);
+            subs.unsubscribe();
+        }, function (error) {
+            alert('Error retrieving data from ChEMBL.');
+            subs.unsubscribe();
+            chembl_activity_rows$.error(error);
+        });
+        return chembl_activity_rows$.asObservable();
+    };
     ChemblComponent.prototype.chemblIdFromSmilesButton = function () {
         var _this = this;
+        this.chembl_running = true;
+        this.setItemList([]);
         var subscript = this.service.chemblSmilesToInChIKey(this.chembl_search_string).subscribe(function (result) {
-            var chembl_subscript = _this.service.uniChemGetSrcIdFromInChIKey(result.inchikey).subscribe(function (unichem_result) {
+            var unichem_subscript = _this.service.uniChemGetSrcIdFromInChIKey(result.inchikey).subscribe(function (unichem_result) {
                 var chembl_ids = _this.service.getChEMBLIDFromUniChemData(unichem_result);
                 _this.setItemList(_this.service.arrayToItemList(chembl_ids));
+                _this.chembl_activity_rows = [];
+                var chembl_subs = _this.chEMBLGetADMETActivityDataByCompoundId(chembl_ids[0], _this.chembl_activity_fields).subscribe(function (chembl_result) {
+                    var activity_rows = '';
+                    chembl_result["activities"].forEach(function (activity) {
+                        activity_rows += '<tr>';
+                        _this.chembl_activity_fields.forEach(function (field) {
+                            activity_rows += '<td>' + activity[field] + '</td>';
+                        });
+                        activity_rows += '</tr>';
+                    });
+                    _this.activity = '<table><tr><th>Property</th><th>Value</th><th>Units</th><th>Description</th></tr>'
+                        + activity_rows + '</table>';
+                }, function (error) {
+                    alert('Error retrieving data from ChEMBL');
+                    _this.chembl_running = false;
+                    chembl_subs.unsubscribe();
+                }, function () {
+                    _this.chembl_running = false;
+                    chembl_subs.unsubscribe();
+                });
             }, function (error) {
                 alert('Error retrieving data from UniChem');
+                _this.chembl_running = false;
+                unichem_subscript.unsubscribe();
             }, function () {
-                chembl_subscript.unsubscribe();
+                _this.chembl_running = false;
+                unichem_subscript.unsubscribe();
             });
         }, function (error) {
             alert('Error standardizing or converting SMILES to InChiKey');
+            _this.chembl_running = false;
         }, function () {
             subscript.unsubscribe();
         });
     };
-    ChemblComponent.prototype.openCopy = function (content, cactus_interface_name, copy_selection_only) {
+    ChemblComponent.prototype.openCopy = function (content, copy_selection_only) {
         var _this = this;
         if (copy_selection_only === void 0) { copy_selection_only = true; }
         var closeResult;
@@ -932,6 +1036,16 @@ var ChemblService = /** @class */ (function () {
             }
         });
         return chembl_ids;
+    };
+    ChemblService.prototype.chEMBLGetADMETActivityDataByCompoundId = function (chemblid) {
+        var url = 'https://www.ebi.ac.uk/chembl/api/data/activity';
+        var params = new _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpParams"]().append('format', 'json').append('assay_type', 'A').
+            append('molecule_chembl_id', chemblid);
+        return this.http.get(url, { params: params });
+    };
+    ChemblService.prototype.chEMBLGetADMETActivityDataNext = function (next) {
+        var url = 'https://www.ebi.ac.uk' + next;
+        return this.http.get(url);
     };
     ChemblService.prototype.arrayToItemList = function (array) {
         var item_list = [];
@@ -1064,7 +1178,7 @@ var EachWorkflowComponent = /** @class */ (function () {
             nodes_info.forEach(function (node) {
                 _this.checked['node' + node['node_seq']] = node['executed'] === 'True' ? true : false;
             });
-        }, function (error) { }, function () { subscription.unsubscribe(); });
+        }, function (error) { subscription.unsubscribe(); }, function () { subscription.unsubscribe(); });
     };
     EachWorkflowComponent.prototype.drawConnections = function () {
         $('.' + this.projectName).connections('remove');
@@ -1140,7 +1254,7 @@ var EachWorkflowComponent = /** @class */ (function () {
             node_loading_overlayRef.dispose();
             return;
         }
-        this.service.getNodeInfo(project_id, node_seq).subscribe(function (result) {
+        var subs = this.service.getNodeInfo(project_id, node_seq).subscribe(function (result) {
             result['node_seq'] = node_seq;
             if (!_this.globals.node_csrf_token.hasOwnProperty(project_id)) {
                 _this.globals.node_csrf_token[project_id] = {};
@@ -1152,7 +1266,7 @@ var EachWorkflowComponent = /** @class */ (function () {
                 _this.globals.node_csrf_token[project_id][node_seq] = null;
             }
             var add_molecule_icon_path = 'icons/ckeditor5-custom-element-molecule/benzene-147550.svg';
-            _this.service.getAssetFileAsText(add_molecule_icon_path).subscribe(function (result_file_text) {
+            var subs2 = _this.service.getAssetFileAsText(add_molecule_icon_path).subscribe(function (result_file_text) {
                 result['add_molecule_icon'] = result_file_text;
                 var dialogRef = _this.dialog.open(_node_info_node_info_component__WEBPACK_IMPORTED_MODULE_5__["NodeInfoComponent"], {
                     width: '100%',
@@ -1167,13 +1281,17 @@ var EachWorkflowComponent = /** @class */ (function () {
                         _this.node.setNodeAsBusy(project_id, node_seq);
                     }
                 });
+                subs2.unsubscribe();
             }, function (error) {
                 node_loading_overlayRef.dispose();
                 alert('Error: file "/assets/' + add_molecule_icon_path + '" not found.');
+                subs2.unsubscribe();
             });
+            subs.unsubscribe();
         }, function (error) {
             node_loading_overlayRef.dispose();
             alert('Error getting node');
+            subs.unsubscribe();
         });
     };
     EachWorkflowComponent.prototype.reDraw = function () {
@@ -1595,6 +1713,87 @@ var Globals = /** @class */ (function () {
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])()
     ], Globals);
     return Globals;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/http-interceptors/index.ts":
+/*!********************************************!*\
+  !*** ./src/app/http-interceptors/index.ts ***!
+  \********************************************/
+/*! exports provided: httpInterceptorProviders */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "httpInterceptorProviders", function() { return httpInterceptorProviders; });
+/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
+/* harmony import */ var _timeout_interceptor__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./timeout-interceptor */ "./src/app/http-interceptors/timeout-interceptor.ts");
+/* "Barrel" of Http Interceptors */
+
+
+
+/** Http interceptor providers in outside-in order */
+var httpInterceptorProviders = [
+    { provide: _angular_common_http__WEBPACK_IMPORTED_MODULE_0__["HTTP_INTERCEPTORS"], useClass: _timeout_interceptor__WEBPACK_IMPORTED_MODULE_1__["TimeoutInterceptor"], multi: true },
+    { provide: _timeout_interceptor__WEBPACK_IMPORTED_MODULE_1__["DEFAULT_TIMEOUT"], useValue: 300000 }
+];
+
+
+/***/ }),
+
+/***/ "./src/app/http-interceptors/timeout-interceptor.ts":
+/*!**********************************************************!*\
+  !*** ./src/app/http-interceptors/timeout-interceptor.ts ***!
+  \**********************************************************/
+/*! exports provided: DEFAULT_TIMEOUT, TIMEOUT_HEADER, TimeoutInterceptor */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DEFAULT_TIMEOUT", function() { return DEFAULT_TIMEOUT; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TIMEOUT_HEADER", function() { return TIMEOUT_HEADER; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TimeoutInterceptor", function() { return TimeoutInterceptor; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
+/* Copyright 2017-2019
+Under CC BY-SA 4.0 license (https://creativecommons.org/licenses/by-sa/4.0/legalcode)
+Adapted from Stack Overflow answer to Alexander Abakumov (https://stackoverflow.com/users/3345644/alexander-abakumov)
+by Michael Ziluck (https://stackoverflow.com/users/3962524/michael-ziluck)
+with help of Jota.Toledo (https://stackoverflow.com/users/5394220/jota-toledo),
+RahulSingh (https://stackoverflow.com/users/2708210/rahul-singh),
+Estus Flask (https://stackoverflow.com/users/3731501/estus-flask) and others' comments.
+https://stackoverflow.com/a/45986060
+Probably trivial and non-copyrighted.*/
+
+
+
+var DEFAULT_TIMEOUT = new _angular_core__WEBPACK_IMPORTED_MODULE_1__["InjectionToken"]('defaultTimeout');
+var TIMEOUT_HEADER = 'ng_timeout';
+var TimeoutInterceptor = /** @class */ (function () {
+    function TimeoutInterceptor(defaultTimeout) {
+        this.defaultTimeout = defaultTimeout;
+    }
+    TimeoutInterceptor.prototype.intercept = function (req, next) {
+        var timeoutValue = req.headers.get(TIMEOUT_HEADER) || this.defaultTimeout;
+        var timeoutValueNumeric = Number(timeoutValue);
+        if (req.headers.has(TIMEOUT_HEADER)) {
+            req = req.clone({ headers: req.headers.delete(TIMEOUT_HEADER) });
+        }
+        return next.handle(req).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_2__["timeout"])(timeoutValueNumeric));
+    };
+    TimeoutInterceptor.ctorParameters = function () { return [
+        { type: Number, decorators: [{ type: _angular_core__WEBPACK_IMPORTED_MODULE_1__["Inject"], args: [DEFAULT_TIMEOUT,] }] }
+    ]; };
+    TimeoutInterceptor = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])(),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__param"](0, Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Inject"])(DEFAULT_TIMEOUT)),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [Number])
+    ], TimeoutInterceptor);
+    return TimeoutInterceptor;
 }());
 
 
@@ -2192,6 +2391,8 @@ var FromNameCACTVSInteface = /** @class */ (function () {
             }.bind(_this));
         }, function (error) {
             alert("Error in CACTVS query");
+            _this.from_name_running = false;
+            _this.item_from_name_subscription.unsubscribe();
         }, function () {
             _this.from_name_running = false;
             _this.item_from_name_subscription.unsubscribe();
@@ -2356,6 +2557,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
+/* harmony import */ var _http_interceptors_timeout_interceptor__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../http-interceptors/timeout-interceptor */ "./src/app/http-interceptors/timeout-interceptor.ts");
+
+
 
 
 
@@ -2364,8 +2568,9 @@ var Name2casService = /** @class */ (function () {
         this.http = http;
         this.cactus_webservice_URL = 'https://cactus.nci.nih.gov/chemical/structure/';
     }
-    Name2casService.prototype.getFromName = function (search_string, search_output, search_type) {
+    Name2casService.prototype.getFromName = function (search_string, search_output, search_type, timeout) {
         if (search_type === void 0) { search_type = null; }
+        if (timeout === void 0) { timeout = 60000; }
         var resolvers = {
             compound_name: 'name_by_opsin,name_by_cir',
             SMILES: 'smiles'
@@ -2378,7 +2583,10 @@ var Name2casService = /** @class */ (function () {
         else {
             params = new _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpParams"]();
         }
-        return this.http.get(url, { responseType: 'text', params: params });
+        var headers_obj = {};
+        headers_obj[_http_interceptors_timeout_interceptor__WEBPACK_IMPORTED_MODULE_3__["TIMEOUT_HEADER"]] = String(timeout);
+        var headers = new _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpHeaders"](headers_obj);
+        return this.http.get(url, { responseType: 'text', params: params, headers: headers });
     };
     Name2casService.prototype.cactusXMLparsed = function (parseString_result, include_input_type) {
         if (include_input_type === void 0) { include_input_type = false; }
