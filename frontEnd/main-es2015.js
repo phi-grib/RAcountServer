@@ -159,7 +159,7 @@ module.exports = "<app-navbar></app-navbar>\n<div class=\"container-fluid\">\n  
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"row m-5 form-group\" style=\"margin-bottom:0px !important;margin-top:10px !important\">\n    <table style=\"width:100%;vertical-align:bottom\">\n        <tr>\n\n                <td style=\"width:9rem\">\n                    <label style=\"margin-bottom:0px\" for=\"name2cas_search_string\" >Compound name:</label>\n                </td>\n                <td><input id=\"name2cas_search_string\" class=\"form-control\" name=\"search_string\" [(ngModel)]=\"search_string\" type=\"text\"></td>\n                <td style=\"width:8rem\"><button class=\"btn btn-primary\" [disabled]=\"this.cas.from_name_running || this.smiles.from_name_running\" (click)=\"itemsFromNameButton()\">Search</button>\n                    <mat-spinner *ngIf=\"this.cas.from_name_running || this.smiles.from_name_running\" style=\"display:inline-block\" ProgressSpinnerMode=\"indeterminate\" diameter=\"14\"></mat-spinner>\n                </td>\n\n        </tr>\n        <tr>\n            <td></td>\n            <td><br>\n                <div class=\"form-check\">\n                    <input class=\"form-check-input\" id=\"show-name2cas-data\" type=\"checkbox\" (change)=\"changeItemsShowCactvsData()\" [(ngModel)]=\"show_cactvs_data\">\n                    <label class=\"form-check-label\" for=\"show-name2cas-data\">Show CACTVS data</label>\n            </div><br></td>\n            <td></td>\n        </tr>\n        <tr>\n\n                <td style=\"width:9rem\"><label style=\"margin-bottom:0px\" for=\"name2cas_cas\" >CAS registry number(s):</label></td>\n                <td style=\"width:auto\">\n                        <select id=\"name2cas_cas\" size=5 class=\"form-control\" name=\"selected_cas\" [(ngModel)]=\"this.cas.selected_item_int_id_list\" multiple>\n                        <ng-container *ngIf=\"this.cas.item_show_cactvs_data\"><option *ngFor=\"let item of this.cas.item_list\" [ngValue]=\"item.int_id\" [innerHTML]=\"item.html_rep\"></option></ng-container>\n                        <ng-container *ngIf=\"!this.cas.item_show_cactvs_data\"><option *ngFor=\"let item of this.cas.item_set\" [ngValue]=\"item.int_id\">{{ item.value }}</option></ng-container>\n                        </select>\n                        \n                </td>\n                <td style=\"width:auto\">\n                </td>\n        </tr>\n        <tr>\n            <td><button class=\"btn\" [disabled]=\"this.cas.item_list.length === 0 || !this.cas.item_show_cactvs_data\" (click)=\"this.cas.removeItemValueDuplicates();\">Remove duplicates</button><br></td>\n            <td style=\"display:inline-block\"><button style=\"display:inline-block\" class=\"btn\" [disabled]=\"this.cas.selected_item_int_id_list.length === 0\" (click)=\"this.cas.deleteSelectedItems()\">Delete</button>\n            <button style=\"display:inline-block\" class=\"btn\" [disabled]=\"this.cas.selected_item_int_id_list.length === 0\" (click)=\"openCopy(contentCAS,'cas',true)\">Copy in clipboard</button>\n            <button style=\"display:inline-block\" class=\"btn\" [disabled]=\"this.cas.item_list.length === 0\" (click)=\"openCopy(contentCAS,'cas',false)\">Copy all in clipboard</button></td>\n\n        </tr>\n    </table>\n</div>\n<br>\n<div class=\"row m-5\" style=\"margin-top:0px !important; margin-bottom:10px !important\">\n    <div *ngIf=\"this.cas.from_name_executed\">\n    <!--TODO: sentences about how many cas numbers have been found-->\n    <label *ngIf=\"this.cas.item_list.length !== 0 && this.cas.selected_item_int_id_list.length === 0 && !this.cas.from_name_running\" >\n        <ng-container *ngIf=\"this.cas.item_show_cactvs_data\">{{this.cas.item_list.length}} CAS registry number<!--\n        --><ng-container *ngIf=\"this.cas.item_list.length > 1\">s</ng-container> found.</ng-container> \n        <ng-container *ngIf=\"!this.cas.item_show_cactvs_data\">{{this.cas.item_set.length}} CAS registry number<!--\n        --><ng-container *ngIf=\"this.cas.item_set.length > 1\">s</ng-container> found.</ng-container>\n    </label>\n    <label *ngIf=\"this.cas.selected_item_int_id_list.length === 1 && this.cas.item_show_cactvs_data\" [innerHTML]=\"this.cas.current_item.html_rep\"></label>\n    <label *ngIf=\"this.cas.selected_item_int_id_list.length > 1 || this.cas.selected_item_int_id_list.length === 1 && !this.cas.item_show_cactvs_data\" >Selected {{this.cas.selected_item_int_id_list.length}} CAS registry numbers.</label>\n    </div>\n</div>\n\n<div class=\"row m-5 form-group\" style=\"margin-bottom:0px !important;margin-top:10px !important\">\n    <table style=\"width:100%;vertical-align:bottom\">\n        <tr>\n\n                <td style=\"width:9rem\"><label style=\"margin-bottom:0px\" for=\"name2smiles_smiles\" >SMILES:</label></td>\n                <td style=\"width:auto\">\n                        <select id=\"name2smiles_smiles\" size=5 class=\"form-control\" name=\"selected_smiles\" [(ngModel)]=\"this.smiles.selected_item_int_id_list\" multiple>\n                        <ng-container *ngIf=\"this.smiles.item_show_cactvs_data\"><option *ngFor=\"let item of this.smiles.item_list\" [ngValue]=\"item.int_id\" [innerHTML]=\"item.html_rep\"></option></ng-container>\n                        <ng-container *ngIf=\"!this.smiles.item_show_cactvs_data\"><option *ngFor=\"let item of this.smiles.item_set\" [ngValue]=\"item.int_id\">{{item.value}}</option></ng-container>\n                        </select>\n                        \n                </td>\n                <td style=\"width:8rem\">\n                </td>\n        </tr>\n        <tr>\n            <td><button class=\"btn\" [disabled]=\"this.smiles.item_list.length === 0 || !this.smiles.item_show_cactvs_data\" (click)=\"this.smiles.removeItemValueDuplicates();\">Remove duplicates</button><br></td>\n            <td style=\"display:inline-block\"><button style=\"display:inline-block\" class=\"btn\" [disabled]=\"this.smiles.selected_item_int_id_list.length === 0\" (click)=\"this.smiles.deleteSelectedItems()\">Delete</button>\n            <button style=\"display:inline-block\" class=\"btn\" [disabled]=\"this.smiles.selected_item_int_id_list.length === 0\" (click)=\"openCopy(contentSmiles,'smiles',true)\">Copy in clipboard</button>\n            <button style=\"display:inline-block\" class=\"btn\" [disabled]=\"this.smiles.item_list.length === 0\" (click)=\"openCopy(contentSmiles,'smiles',false)\">Copy all in clipboard</button></td>\n\n        </tr>\n    </table>\n</div>\n<br>\n<div class=\"row m-5\" style=\"margin-top:0px !important; margin-bottom:10px !important\">\n    <div *ngIf=\"this.smiles.from_name_executed\">\n    <!--TODO: sentences about how many smiles numbers have been found-->\n    <label *ngIf=\"this.smiles.item_list.length !== 0 && this.smiles.selected_item_int_id_list.length === 0 && !this.smiles.from_name_running\" >\n        <ng-container *ngIf=\"this.smiles.item_show_cactvs_data\">{{this.smiles.item_list.length}} SMILES found.</ng-container>\n        <ng-container *ngIf=\"!this.smiles.item_show_cactvs_data\">{{this.smiles.item_set.length}} SMILES found.</ng-container> \n    </label>\n    <label *ngIf=\"this.smiles.selected_item_int_id_list.length === 1 && this.smiles.item_show_cactvs_data\" [innerHTML]=\"this.smiles.current_item.html_rep\"></label>\n    <label *ngIf=\"this.smiles.selected_item_int_id_list.length > 1 || this.smiles.selected_item_int_id_list.length === 1 && !this.smiles.item_show_cactvs_data\" >Selected {{this.smiles.selected_item_int_id_list.length}} SMILES.</label>\n\n    </div>\n</div>\n\n<ng-template #contentCAS let-modal>\n    <div class=\"modal-header\">\n        <h4 class=\"modal-title\" id=\"name2cas-copy-clipboard-basic-title\">CAS registry number(s)</h4>\n        <button type=\"button\" class=\"close\" aria-label=\"Close\" (click)=\"modal.dismiss('close')\">\n        <span aria-hidden=\"true\">&times;</span>\n        </button>\n    </div>\n    <div class=\"modal-body\">\n        <div class=\"form-group\">\n            <div class=\"input-group\">\n                <div class=\"form-check\">\n                    <input class=\"form-check-input\" id=\"show-name2cas-copy-data\" type=\"checkbox\" (change)=\"changeShowName2ItemData(this.cas)\" [(ngModel)]=\"this.cas.item_copy_show_cactvs_data\">\n                    <label class=\"form-check-label\" for=\"show-name2cas-copy-data\">Show CACTVS data</label>\n                </div>  \n            </div>\n            <br>\n            <div class=\"input-group\">\n                <p>The following CAS registry number data has been copied in your clipboard:</p>\n            </div>\n            <div class=\"input-group\">\n            <textarea id=\"name2cas-copy-textarea\" style=\"width:100%\" class=\"form-control\" (change)=\"changeContentItemTextarea(this.cas)\" [(ngModel)]=\"this.cas.content_item_textarea\" rows=10></textarea>\n            </div>\n        </div>\n    </div>\n    <div class=\"modal-footer\">\n        <button type=\"button\" class=\"btn btn-outline-dark\" (click)=\"modal.dismiss('close')\">Close</button>\n    </div>\n</ng-template>\n<ng-template #contentSmiles let-modal>\n        <div class=\"modal-header\">\n            <h4 class=\"modal-title\" id=\"name2smiles-copy-clipboard-basic-title\">SMILES registry number(s)</h4>\n            <button type=\"button\" class=\"close\" aria-label=\"Close\" (click)=\"modal.dismiss('close')\">\n            <span aria-hidden=\"true\">&times;</span>\n            </button>\n        </div>\n        <div class=\"modal-body\">\n            <div class=\"form-group\">\n                <div class=\"input-group\">\n                    <div class=\"form-check\">\n                        <input class=\"form-check-input\" id=\"show-name2smiles-copy-data\" type=\"checkbox\" (change)=\"changeShowName2ItemData(this.smiles)\" [(ngModel)]=\"this.smiles.item_copy_show_cactvs_data\">\n                        <label class=\"form-check-label\" for=\"show-name2smiles-copy-data\">Show CACTVS data</label>\n                    </div>  \n                </div>\n                <br>\n                <div class=\"input-group\">\n                    <p>The following SMILES data has been copied in your clipboard:</p>\n                </div>\n                <div class=\"input-group\">\n                <textarea id=\"name2smiles-copy-textarea\" style=\"width:100%\" class=\"form-control\" (change)=\"changeContentItemTextarea(this.smiles)\" [(ngModel)]=\"this.smiles.content_item_textarea\" rows=10></textarea>\n                </div>\n            </div>\n        </div>\n        <div class=\"modal-footer\">\n            <button type=\"button\" class=\"btn btn-outline-dark\" (click)=\"modal.dismiss('close')\">Close</button>\n        </div>\n</ng-template>\n"
+module.exports = "<div class=\"row m-5 form-group\" style=\"margin-bottom:0px !important;margin-top:10px !important\">\n    <table style=\"width:100%;vertical-align:bottom\">\n        <tr>\n\n                <td style=\"width:9rem\">\n                    <label style=\"margin-bottom:0px\" for=\"name2cas_search_string\" >Compound name <br>or CAS registry number:</label>\n                </td>\n                <td><input id=\"name2cas_search_string\" class=\"form-control\" name=\"search_string\" [(ngModel)]=\"search_string\" type=\"text\" [disabled]=\"this.cas.from_name_running || this.smiles.from_name_running\"></td>\n                <td style=\"width:8rem\"><button class=\"btn btn-primary\" [disabled]=\"this.cas.from_name_running || this.smiles.from_name_running || this.compound_name_running\" (click)=\"itemsFromNameButton()\">Search</button>\n                    <mat-spinner *ngIf=\"this.cas.from_name_running || this.smiles.from_name_running\" style=\"display:inline-block\" ProgressSpinnerMode=\"indeterminate\" diameter=\"14\"></mat-spinner>\n                </td>\n\n        </tr>\n        <tr>\n            <td></td>\n            <td><br>\n                <div class=\"form-check\">\n                    <input class=\"form-check-input\" id=\"show-name2cas-data\" type=\"checkbox\" (change)=\"changeItemsShowCactvsData()\" [(ngModel)]=\"show_cactvs_data\">\n                    <label class=\"form-check-label\" for=\"show-name2cas-data\">Show CACTVS data</label>\n            </div><br></td>\n            <td></td>\n        </tr>\n        <tr>\n            <td style=\"width:9rem\"><label style=\"margin-bottom:0px\" for=\"selected_compound_name\" >Compound name:</label><br><br></td>\n            \n            <td style=\"width:auto\"><mat-form-field><mat-select id=\"selected_compound_name\" class=\"form-control\" name=\"selected_compound_name\" (selectionChange)=\"this.compoundNameChange($event)\" [(ngModel)]=\"this.compound_name_int_id\">\n                <ng-container *ngIf=\"this.show_cactvs_data\"><mat-option *ngFor=\"let item of this.compound_synonyms\" [value]=\"item.int_id\" [innerHTML]=\"item.html_rep\"></mat-option></ng-container>\n                <ng-container *ngIf=\"!this.show_cactvs_data\"><mat-option *ngFor=\"let item of this.compound_synonyms\" [value]=\"item.int_id\" [innerText]=\"item.value\"></mat-option></ng-container>\n            </mat-select>\n            </mat-form-field>\n            <br>\n            <br>\n            </td>\n\n        </tr>\n        <tr>\n\n                <td style=\"width:9rem\"><label style=\"margin-bottom:0px\" for=\"name2cas_cas\" >CAS registry number(s):</label></td>\n                <td style=\"width:auto\">\n                        <select id=\"name2cas_cas\" size=5 class=\"form-control\" name=\"selected_cas\" [(ngModel)]=\"this.cas.selected_item_int_id_list\" multiple>\n                        <ng-container *ngIf=\"this.cas.item_show_cactvs_data\"><option *ngFor=\"let item of this.cas.item_list\" [ngValue]=\"item.int_id\" [innerHTML]=\"item.html_rep\"></option></ng-container>\n                        <ng-container *ngIf=\"!this.cas.item_show_cactvs_data\"><option *ngFor=\"let item of this.cas.item_set\" [ngValue]=\"item.int_id\">{{ item.value }}</option></ng-container>\n                        </select>\n                        \n                </td>\n                <td style=\"width:auto\">\n                </td>\n        </tr>\n        <tr>\n            <td><button class=\"btn\" [disabled]=\"this.cas.item_list.length === 0 || !this.cas.item_show_cactvs_data\" (click)=\"this.cas.removeItemValueDuplicates();\">Remove duplicates</button><br></td>\n            <td style=\"display:inline-block\"><button style=\"display:inline-block\" class=\"btn\" [disabled]=\"this.cas.selected_item_int_id_list.length === 0\" (click)=\"this.cas.deleteSelectedItems()\">Delete</button>\n            <button style=\"display:inline-block\" class=\"btn\" [disabled]=\"this.cas.selected_item_int_id_list.length === 0\" (click)=\"openCopy(contentCAS,'cas',true)\">Copy in clipboard</button>\n            <button style=\"display:inline-block\" class=\"btn\" [disabled]=\"this.cas.item_list.length === 0\" (click)=\"openCopy(contentCAS,'cas',false)\">Copy all in clipboard</button></td>\n\n        </tr>\n    </table>\n</div>\n<br>\n<div class=\"row m-5\" style=\"margin-top:0px !important; margin-bottom:10px !important\">\n    <div *ngIf=\"this.cas.from_name_executed\">\n    <!--TODO: sentences about how many cas numbers have been found-->\n    <label *ngIf=\"this.cas.item_list.length !== 0 && this.cas.selected_item_int_id_list.length === 0 && !this.cas.from_name_running\" >\n        <ng-container *ngIf=\"this.cas.item_show_cactvs_data\">{{this.cas.item_list.length}} CAS registry number<!--\n        --><ng-container *ngIf=\"this.cas.item_list.length > 1\">s</ng-container> found.</ng-container> \n        <ng-container *ngIf=\"!this.cas.item_show_cactvs_data\">{{this.cas.item_set.length}} CAS registry number<!--\n        --><ng-container *ngIf=\"this.cas.item_set.length > 1\">s</ng-container> found.</ng-container>\n    </label>\n    <label *ngIf=\"this.cas.selected_item_int_id_list.length === 1 && this.cas.item_show_cactvs_data\" [innerHTML]=\"this.cas.current_item.html_rep\"></label>\n    <label *ngIf=\"this.cas.selected_item_int_id_list.length > 1 || this.cas.selected_item_int_id_list.length === 1 && !this.cas.item_show_cactvs_data\" >Selected {{this.cas.selected_item_int_id_list.length}} CAS registry numbers.</label>\n    </div>\n</div>\n\n<div class=\"row m-5 form-group\" style=\"margin-bottom:0px !important;margin-top:10px !important\">\n    <table style=\"width:100%;vertical-align:bottom\">\n        <tr>\n\n                <td style=\"width:9rem\"><label style=\"margin-bottom:0px\" for=\"name2smiles_smiles\" >SMILES:</label></td>\n                <td style=\"width:auto\">\n                        <select id=\"name2smiles_smiles\" size=5 class=\"form-control\" name=\"selected_smiles\" [(ngModel)]=\"this.smiles.selected_item_int_id_list\" multiple>\n                        <ng-container *ngIf=\"this.smiles.item_show_cactvs_data\"><option *ngFor=\"let item of this.smiles.item_list\" [ngValue]=\"item.int_id\" [innerHTML]=\"item.html_rep\"></option></ng-container>\n                        <ng-container *ngIf=\"!this.smiles.item_show_cactvs_data\"><option *ngFor=\"let item of this.smiles.item_set\" [ngValue]=\"item.int_id\">{{item.value}}</option></ng-container>\n                        </select>\n                        \n                </td>\n                <td style=\"width:8rem\">\n                </td>\n        </tr>\n        <tr>\n            <td><button class=\"btn\" [disabled]=\"this.smiles.item_list.length === 0 || !this.smiles.item_show_cactvs_data\" (click)=\"this.smiles.removeItemValueDuplicates();\">Remove duplicates</button><br></td>\n            <td style=\"display:inline-block\"><button style=\"display:inline-block\" class=\"btn\" [disabled]=\"this.smiles.selected_item_int_id_list.length === 0\" (click)=\"this.smiles.deleteSelectedItems()\">Delete</button>\n            <button style=\"display:inline-block\" class=\"btn\" [disabled]=\"this.smiles.selected_item_int_id_list.length === 0\" (click)=\"openCopy(contentSmiles,'smiles',true)\">Copy in clipboard</button>\n            <button style=\"display:inline-block\" class=\"btn\" [disabled]=\"this.smiles.item_list.length === 0\" (click)=\"openCopy(contentSmiles,'smiles',false)\">Copy all in clipboard</button></td>\n\n        </tr>\n    </table>\n</div>\n<br>\n<div class=\"row m-5\" style=\"margin-top:0px !important; margin-bottom:10px !important\">\n    <div *ngIf=\"this.smiles.from_name_executed\">\n    <!--TODO: sentences about how many smiles numbers have been found-->\n    <label *ngIf=\"this.smiles.item_list.length !== 0 && this.smiles.selected_item_int_id_list.length === 0 && !this.smiles.from_name_running\" >\n        <ng-container *ngIf=\"this.smiles.item_show_cactvs_data\">{{this.smiles.item_list.length}} SMILES found.</ng-container>\n        <ng-container *ngIf=\"!this.smiles.item_show_cactvs_data\">{{this.smiles.item_set.length}} SMILES found.</ng-container> \n    </label>\n    <label *ngIf=\"this.smiles.selected_item_int_id_list.length === 1 && this.smiles.item_show_cactvs_data\" [innerHTML]=\"this.smiles.current_item.html_rep\"></label>\n    <label *ngIf=\"this.smiles.selected_item_int_id_list.length > 1 || this.smiles.selected_item_int_id_list.length === 1 && !this.smiles.item_show_cactvs_data\" >Selected {{this.smiles.selected_item_int_id_list.length}} SMILES.</label>\n\n    </div>\n</div>\n\n<ng-template #contentCAS let-modal>\n    <div class=\"modal-header\">\n        <h4 class=\"modal-title\" id=\"name2cas-copy-clipboard-basic-title\">CAS registry number(s)</h4>\n        <button type=\"button\" class=\"close\" aria-label=\"Close\" (click)=\"modal.dismiss('close')\">\n        <span aria-hidden=\"true\">&times;</span>\n        </button>\n    </div>\n    <div class=\"modal-body\">\n        <div class=\"form-group\">\n            <div class=\"input-group\">\n                <div class=\"form-check\">\n                    <input class=\"form-check-input\" id=\"show-name2cas-copy-data\" type=\"checkbox\" (change)=\"changeShowName2ItemData(this.cas)\" [(ngModel)]=\"this.cas.item_copy_show_cactvs_data\">\n                    <label class=\"form-check-label\" for=\"show-name2cas-copy-data\">Show CACTVS data</label>\n                </div>  \n            </div>\n            <br>\n            <div class=\"input-group\">\n                <p>The following CAS registry number data has been copied in your clipboard:</p>\n            </div>\n            <div class=\"input-group\">\n            <textarea id=\"name2cas-copy-textarea\" style=\"width:100%\" class=\"form-control\" (change)=\"changeContentItemTextarea(this.cas)\" [(ngModel)]=\"this.cas.content_item_textarea\" rows=10></textarea>\n            </div>\n        </div>\n    </div>\n    <div class=\"modal-footer\">\n        <button type=\"button\" class=\"btn btn-outline-dark\" (click)=\"modal.dismiss('close')\">Close</button>\n    </div>\n</ng-template>\n<ng-template #contentSmiles let-modal>\n        <div class=\"modal-header\">\n            <h4 class=\"modal-title\" id=\"name2smiles-copy-clipboard-basic-title\">SMILES registry number(s)</h4>\n            <button type=\"button\" class=\"close\" aria-label=\"Close\" (click)=\"modal.dismiss('close')\">\n            <span aria-hidden=\"true\">&times;</span>\n            </button>\n        </div>\n        <div class=\"modal-body\">\n            <div class=\"form-group\">\n                <div class=\"input-group\">\n                    <div class=\"form-check\">\n                        <input class=\"form-check-input\" id=\"show-name2smiles-copy-data\" type=\"checkbox\" (change)=\"changeShowName2ItemData(this.smiles)\" [(ngModel)]=\"this.smiles.item_copy_show_cactvs_data\">\n                        <label class=\"form-check-label\" for=\"show-name2smiles-copy-data\">Show CACTVS data</label>\n                    </div>  \n                </div>\n                <br>\n                <div class=\"input-group\">\n                    <p>The following SMILES data has been copied in your clipboard:</p>\n                </div>\n                <div class=\"input-group\">\n                <textarea id=\"name2smiles-copy-textarea\" style=\"width:100%\" class=\"form-control\" (change)=\"changeContentItemTextarea(this.smiles)\" [(ngModel)]=\"this.smiles.content_item_textarea\" rows=10></textarea>\n                </div>\n            </div>\n        </div>\n        <div class=\"modal-footer\">\n            <button type=\"button\" class=\"btn btn-outline-dark\" (click)=\"modal.dismiss('close')\">Close</button>\n        </div>\n</ng-template>\n"
 
 /***/ }),
 
@@ -439,42 +439,44 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_material_dialog__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! @angular/material/dialog */ "./node_modules/@angular/material/esm2015/dialog.js");
 /* harmony import */ var _angular_material_card__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! @angular/material/card */ "./node_modules/@angular/material/esm2015/card.js");
 /* harmony import */ var _angular_material_checkbox__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! @angular/material/checkbox */ "./node_modules/@angular/material/esm2015/checkbox.js");
-/* harmony import */ var _angular_cdk_portal__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! @angular/cdk/portal */ "./node_modules/@angular/cdk/esm2015/portal.js");
-/* harmony import */ var _angular_cdk_overlay__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! @angular/cdk/overlay */ "./node_modules/@angular/cdk/esm2015/overlay.js");
-/* harmony import */ var _globals__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! ./globals */ "./src/app/globals.ts");
-/* harmony import */ var _login_login_component__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! ./login/login.component */ "./src/app/login/login.component.ts");
-/* harmony import */ var _main_main_component__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(/*! ./main/main.component */ "./src/app/main/main.component.ts");
-/* harmony import */ var _app_component__WEBPACK_IMPORTED_MODULE_29__ = __webpack_require__(/*! ./app.component */ "./src/app/app.component.ts");
-/* harmony import */ var _navbar_navbar_component__WEBPACK_IMPORTED_MODULE_30__ = __webpack_require__(/*! ./navbar/navbar.component */ "./src/app/navbar/navbar.component.ts");
-/* harmony import */ var _sidebar_sidebar_component__WEBPACK_IMPORTED_MODULE_31__ = __webpack_require__(/*! ./sidebar/sidebar.component */ "./src/app/sidebar/sidebar.component.ts");
-/* harmony import */ var _tabs_tabs_component__WEBPACK_IMPORTED_MODULE_32__ = __webpack_require__(/*! ./tabs/tabs.component */ "./src/app/tabs/tabs.component.ts");
-/* harmony import */ var _workflows_workflows_component__WEBPACK_IMPORTED_MODULE_33__ = __webpack_require__(/*! ./workflows/workflows.component */ "./src/app/workflows/workflows.component.ts");
-/* harmony import */ var _each_workflow_each_workflow_component__WEBPACK_IMPORTED_MODULE_34__ = __webpack_require__(/*! ./each-workflow/each-workflow.component */ "./src/app/each-workflow/each-workflow.component.ts");
-/* harmony import */ var _welcome_welcome_component__WEBPACK_IMPORTED_MODULE_35__ = __webpack_require__(/*! ./welcome/welcome.component */ "./src/app/welcome/welcome.component.ts");
-/* harmony import */ var _smiles_micromodal_smiles_micromodal_component__WEBPACK_IMPORTED_MODULE_36__ = __webpack_require__(/*! ./smiles-micromodal/smiles-micromodal.component */ "./src/app/smiles-micromodal/smiles-micromodal.component.ts");
-/* harmony import */ var _node_info_node_info_component__WEBPACK_IMPORTED_MODULE_37__ = __webpack_require__(/*! ./node-info/node-info.component */ "./src/app/node-info/node-info.component.ts");
-/* harmony import */ var _editable_editable_component__WEBPACK_IMPORTED_MODULE_38__ = __webpack_require__(/*! ./editable/editable.component */ "./src/app/editable/editable.component.ts");
-/* harmony import */ var _node1_problem_formulation_node1_problem_formulation_component__WEBPACK_IMPORTED_MODULE_39__ = __webpack_require__(/*! ./node1-problem-formulation/node1-problem-formulation.component */ "./src/app/node1-problem-formulation/node1-problem-formulation.component.ts");
-/* harmony import */ var _tk_workflow_tk_workflow_component__WEBPACK_IMPORTED_MODULE_40__ = __webpack_require__(/*! ./tk-workflow/tk-workflow.component */ "./src/app/tk-workflow/tk-workflow.component.ts");
-/* harmony import */ var _td_workflow_td_workflow_component__WEBPACK_IMPORTED_MODULE_41__ = __webpack_require__(/*! ./td-workflow/td-workflow.component */ "./src/app/td-workflow/td-workflow.component.ts");
-/* harmony import */ var _tc_characterization_tc_characterization_component__WEBPACK_IMPORTED_MODULE_42__ = __webpack_require__(/*! ./tc-characterization/tc-characterization.component */ "./src/app/tc-characterization/tc-characterization.component.ts");
-/* harmony import */ var _overlay_overlay_component__WEBPACK_IMPORTED_MODULE_43__ = __webpack_require__(/*! ./overlay/overlay.component */ "./src/app/overlay/overlay.component.ts");
-/* harmony import */ var _name2cas_name2cas_component__WEBPACK_IMPORTED_MODULE_44__ = __webpack_require__(/*! ./name2cas/name2cas.component */ "./src/app/name2cas/name2cas.component.ts");
-/* harmony import */ var _chembl_chembl_component__WEBPACK_IMPORTED_MODULE_45__ = __webpack_require__(/*! ./chembl/chembl.component */ "./src/app/chembl/chembl.component.ts");
-/* harmony import */ var _keys_pipe__WEBPACK_IMPORTED_MODULE_46__ = __webpack_require__(/*! ./keys.pipe */ "./src/app/keys.pipe.ts");
-/* harmony import */ var _editable_view_mode_directive__WEBPACK_IMPORTED_MODULE_47__ = __webpack_require__(/*! ./editable/view-mode.directive */ "./src/app/editable/view-mode.directive.ts");
-/* harmony import */ var _editable_edit_mode_directive__WEBPACK_IMPORTED_MODULE_48__ = __webpack_require__(/*! ./editable/edit-mode.directive */ "./src/app/editable/edit-mode.directive.ts");
-/* harmony import */ var _editable_edit_on_enter_directive__WEBPACK_IMPORTED_MODULE_49__ = __webpack_require__(/*! ./editable/edit-on-enter.directive */ "./src/app/editable/edit-on-enter.directive.ts");
-/* harmony import */ var _http_interceptors_index__WEBPACK_IMPORTED_MODULE_50__ = __webpack_require__(/*! ./http-interceptors/index */ "./src/app/http-interceptors/index.ts");
-/* harmony import */ var _login_login_service__WEBPACK_IMPORTED_MODULE_51__ = __webpack_require__(/*! ./login/login.service */ "./src/app/login/login.service.ts");
-/* harmony import */ var _tabs_tabs_service__WEBPACK_IMPORTED_MODULE_52__ = __webpack_require__(/*! ./tabs/tabs.service */ "./src/app/tabs/tabs.service.ts");
-/* harmony import */ var _each_workflow_each_workflow_service__WEBPACK_IMPORTED_MODULE_53__ = __webpack_require__(/*! ./each-workflow/each-workflow.service */ "./src/app/each-workflow/each-workflow.service.ts");
-/* harmony import */ var _node1_problem_formulation_node1_problem_formulation_service__WEBPACK_IMPORTED_MODULE_54__ = __webpack_require__(/*! ./node1-problem-formulation/node1-problem-formulation.service */ "./src/app/node1-problem-formulation/node1-problem-formulation.service.ts");
-/* harmony import */ var _node_info_node_info_service__WEBPACK_IMPORTED_MODULE_55__ = __webpack_require__(/*! ./node-info/node-info.service */ "./src/app/node-info/node-info.service.ts");
-/* harmony import */ var ngx_cookie_service__WEBPACK_IMPORTED_MODULE_56__ = __webpack_require__(/*! ngx-cookie-service */ "./node_modules/ngx-cookie-service/ngx-cookie-service.js");
-/* harmony import */ var _tc_characterization_tc_characterization_service__WEBPACK_IMPORTED_MODULE_57__ = __webpack_require__(/*! ./tc-characterization/tc-characterization.service */ "./src/app/tc-characterization/tc-characterization.service.ts");
-/* harmony import */ var _name2cas_name2cas_service__WEBPACK_IMPORTED_MODULE_58__ = __webpack_require__(/*! ./name2cas/name2cas.service */ "./src/app/name2cas/name2cas.service.ts");
-/* harmony import */ var _chembl_chembl_service__WEBPACK_IMPORTED_MODULE_59__ = __webpack_require__(/*! ./chembl/chembl.service */ "./src/app/chembl/chembl.service.ts");
+/* harmony import */ var _angular_material_select__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! @angular/material/select */ "./node_modules/@angular/material/esm2015/select.js");
+/* harmony import */ var _angular_cdk_portal__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! @angular/cdk/portal */ "./node_modules/@angular/cdk/esm2015/portal.js");
+/* harmony import */ var _angular_cdk_overlay__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! @angular/cdk/overlay */ "./node_modules/@angular/cdk/esm2015/overlay.js");
+/* harmony import */ var _globals__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! ./globals */ "./src/app/globals.ts");
+/* harmony import */ var _login_login_component__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(/*! ./login/login.component */ "./src/app/login/login.component.ts");
+/* harmony import */ var _main_main_component__WEBPACK_IMPORTED_MODULE_29__ = __webpack_require__(/*! ./main/main.component */ "./src/app/main/main.component.ts");
+/* harmony import */ var _app_component__WEBPACK_IMPORTED_MODULE_30__ = __webpack_require__(/*! ./app.component */ "./src/app/app.component.ts");
+/* harmony import */ var _navbar_navbar_component__WEBPACK_IMPORTED_MODULE_31__ = __webpack_require__(/*! ./navbar/navbar.component */ "./src/app/navbar/navbar.component.ts");
+/* harmony import */ var _sidebar_sidebar_component__WEBPACK_IMPORTED_MODULE_32__ = __webpack_require__(/*! ./sidebar/sidebar.component */ "./src/app/sidebar/sidebar.component.ts");
+/* harmony import */ var _tabs_tabs_component__WEBPACK_IMPORTED_MODULE_33__ = __webpack_require__(/*! ./tabs/tabs.component */ "./src/app/tabs/tabs.component.ts");
+/* harmony import */ var _workflows_workflows_component__WEBPACK_IMPORTED_MODULE_34__ = __webpack_require__(/*! ./workflows/workflows.component */ "./src/app/workflows/workflows.component.ts");
+/* harmony import */ var _each_workflow_each_workflow_component__WEBPACK_IMPORTED_MODULE_35__ = __webpack_require__(/*! ./each-workflow/each-workflow.component */ "./src/app/each-workflow/each-workflow.component.ts");
+/* harmony import */ var _welcome_welcome_component__WEBPACK_IMPORTED_MODULE_36__ = __webpack_require__(/*! ./welcome/welcome.component */ "./src/app/welcome/welcome.component.ts");
+/* harmony import */ var _smiles_micromodal_smiles_micromodal_component__WEBPACK_IMPORTED_MODULE_37__ = __webpack_require__(/*! ./smiles-micromodal/smiles-micromodal.component */ "./src/app/smiles-micromodal/smiles-micromodal.component.ts");
+/* harmony import */ var _node_info_node_info_component__WEBPACK_IMPORTED_MODULE_38__ = __webpack_require__(/*! ./node-info/node-info.component */ "./src/app/node-info/node-info.component.ts");
+/* harmony import */ var _editable_editable_component__WEBPACK_IMPORTED_MODULE_39__ = __webpack_require__(/*! ./editable/editable.component */ "./src/app/editable/editable.component.ts");
+/* harmony import */ var _node1_problem_formulation_node1_problem_formulation_component__WEBPACK_IMPORTED_MODULE_40__ = __webpack_require__(/*! ./node1-problem-formulation/node1-problem-formulation.component */ "./src/app/node1-problem-formulation/node1-problem-formulation.component.ts");
+/* harmony import */ var _tk_workflow_tk_workflow_component__WEBPACK_IMPORTED_MODULE_41__ = __webpack_require__(/*! ./tk-workflow/tk-workflow.component */ "./src/app/tk-workflow/tk-workflow.component.ts");
+/* harmony import */ var _td_workflow_td_workflow_component__WEBPACK_IMPORTED_MODULE_42__ = __webpack_require__(/*! ./td-workflow/td-workflow.component */ "./src/app/td-workflow/td-workflow.component.ts");
+/* harmony import */ var _tc_characterization_tc_characterization_component__WEBPACK_IMPORTED_MODULE_43__ = __webpack_require__(/*! ./tc-characterization/tc-characterization.component */ "./src/app/tc-characterization/tc-characterization.component.ts");
+/* harmony import */ var _overlay_overlay_component__WEBPACK_IMPORTED_MODULE_44__ = __webpack_require__(/*! ./overlay/overlay.component */ "./src/app/overlay/overlay.component.ts");
+/* harmony import */ var _name2cas_name2cas_component__WEBPACK_IMPORTED_MODULE_45__ = __webpack_require__(/*! ./name2cas/name2cas.component */ "./src/app/name2cas/name2cas.component.ts");
+/* harmony import */ var _chembl_chembl_component__WEBPACK_IMPORTED_MODULE_46__ = __webpack_require__(/*! ./chembl/chembl.component */ "./src/app/chembl/chembl.component.ts");
+/* harmony import */ var _keys_pipe__WEBPACK_IMPORTED_MODULE_47__ = __webpack_require__(/*! ./keys.pipe */ "./src/app/keys.pipe.ts");
+/* harmony import */ var _editable_view_mode_directive__WEBPACK_IMPORTED_MODULE_48__ = __webpack_require__(/*! ./editable/view-mode.directive */ "./src/app/editable/view-mode.directive.ts");
+/* harmony import */ var _editable_edit_mode_directive__WEBPACK_IMPORTED_MODULE_49__ = __webpack_require__(/*! ./editable/edit-mode.directive */ "./src/app/editable/edit-mode.directive.ts");
+/* harmony import */ var _editable_edit_on_enter_directive__WEBPACK_IMPORTED_MODULE_50__ = __webpack_require__(/*! ./editable/edit-on-enter.directive */ "./src/app/editable/edit-on-enter.directive.ts");
+/* harmony import */ var _http_interceptors_index__WEBPACK_IMPORTED_MODULE_51__ = __webpack_require__(/*! ./http-interceptors/index */ "./src/app/http-interceptors/index.ts");
+/* harmony import */ var _login_login_service__WEBPACK_IMPORTED_MODULE_52__ = __webpack_require__(/*! ./login/login.service */ "./src/app/login/login.service.ts");
+/* harmony import */ var _tabs_tabs_service__WEBPACK_IMPORTED_MODULE_53__ = __webpack_require__(/*! ./tabs/tabs.service */ "./src/app/tabs/tabs.service.ts");
+/* harmony import */ var _each_workflow_each_workflow_service__WEBPACK_IMPORTED_MODULE_54__ = __webpack_require__(/*! ./each-workflow/each-workflow.service */ "./src/app/each-workflow/each-workflow.service.ts");
+/* harmony import */ var _node1_problem_formulation_node1_problem_formulation_service__WEBPACK_IMPORTED_MODULE_55__ = __webpack_require__(/*! ./node1-problem-formulation/node1-problem-formulation.service */ "./src/app/node1-problem-formulation/node1-problem-formulation.service.ts");
+/* harmony import */ var _node_info_node_info_service__WEBPACK_IMPORTED_MODULE_56__ = __webpack_require__(/*! ./node-info/node-info.service */ "./src/app/node-info/node-info.service.ts");
+/* harmony import */ var ngx_cookie_service__WEBPACK_IMPORTED_MODULE_57__ = __webpack_require__(/*! ngx-cookie-service */ "./node_modules/ngx-cookie-service/ngx-cookie-service.js");
+/* harmony import */ var _tc_characterization_tc_characterization_service__WEBPACK_IMPORTED_MODULE_58__ = __webpack_require__(/*! ./tc-characterization/tc-characterization.service */ "./src/app/tc-characterization/tc-characterization.service.ts");
+/* harmony import */ var _name2cas_name2cas_service__WEBPACK_IMPORTED_MODULE_59__ = __webpack_require__(/*! ./name2cas/name2cas.service */ "./src/app/name2cas/name2cas.service.ts");
+/* harmony import */ var _chembl_chembl_service__WEBPACK_IMPORTED_MODULE_60__ = __webpack_require__(/*! ./chembl/chembl.service */ "./src/app/chembl/chembl.service.ts");
+
 
 
 
@@ -540,29 +542,29 @@ let AppModule = class AppModule {
 AppModule = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
     Object(_angular_core__WEBPACK_IMPORTED_MODULE_4__["NgModule"])({
         declarations: [
-            _app_component__WEBPACK_IMPORTED_MODULE_29__["AppComponent"],
-            _login_login_component__WEBPACK_IMPORTED_MODULE_27__["LoginComponent"],
-            _main_main_component__WEBPACK_IMPORTED_MODULE_28__["MainComponent"],
-            _navbar_navbar_component__WEBPACK_IMPORTED_MODULE_30__["NavbarComponent"],
-            _sidebar_sidebar_component__WEBPACK_IMPORTED_MODULE_31__["SidebarComponent"],
-            _tabs_tabs_component__WEBPACK_IMPORTED_MODULE_32__["TabsComponent"],
-            _workflows_workflows_component__WEBPACK_IMPORTED_MODULE_33__["WorkflowsComponent"],
-            _each_workflow_each_workflow_component__WEBPACK_IMPORTED_MODULE_34__["EachWorkflowComponent"],
-            _node_info_node_info_component__WEBPACK_IMPORTED_MODULE_37__["NodeInfoComponent"],
-            _editable_editable_component__WEBPACK_IMPORTED_MODULE_38__["EditableComponent"],
-            _editable_view_mode_directive__WEBPACK_IMPORTED_MODULE_47__["ViewModeDirective"],
-            _editable_edit_mode_directive__WEBPACK_IMPORTED_MODULE_48__["EditModeDirective"],
-            _editable_edit_on_enter_directive__WEBPACK_IMPORTED_MODULE_49__["EditableOnEnterDirective"],
-            _keys_pipe__WEBPACK_IMPORTED_MODULE_46__["KeysPipe"],
-            _node1_problem_formulation_node1_problem_formulation_component__WEBPACK_IMPORTED_MODULE_39__["Node1ProblemFormulationComponent"],
-            _welcome_welcome_component__WEBPACK_IMPORTED_MODULE_35__["WelcomeComponent"],
-            _smiles_micromodal_smiles_micromodal_component__WEBPACK_IMPORTED_MODULE_36__["SmilesMicromodalComponent"],
-            _tk_workflow_tk_workflow_component__WEBPACK_IMPORTED_MODULE_40__["TkWorkflowComponent"],
-            _td_workflow_td_workflow_component__WEBPACK_IMPORTED_MODULE_41__["TdWorkflowComponent"],
-            _tc_characterization_tc_characterization_component__WEBPACK_IMPORTED_MODULE_42__["TcCharacterizationComponent"],
-            _overlay_overlay_component__WEBPACK_IMPORTED_MODULE_43__["OverlayComponent"],
-            _name2cas_name2cas_component__WEBPACK_IMPORTED_MODULE_44__["Name2casComponent"],
-            _chembl_chembl_component__WEBPACK_IMPORTED_MODULE_45__["ChemblComponent"],
+            _app_component__WEBPACK_IMPORTED_MODULE_30__["AppComponent"],
+            _login_login_component__WEBPACK_IMPORTED_MODULE_28__["LoginComponent"],
+            _main_main_component__WEBPACK_IMPORTED_MODULE_29__["MainComponent"],
+            _navbar_navbar_component__WEBPACK_IMPORTED_MODULE_31__["NavbarComponent"],
+            _sidebar_sidebar_component__WEBPACK_IMPORTED_MODULE_32__["SidebarComponent"],
+            _tabs_tabs_component__WEBPACK_IMPORTED_MODULE_33__["TabsComponent"],
+            _workflows_workflows_component__WEBPACK_IMPORTED_MODULE_34__["WorkflowsComponent"],
+            _each_workflow_each_workflow_component__WEBPACK_IMPORTED_MODULE_35__["EachWorkflowComponent"],
+            _node_info_node_info_component__WEBPACK_IMPORTED_MODULE_38__["NodeInfoComponent"],
+            _editable_editable_component__WEBPACK_IMPORTED_MODULE_39__["EditableComponent"],
+            _editable_view_mode_directive__WEBPACK_IMPORTED_MODULE_48__["ViewModeDirective"],
+            _editable_edit_mode_directive__WEBPACK_IMPORTED_MODULE_49__["EditModeDirective"],
+            _editable_edit_on_enter_directive__WEBPACK_IMPORTED_MODULE_50__["EditableOnEnterDirective"],
+            _keys_pipe__WEBPACK_IMPORTED_MODULE_47__["KeysPipe"],
+            _node1_problem_formulation_node1_problem_formulation_component__WEBPACK_IMPORTED_MODULE_40__["Node1ProblemFormulationComponent"],
+            _welcome_welcome_component__WEBPACK_IMPORTED_MODULE_36__["WelcomeComponent"],
+            _smiles_micromodal_smiles_micromodal_component__WEBPACK_IMPORTED_MODULE_37__["SmilesMicromodalComponent"],
+            _tk_workflow_tk_workflow_component__WEBPACK_IMPORTED_MODULE_41__["TkWorkflowComponent"],
+            _td_workflow_td_workflow_component__WEBPACK_IMPORTED_MODULE_42__["TdWorkflowComponent"],
+            _tc_characterization_tc_characterization_component__WEBPACK_IMPORTED_MODULE_43__["TcCharacterizationComponent"],
+            _overlay_overlay_component__WEBPACK_IMPORTED_MODULE_44__["OverlayComponent"],
+            _name2cas_name2cas_component__WEBPACK_IMPORTED_MODULE_45__["Name2casComponent"],
+            _chembl_chembl_component__WEBPACK_IMPORTED_MODULE_46__["ChemblComponent"],
         ],
         imports: [
             _angular_platform_browser__WEBPACK_IMPORTED_MODULE_3__["BrowserModule"],
@@ -580,6 +582,7 @@ AppModule = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
             _angular_material_sort__WEBPACK_IMPORTED_MODULE_18__["MatSortModule"],
             _angular_material_button__WEBPACK_IMPORTED_MODULE_19__["MatButtonModule"],
             _angular_material_input__WEBPACK_IMPORTED_MODULE_20__["MatInputModule"],
+            _angular_material_select__WEBPACK_IMPORTED_MODULE_24__["MatSelectModule"],
             _angular_forms__WEBPACK_IMPORTED_MODULE_5__["FormsModule"],
             _angular_forms__WEBPACK_IMPORTED_MODULE_5__["ReactiveFormsModule"],
             _angular_material_dialog__WEBPACK_IMPORTED_MODULE_21__["MatDialogModule"],
@@ -588,8 +591,8 @@ AppModule = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
             _angular_material_progress_spinner__WEBPACK_IMPORTED_MODULE_14__["MatProgressSpinnerModule"],
             _ckeditor_ckeditor5_angular__WEBPACK_IMPORTED_MODULE_8__["CKEditorModule"],
             _ng_bootstrap_ng_bootstrap__WEBPACK_IMPORTED_MODULE_15__["NgbModalModule"],
-            _angular_cdk_overlay__WEBPACK_IMPORTED_MODULE_25__["OverlayModule"],
-            _angular_cdk_portal__WEBPACK_IMPORTED_MODULE_24__["PortalModule"],
+            _angular_cdk_overlay__WEBPACK_IMPORTED_MODULE_26__["OverlayModule"],
+            _angular_cdk_portal__WEBPACK_IMPORTED_MODULE_25__["PortalModule"],
             ngx_toastr__WEBPACK_IMPORTED_MODULE_10__["ToastrModule"].forRoot({
                 timeOut: 3000,
                 positionClass: 'toast-top-center',
@@ -597,21 +600,21 @@ AppModule = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
             }) // ToastrModule added
         ],
         providers: [
-            _http_interceptors_index__WEBPACK_IMPORTED_MODULE_50__["httpInterceptorProviders"],
-            _globals__WEBPACK_IMPORTED_MODULE_26__["Globals"],
-            _login_login_service__WEBPACK_IMPORTED_MODULE_51__["LoginService"],
-            ngx_cookie_service__WEBPACK_IMPORTED_MODULE_56__["CookieService"],
-            _tabs_tabs_service__WEBPACK_IMPORTED_MODULE_52__["TabsService"],
-            _each_workflow_each_workflow_service__WEBPACK_IMPORTED_MODULE_53__["EachWorkflowService"],
-            _node_info_node_info_service__WEBPACK_IMPORTED_MODULE_55__["NodeInfoService"],
-            _node1_problem_formulation_node1_problem_formulation_service__WEBPACK_IMPORTED_MODULE_54__["Node1ProblemFormulationService"],
-            _tc_characterization_tc_characterization_service__WEBPACK_IMPORTED_MODULE_57__["TcCharacterizationService"],
-            _name2cas_name2cas_service__WEBPACK_IMPORTED_MODULE_58__["Name2casService"],
-            _chembl_chembl_service__WEBPACK_IMPORTED_MODULE_59__["ChemblService"],
-            { provide: _angular_cdk_overlay__WEBPACK_IMPORTED_MODULE_25__["OverlayContainer"], useClass: _angular_cdk_overlay__WEBPACK_IMPORTED_MODULE_25__["FullscreenOverlayContainer"] }
+            _http_interceptors_index__WEBPACK_IMPORTED_MODULE_51__["httpInterceptorProviders"],
+            _globals__WEBPACK_IMPORTED_MODULE_27__["Globals"],
+            _login_login_service__WEBPACK_IMPORTED_MODULE_52__["LoginService"],
+            ngx_cookie_service__WEBPACK_IMPORTED_MODULE_57__["CookieService"],
+            _tabs_tabs_service__WEBPACK_IMPORTED_MODULE_53__["TabsService"],
+            _each_workflow_each_workflow_service__WEBPACK_IMPORTED_MODULE_54__["EachWorkflowService"],
+            _node_info_node_info_service__WEBPACK_IMPORTED_MODULE_56__["NodeInfoService"],
+            _node1_problem_formulation_node1_problem_formulation_service__WEBPACK_IMPORTED_MODULE_55__["Node1ProblemFormulationService"],
+            _tc_characterization_tc_characterization_service__WEBPACK_IMPORTED_MODULE_58__["TcCharacterizationService"],
+            _name2cas_name2cas_service__WEBPACK_IMPORTED_MODULE_59__["Name2casService"],
+            _chembl_chembl_service__WEBPACK_IMPORTED_MODULE_60__["ChemblService"],
+            { provide: _angular_cdk_overlay__WEBPACK_IMPORTED_MODULE_26__["OverlayContainer"], useClass: _angular_cdk_overlay__WEBPACK_IMPORTED_MODULE_26__["FullscreenOverlayContainer"] }
         ],
-        entryComponents: [_node_info_node_info_component__WEBPACK_IMPORTED_MODULE_37__["NodeInfoComponent"], _overlay_overlay_component__WEBPACK_IMPORTED_MODULE_43__["OverlayComponent"]],
-        bootstrap: [_app_component__WEBPACK_IMPORTED_MODULE_29__["AppComponent"]]
+        entryComponents: [_node_info_node_info_component__WEBPACK_IMPORTED_MODULE_38__["NodeInfoComponent"], _overlay_overlay_component__WEBPACK_IMPORTED_MODULE_44__["OverlayComponent"]],
+        bootstrap: [_app_component__WEBPACK_IMPORTED_MODULE_30__["AppComponent"]]
     })
 ], AppModule);
 
@@ -703,8 +706,9 @@ let ChemblComponent = class ChemblComponent {
                 });
             }
             catch (e) {
-                if (e !== BreakException)
+                if (e !== BreakException) {
                     throw e;
+                }
             }
         }
     }
@@ -746,7 +750,7 @@ let ChemblComponent = class ChemblComponent {
         values.forEach((value) => {
             j_key[value] = 0;
         });
-        let filtered_object_list = object_list.filter((value, index, array) => {
+        const filtered_object_list = object_list.filter((value, index, array) => {
             let is_in_j_key = j_key.hasOwnProperty(value[key]);
             return inverted ? !is_in_j_key : is_in_j_key;
         });
@@ -850,7 +854,7 @@ let ChemblComponent = class ChemblComponent {
             subs.unsubscribe();
             chembl_activity_rows$.error(error);
         });
-        return chembl_activity_rows$.asObservable();
+        return chembl_activity_rows$;
     }
     chemblIdFromSmilesButton() {
         this.chembl_running = true;
@@ -860,24 +864,49 @@ let ChemblComponent = class ChemblComponent {
                 const chembl_ids = this.service.getChEMBLIDFromUniChemData(unichem_result);
                 this.setItemList(this.service.arrayToItemList(chembl_ids));
                 this.chembl_activity_rows = [];
-                const chembl_subs = this.chEMBLGetADMETActivityDataByCompoundId(chembl_ids[0], this.chembl_activity_fields).subscribe(chembl_result => {
+                const chembl_activity_rows_obj = {};
+                let index = 0;
+                const chembl_activity$ = new rxjs__WEBPACK_IMPORTED_MODULE_4__["AsyncSubject"]();
+                const chembl_act_subs = chembl_activity$.subscribe(result => {
                     let activity_rows = '';
-                    chembl_result["activities"].forEach(activity => {
-                        activity_rows += '<tr>';
-                        this.chembl_activity_fields.forEach(field => {
-                            activity_rows += '<td>' + activity[field] + '</td>';
+                    Object.keys(chembl_activity_rows_obj).sort((a, b) => Number(a) - Number(b)).forEach(idx => {
+                        this.chembl_activity_rows += chembl_activity_rows_obj[idx];
+                        chembl_activity_rows_obj[idx].forEach(activity => {
+                            activity_rows += '<tr>';
+                            this.chembl_activity_fields.forEach(field => {
+                                activity_rows += '<td>' + activity[field] + '</td>';
+                            });
+                            activity_rows += '</tr>';
                         });
-                        activity_rows += '</tr>';
                     });
                     this.activity = '<table><tr><th>Property</th><th>Value</th><th>Units</th><th>Description</th></tr>'
                         + activity_rows + '</table>';
                 }, error => {
                     alert('Error retrieving data from ChEMBL');
-                    this.chembl_running = false;
-                    chembl_subs.unsubscribe();
+                    chembl_act_subs.unsubscribe();
                 }, () => {
-                    this.chembl_running = false;
-                    chembl_subs.unsubscribe();
+                    chembl_act_subs.unsubscribe();
+                });
+                let sucess_count = 0;
+                const chembl_ids_length = chembl_ids.length;
+                chembl_ids.forEach(chembl_id => {
+                    const chembl_activity_rows$ = this.chEMBLGetADMETActivityDataByCompoundId(chembl_id, this.chembl_activity_fields);
+                    const chembl_subs = chembl_activity_rows$.subscribe(chembl_result => {
+                        chembl_activity_rows_obj[index] = chembl_result['activities'];
+                        chembl_activity$.next(Object.keys(chembl_activity_rows_obj));
+                        sucess_count++;
+                        if (chembl_ids_length >= sucess_count) {
+                            chembl_activity$.complete();
+                        }
+                    }, error => {
+                        chembl_activity$.error(error);
+                        this.chembl_running = false;
+                        chembl_subs.unsubscribe();
+                    }, () => {
+                        this.chembl_running = false;
+                        chembl_subs.unsubscribe();
+                    });
+                    index++;
                 });
             }, error => {
                 alert('Error retrieving data from UniChem');
@@ -2110,7 +2139,7 @@ MainComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = ".block1 {\n    overflow: scroll;\n    display: block;\n    border: 1px solid #ccc;\n    width:100%;\n    height:100%;\n}\n    \n.block2 {\n    display: inline-block;\n    vertical-align: top;\n    overflow: visible;\n    border-right: 1px solid #a4a4a4;\n}\n    \n.btn {\n    text-align: left;\n}\n    \n#old_name2cas_cas {\n    width: 100% !important;\n    height:100% !important;\n    border : none !important;\n    margin-right:-5%;\n    overflow: visible;\n}\n    \n#name2cas_cas {\n    width: 100% !important;\n}\n    \n#ms-name2cas_cas {\n    width: 100% !important;\n}\n    \n.ms-container {\n    width: 100% !important;\n    \n}\n    \n.ms-list {\n    height: 100px !important;\n}\n    \n.cas2name-modal {\n    overflow-x: hidden !important;\n    overflow-y: hidden !important;\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvbmFtZTJjYXMvbmFtZTJjYXMuY29tcG9uZW50LmNzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtJQUNJLGdCQUFnQjtJQUNoQixjQUFjO0lBQ2Qsc0JBQXNCO0lBQ3RCLFVBQVU7SUFDVixXQUFXO0FBQ2Y7O0FBRUE7SUFDSSxxQkFBcUI7SUFDckIsbUJBQW1CO0lBQ25CLGlCQUFpQjtJQUNqQiwrQkFBK0I7QUFDbkM7O0FBRUE7SUFDSSxnQkFBZ0I7QUFDcEI7O0FBRUE7SUFDSSxzQkFBc0I7SUFDdEIsc0JBQXNCO0lBQ3RCLHdCQUF3QjtJQUN4QixnQkFBZ0I7SUFDaEIsaUJBQWlCO0FBQ3JCOztBQUVBO0lBQ0ksc0JBQXNCO0FBQzFCOztBQUVBO0lBQ0ksc0JBQXNCO0FBQzFCOztBQUVBO0lBQ0ksc0JBQXNCOztBQUUxQjs7QUFFQTtJQUNJLHdCQUF3QjtBQUM1Qjs7QUFFQTtJQUNJLDZCQUE2QjtJQUM3Qiw2QkFBNkI7QUFDakMiLCJmaWxlIjoic3JjL2FwcC9uYW1lMmNhcy9uYW1lMmNhcy5jb21wb25lbnQuY3NzIiwic291cmNlc0NvbnRlbnQiOlsiLmJsb2NrMSB7XG4gICAgb3ZlcmZsb3c6IHNjcm9sbDtcbiAgICBkaXNwbGF5OiBibG9jaztcbiAgICBib3JkZXI6IDFweCBzb2xpZCAjY2NjO1xuICAgIHdpZHRoOjEwMCU7XG4gICAgaGVpZ2h0OjEwMCU7XG59XG4gICAgXG4uYmxvY2syIHtcbiAgICBkaXNwbGF5OiBpbmxpbmUtYmxvY2s7XG4gICAgdmVydGljYWwtYWxpZ246IHRvcDtcbiAgICBvdmVyZmxvdzogdmlzaWJsZTtcbiAgICBib3JkZXItcmlnaHQ6IDFweCBzb2xpZCAjYTRhNGE0O1xufVxuXG4uYnRuIHtcbiAgICB0ZXh0LWFsaWduOiBsZWZ0O1xufVxuXG4jb2xkX25hbWUyY2FzX2NhcyB7XG4gICAgd2lkdGg6IDEwMCUgIWltcG9ydGFudDtcbiAgICBoZWlnaHQ6MTAwJSAhaW1wb3J0YW50O1xuICAgIGJvcmRlciA6IG5vbmUgIWltcG9ydGFudDtcbiAgICBtYXJnaW4tcmlnaHQ6LTUlO1xuICAgIG92ZXJmbG93OiB2aXNpYmxlO1xufVxuXG4jbmFtZTJjYXNfY2FzIHtcbiAgICB3aWR0aDogMTAwJSAhaW1wb3J0YW50O1xufVxuXG4jbXMtbmFtZTJjYXNfY2FzIHtcbiAgICB3aWR0aDogMTAwJSAhaW1wb3J0YW50O1xufVxuXG4ubXMtY29udGFpbmVyIHtcbiAgICB3aWR0aDogMTAwJSAhaW1wb3J0YW50O1xuICAgIFxufVxuXG4ubXMtbGlzdCB7XG4gICAgaGVpZ2h0OiAxMDBweCAhaW1wb3J0YW50O1xufVxuXG4uY2FzMm5hbWUtbW9kYWwge1xuICAgIG92ZXJmbG93LXg6IGhpZGRlbiAhaW1wb3J0YW50O1xuICAgIG92ZXJmbG93LXk6IGhpZGRlbiAhaW1wb3J0YW50O1xufSJdfQ== */"
+module.exports = ".block1 {\n    overflow: scroll;\n    display: block;\n    border: 1px solid #ccc;\n    width:100%;\n    height:100%;\n}\n    \n.block2 {\n    display: inline-block;\n    vertical-align: top;\n    overflow: visible;\n    border-right: 1px solid #a4a4a4;\n}\n    \n.btn {\n    text-align: left;\n}\n    \n.mat-option {\n    overflow: auto;\n    text-overflow: unset;\n}\n    \n#old_name2cas_cas {\n    width: 100% !important;\n    height:100% !important;\n    border : none !important;\n    margin-right:-5%;\n    overflow: visible;\n}\n    \n#name2cas_cas {\n    width: 100% !important;\n}\n    \n#ms-name2cas_cas {\n    width: 100% !important;\n}\n    \n.ms-container {\n    width: 100% !important;\n    \n}\n    \n.ms-list {\n    height: 100px !important;\n}\n    \n.cas2name-modal {\n    overflow-x: hidden !important;\n    overflow-y: hidden !important;\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvbmFtZTJjYXMvbmFtZTJjYXMuY29tcG9uZW50LmNzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtJQUNJLGdCQUFnQjtJQUNoQixjQUFjO0lBQ2Qsc0JBQXNCO0lBQ3RCLFVBQVU7SUFDVixXQUFXO0FBQ2Y7O0FBRUE7SUFDSSxxQkFBcUI7SUFDckIsbUJBQW1CO0lBQ25CLGlCQUFpQjtJQUNqQiwrQkFBK0I7QUFDbkM7O0FBRUE7SUFDSSxnQkFBZ0I7QUFDcEI7O0FBRUE7SUFDSSxjQUFjO0lBQ2Qsb0JBQW9CO0FBQ3hCOztBQUVBO0lBQ0ksc0JBQXNCO0lBQ3RCLHNCQUFzQjtJQUN0Qix3QkFBd0I7SUFDeEIsZ0JBQWdCO0lBQ2hCLGlCQUFpQjtBQUNyQjs7QUFFQTtJQUNJLHNCQUFzQjtBQUMxQjs7QUFFQTtJQUNJLHNCQUFzQjtBQUMxQjs7QUFFQTtJQUNJLHNCQUFzQjs7QUFFMUI7O0FBRUE7SUFDSSx3QkFBd0I7QUFDNUI7O0FBRUE7SUFDSSw2QkFBNkI7SUFDN0IsNkJBQTZCO0FBQ2pDIiwiZmlsZSI6InNyYy9hcHAvbmFtZTJjYXMvbmFtZTJjYXMuY29tcG9uZW50LmNzcyIsInNvdXJjZXNDb250ZW50IjpbIi5ibG9jazEge1xuICAgIG92ZXJmbG93OiBzY3JvbGw7XG4gICAgZGlzcGxheTogYmxvY2s7XG4gICAgYm9yZGVyOiAxcHggc29saWQgI2NjYztcbiAgICB3aWR0aDoxMDAlO1xuICAgIGhlaWdodDoxMDAlO1xufVxuICAgIFxuLmJsb2NrMiB7XG4gICAgZGlzcGxheTogaW5saW5lLWJsb2NrO1xuICAgIHZlcnRpY2FsLWFsaWduOiB0b3A7XG4gICAgb3ZlcmZsb3c6IHZpc2libGU7XG4gICAgYm9yZGVyLXJpZ2h0OiAxcHggc29saWQgI2E0YTRhNDtcbn1cblxuLmJ0biB7XG4gICAgdGV4dC1hbGlnbjogbGVmdDtcbn1cblxuLm1hdC1vcHRpb24ge1xuICAgIG92ZXJmbG93OiBhdXRvO1xuICAgIHRleHQtb3ZlcmZsb3c6IHVuc2V0O1xufVxuXG4jb2xkX25hbWUyY2FzX2NhcyB7XG4gICAgd2lkdGg6IDEwMCUgIWltcG9ydGFudDtcbiAgICBoZWlnaHQ6MTAwJSAhaW1wb3J0YW50O1xuICAgIGJvcmRlciA6IG5vbmUgIWltcG9ydGFudDtcbiAgICBtYXJnaW4tcmlnaHQ6LTUlO1xuICAgIG92ZXJmbG93OiB2aXNpYmxlO1xufVxuXG4jbmFtZTJjYXNfY2FzIHtcbiAgICB3aWR0aDogMTAwJSAhaW1wb3J0YW50O1xufVxuXG4jbXMtbmFtZTJjYXNfY2FzIHtcbiAgICB3aWR0aDogMTAwJSAhaW1wb3J0YW50O1xufVxuXG4ubXMtY29udGFpbmVyIHtcbiAgICB3aWR0aDogMTAwJSAhaW1wb3J0YW50O1xuICAgIFxufVxuXG4ubXMtbGlzdCB7XG4gICAgaGVpZ2h0OiAxMDBweCAhaW1wb3J0YW50O1xufVxuXG4uY2FzMm5hbWUtbW9kYWwge1xuICAgIG92ZXJmbG93LXg6IGhpZGRlbiAhaW1wb3J0YW50O1xuICAgIG92ZXJmbG93LXk6IGhpZGRlbiAhaW1wb3J0YW50O1xufSJdfQ== */"
 
 /***/ }),
 
@@ -2131,23 +2160,43 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var xml2js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! xml2js */ "./node_modules/xml2js/lib/xml2js.js");
 /* harmony import */ var xml2js__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(xml2js__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var _ng_bootstrap_ng_bootstrap__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @ng-bootstrap/ng-bootstrap */ "./node_modules/@ng-bootstrap/ng-bootstrap/fesm2015/ng-bootstrap.js");
+/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm2015/index.js");
+
 
 
 
 
 
 class FromNameCACTVSInteface {
-    constructor(cactus_output_key, binded_multiselect_id, service) {
+    constructor(cactus_output_key, binded_multiselect_id, service, show_cactvs_data = false) {
         this.from_name_running = false;
         this.from_name_executed = false;
         this.item_list = [];
         this.item_set = [];
-        this.item_show_cactvs_data = true;
-        this.item_copy_show_cactvs_data = true;
         this.selected_item_int_id_list = [];
         this.cactus_output_key = cactus_output_key;
         this.binded_multiselect_id = binded_multiselect_id;
         this._service = service;
+        this.item_show_cactvs_data = show_cactvs_data,
+            this.item_copy_show_cactvs_data = show_cactvs_data;
+    }
+    static filterObjectListByKey(object_list, key, values, inverted = false) {
+        let j_key = {};
+        values.forEach((value) => {
+            j_key[value] = 0;
+        });
+        let filtered_object_list = object_list.filter((value, index, array) => {
+            let is_in_j_key = j_key.hasOwnProperty(value[key]);
+            return inverted ? !is_in_j_key : is_in_j_key;
+        });
+        return filtered_object_list;
+    }
+    static filterListByIntId(item_list, item_int_id_list, inverted = false) {
+        let item_int_id_list_number = [];
+        item_int_id_list.forEach((item_int_id) => {
+            item_int_id_list_number.push(Number(item_int_id));
+        });
+        return FromNameCACTVSInteface.filterObjectListByKey(item_list, 'int_id', item_int_id_list_number, inverted);
     }
     removeItemDuplicates(item_list) {
         let j = {};
@@ -2245,47 +2294,29 @@ class FromNameCACTVSInteface {
     removeItemValueDuplicates() {
         this.setItemList(this.removeItemDuplicates(this.item_list), true);
     }
-    filterObjectListByKey(object_list, key, values, inverted = false) {
-        let j_key = {};
-        values.forEach((value) => {
-            j_key[value] = 0;
-        });
-        let filtered_object_list = object_list.filter((value, index, array) => {
-            let is_in_j_key = j_key.hasOwnProperty(value[key]);
-            return inverted ? !is_in_j_key : is_in_j_key;
-        });
-        return filtered_object_list;
-    }
-    filterListByIntId(item_list, item_int_id_list, inverted = false) {
-        let item_int_id_list_number = [];
-        item_int_id_list.forEach((item_int_id) => {
-            item_int_id_list_number.push(Number(item_int_id));
-        });
-        return this.filterObjectListByKey(item_list, 'int_id', item_int_id_list_number, inverted);
-    }
     deleteItemsByIntId(int_id_list, delete_same_value = false) {
         if (!delete_same_value) {
-            this.setItemList(this.item_list = this.filterListByIntId(this.item_list, int_id_list, true));
+            this.setItemList(this.item_list = FromNameCACTVSInteface.filterListByIntId(this.item_list, int_id_list, true));
         }
         else {
-            let selected_item = this.filterListByIntId(this.item_list, int_id_list);
+            let selected_item = FromNameCACTVSInteface.filterListByIntId(this.item_list, int_id_list);
             let value_list = [];
             selected_item.forEach((item) => {
                 value_list.push(item['value']);
             });
-            this.setItemList(this.filterObjectListByKey(this.item_list, 'value', value_list, true));
+            this.setItemList(FromNameCACTVSInteface.filterObjectListByKey(this.item_list, 'value', value_list, true));
         }
     }
     deleteSelectedItems() {
         this.deleteItemsByIntId(this.selected_item_int_id_list, !this.item_show_cactvs_data);
     }
-    fromName(search_string) {
+    fromName(search_string, termination_subject$, subject_emitted_value) {
         if (this.from_name_running) {
             return;
         }
         this.from_name_running = true;
         this.setItemList([]);
-        this.item_from_name_subscription = this._service.getFromName(search_string, this.cactus_output_key, 'compound_name').subscribe(result => {
+        this.item_from_name_subscription = this._service.getFromName(search_string, this.cactus_output_key, ['compound_name', 'cas_number']).subscribe(result => {
             Object(xml2js__WEBPACK_IMPORTED_MODULE_3__["parseString"])(result, function (err, result) {
                 if (err !== null) {
                     alert('Error while parsing CACTVS query');
@@ -2294,17 +2325,25 @@ class FromNameCACTVSInteface {
                     return;
                 }
                 if (!result.hasOwnProperty('request')) {
-                    alert("Error in CACTVS query");
-                    console.log("Error in CACTVS query. Response:");
+                    alert('Error in CACTVS query');
+                    console.log('Error in CACTVS query. Response:');
                     console.log(result);
                 }
                 else {
                     this.setItemList(this._service.cactusXMLparsed(result));
                     this.from_name_executed = true;
+                    if (typeof termination_subject$ !== 'undefined' || termination_subject$ !== null) {
+                        if (!(termination_subject$.closed || termination_subject$.isStopped || termination_subject$.hasError)) {
+                            termination_subject$.next(subject_emitted_value);
+                        }
+                        if (!(termination_subject$.closed || termination_subject$.isStopped || termination_subject$.hasError)) {
+                            termination_subject$.complete();
+                        }
+                    }
                 }
             }.bind(this));
         }, error => {
-            alert("Error in CACTVS query");
+            alert('Error in CACTVS query');
             this.from_name_running = false;
             this.item_from_name_subscription.unsubscribe();
         }, () => {
@@ -2315,7 +2354,7 @@ class FromNameCACTVSInteface {
     updateTextDump(copy_selection_only = true, item_value_only = false) {
         let item_list;
         if (copy_selection_only) {
-            item_list = this.filterListByIntId(this.item_list, this.selected_item_int_id_list);
+            item_list = FromNameCACTVSInteface.filterListByIntId(this.item_list, this.selected_item_int_id_list);
         }
         else {
             item_list = this.item_list;
@@ -2337,16 +2376,20 @@ class FromNameCACTVSInteface {
 FromNameCACTVSInteface.ctorParameters = () => [
     { type: String },
     { type: String },
-    { type: _name2cas_service__WEBPACK_IMPORTED_MODULE_2__["Name2casService"] }
+    { type: _name2cas_service__WEBPACK_IMPORTED_MODULE_2__["Name2casService"] },
+    { type: Boolean }
 ];
 let Name2casComponent = class Name2casComponent {
     constructor(service, modalService) {
         this.service = service;
         this.modalService = modalService;
-        this.search_type = 'compound_name';
-        this.show_cactvs_data = true;
-        this.cas = new FromNameCACTVSInteface("cas", "name2cas_cas", this.service);
-        this.smiles = new FromNameCACTVSInteface("smiles", "name2smiles_smiles", this.service);
+        this.search_type = ['compound_name', 'cas_number'];
+        this.show_cactvs_data = false;
+        this.cas = new FromNameCACTVSInteface("cas", "name2cas_cas", this.service, this.show_cactvs_data);
+        this.smiles = new FromNameCACTVSInteface("smiles", "name2smiles_smiles", this.service, this.show_cactvs_data);
+        this.compound_synonyms = [];
+        this.compound_name_executed = false;
+        this.compound_name_running = false;
         this.cactus_interfaces = {
             cas: this.cas,
             smiles: this.smiles
@@ -2377,14 +2420,81 @@ let Name2casComponent = class Name2casComponent {
         });
     }
     itemsFromNameButton() {
+        this.compound_synonyms = [];
+        this.compound_name = undefined;
+        this.compound_name_int_id = undefined;
+        if (this.finished_cactvs_from_name_query$ instanceof rxjs__WEBPACK_IMPORTED_MODULE_5__["Subject"]) {
+            if (this.finished_cactvs_from_name_query$.closed || this.finished_cactvs_from_name_query$.isStopped ||
+                this.finished_cactvs_from_name_query$.hasError) {
+                this.finished_cactvs_from_name_query$.complete();
+            }
+            this.finished_cactvs_from_name_query$.unsubscribe();
+        }
+        this.finished_cactvs_from_name_query$ = new rxjs__WEBPACK_IMPORTED_MODULE_5__["Subject"]();
+        const subs = this.finished_cactvs_from_name_query$.subscribe(interface_name => {
+            const default_value = { int_id: 0, value: this.search_string, html_rep: this.search_string, string_rep: this.search_string };
+            if (this.cactus_interfaces[interface_name].item_list[0]['string_class'] === 'CAS Registry Number') {
+                this.compound_name_running = true;
+                const subs_synonyms = this.service.getFromName(this.search_string, 'names', 'cas', 120000).subscribe(result => {
+                    Object(xml2js__WEBPACK_IMPORTED_MODULE_3__["parseString"])(result, function (err, result) {
+                        console.log(result);
+                        console.log(err);
+                        if (err !== null) {
+                            alert('Error while parsing CACTVS query');
+                            console.log('Error while parsing CACTVS query:');
+                            console.log(err);
+                            return;
+                        }
+                        if (!result.hasOwnProperty('request')) {
+                            alert('Error in CACTVS query');
+                            console.log('Error in CACTVS query. Response:');
+                            console.log(result);
+                        }
+                        else {
+                            this.compound_synonyms = this.service.cactusXMLparsed(result);
+                            if (this.compound_synonyms.length === 0) {
+                                this.compound_synonyms.push(default_value);
+                            }
+                            this.compound_name_executed = true;
+                        }
+                    }.bind(this));
+                }, error => {
+                    alert('Error in CACTVS query');
+                    this.compound_name_running = false;
+                }, () => {
+                    this.compound_name_running = false;
+                    subs_synonyms.unsubscribe();
+                });
+            }
+            else if (this.cactus_interfaces[interface_name].item_list[0]['string_class'] === 'chemical name (CIR)' ||
+                this.cactus_interfaces[interface_name].item_list[0]['string_class'] === 'IUPAC name (OPSIN)') {
+                this.compound_name = this.search_string;
+                this.compound_synonyms.push(default_value);
+                this.compound_name_int_id = 0;
+                this.compound_name_executed = true;
+                this.compound_name_running = false;
+            }
+            else {
+                this.compound_name = this.search_string;
+                this.compound_synonyms.push(default_value);
+                this.compound_name_int_id = 0;
+                this.compound_name_executed = true;
+                this.compound_name_running = false;
+            }
+        }, error => {
+            this.compound_name_running = false;
+            subs.unsubscribe();
+            this.finished_cactvs_from_name_query$.complete();
+        });
         Object.keys(this.cactus_interfaces).forEach((interface_name) => {
-            this.cactus_interfaces[interface_name].fromName(this.search_string);
+            this.cactus_interfaces[interface_name].fromName(this.search_string, this.finished_cactvs_from_name_query$, interface_name);
         });
     }
     changeItemsShowCactvsData() {
         Object.keys(this.cactus_interfaces).forEach((interface_name) => {
             this.cactus_interfaces[interface_name].item_show_cactvs_data = this.show_cactvs_data;
-            this.cactus_interfaces[interface_name].item_copy_show_cactvs_data = Boolean(this.cactus_interfaces[interface_name].item_show_cactvs_data);
+            this.cactus_interfaces[interface_name].item_copy_show_cactvs_data =
+                Boolean(this.cactus_interfaces[interface_name].item_show_cactvs_data);
             this.cactus_interfaces[interface_name].deleteSelection();
         });
     }
@@ -2400,7 +2510,7 @@ let Name2casComponent = class Name2casComponent {
             closeResult = 'Closed with: ' + result;
             $(jquery_sel_copy_textarea_id).off('input');
         }, (reason) => {
-            //ModalDismissReasons contains reason possible values
+            // ModalDismissReasons contains reason possible values
             $(jquery_sel_copy_textarea_id).off('input');
         });
         setTimeout(() => {
@@ -2411,7 +2521,7 @@ let Name2casComponent = class Name2casComponent {
         }, 0);
         setTimeout(function (copy_textarea_id) {
             document.getElementById(copy_textarea_id).select();
-            document.execCommand("copy");
+            document.execCommand('copy');
         }.bind(this, copy_textarea_id), 0);
     }
     changeShowName2ItemData(item) {
@@ -2422,6 +2532,12 @@ let Name2casComponent = class Name2casComponent {
         if (item.content_item_textarea !== item.item_text_dump) {
             item.content_item_textarea = item.item_text_dump;
         }
+    }
+    compoundNameChange($event) {
+        const item = FromNameCACTVSInteface.filterListByIntId(this.compound_synonyms, [this.compound_name_int_id])[0];
+        this.compound_name = item['value'];
+    }
+    ngOnDestroy() {
     }
 };
 Name2casComponent.ctorParameters = () => [
@@ -2473,12 +2589,17 @@ let Name2casService = class Name2casService {
     getFromName(search_string, search_output, search_type = null, timeout = 60000) {
         const resolvers = {
             compound_name: 'name_by_opsin,name_by_cir',
+            cas_number: 'cas_number',
             SMILES: 'smiles'
         };
+        if (typeof search_type === 'string' || search_type instanceof String) {
+            search_type = [search_type];
+        }
         let params;
         const url = this.cactus_webservice_URL + encodeURIComponent(search_string) + '/' + search_output + '/xml';
         if (search_type !== null) {
-            params = new _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpParams"]().append('resolver', resolvers[search_type]);
+            const resolvers_string = search_type.map(stype => resolvers[stype]).join(',');
+            params = new _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpParams"]().append('resolver', resolvers_string);
         }
         else {
             params = new _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpParams"]();
@@ -2516,15 +2637,17 @@ let Name2casService = class Name2casService {
                         }
                         else if (typeof item.resolver === 'undefined') {
                             item['string_rep'] += ', ' + input_type_string + 'source="NA":"' + item.classification + '"';
-                            item['html_rep'] += ', ' + input_type_string + 'source="NA":"' + item.classification + '"';
+                            item['html_rep'] += ', ' + escapeHtmlString(input_type_string) + 'source="NA":"' +
+                                escapeHtmlString(item.classification) + '"';
                         }
                         else if (typeof item.classification === 'undefined') {
                             item['string_rep'] += ', ' + input_type_string + 'source="' + item.resolver + '":"NA"';
-                            item['html_rep'] += ', ' + input_type_string + 'source="' + item.resolver + '":"NA"';
+                            item['html_rep'] += ', ' + escapeHtmlString(input_type_string) + 'source="' + escapeHtmlString(item.resolver) + '":"NA"';
                         }
                         else {
                             item['string_rep'] += ', ' + input_type_string + 'source="' + item.resolver + '":"' + item.classification + '"';
-                            item['html_rep'] += ', ' + input_type_string + 'source="' + item.resolver + '":"' + item.classification + '"';
+                            item['html_rep'] += ', ' + escapeHtmlString(input_type_string) + 'source="' + escapeHtmlString(item.resolver) +
+                                '":"' + escapeHtmlString(item.classification) + '"';
                         }
                         item_list.push(item);
                         counter++;
