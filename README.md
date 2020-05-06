@@ -32,3 +32,8 @@ At the root folder execute:
 
 and then navigate to <http://localhost:8000>
 (http://127.0.0.1:8000 does not work).
+
+## Login
+Example accounts are:
+- User: manuel.pastor@upf.edu  Password: Manuel
+- User: ***REMOVED*** Password: Ignacio
