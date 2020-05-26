@@ -119,6 +119,17 @@ module.exports = "<div class=\"row m-5 form-group\" style=\"margin-bottom:0px !i
 
 /***/ }),
 
+/***/ "./node_modules/raw-loader/index.js!./src/app/compound/compound.component.html":
+/*!****************************************************************************!*\
+  !*** ./node_modules/raw-loader!./src/app/compound/compound.component.html ***!
+  \****************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "<div class=\"card\">\n    <h6 class=\"card-header bg-light p-1\">{{ra_type_title}} compounds</h6>\n    <div class=\"row m-5 form-group\" style=\"margin-bottom:0px !important;margin-top:10px !important\">\n    <table class=\"table\">\n        <tr>\n            <th>Compound #</th><th>Name</th><th>CAS registry #</th><th></th><th></th><th style=\"display: hidden;\"></th>\n        </tr>\n\n        <tr *ngFor=\"let compound of (this.ra_compound_service.compounds$| async); index as i;\">\n            <td>{{compound.int_id}}</td>\n            <td>{{compound.name}}</td>\n            <td>{{compound.cas_rn}}</td>\n            <td><button class=\"btn\" [disabled]=\"running\" (click)=\"deleteCompound(compound.int_id)\">Delete</button></td>\n            <td><button class=\"btn\" (click)=\"copySmiles(ra_type + '_compound_smiles_textarea_' + i)\">Copy smiles</button>\n                <textarea class=\"invisible_textarea\" [id]=\"ra_type + '_compound_smiles_textarea_' + i\" [innerText]=\"compound.smiles\"></textarea>\n            </td>\n        </tr>\n    </table>\n    </div>\n</div>\n"
+
+/***/ }),
+
 /***/ "./node_modules/raw-loader/index.js!./src/app/each-workflow/each-workflow.component.html":
 /*!**************************************************************************************!*\
   !*** ./node_modules/raw-loader!./src/app/each-workflow/each-workflow.component.html ***!
@@ -181,7 +192,7 @@ module.exports = "<nav class=\"navbar navbar-dark sticky-top bg-dark flex-md-now
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<h1 mat-dialog-title style=\"margin-bottom: 0px;\" [innerHTML]=\"this.info.name\"></h1>\n<div mat-dialog-content>\n    <!--<div class=\"card\">-->\n      <div style=\"padding-top: 0px;\" class=\"card-body\" [innerHTML]=\"this.info.description\">\n      </div>\n    <!--</div>-->\n    <div class=\"card\" *ngIf=\"this.info.inputs.length>0\">\n        <h5 class=\"card-header bg-light p-1\">Previous knowledge</h5>\n        <div class=\"card-body p-0\">\n            <div class=\"card m-0\" *ngFor=\"let info of this.info.inputs ; let i=index;\"> \n                <div class=\"card-header p-0\">\n                    \n                    <a class=\"btn m-0\" data-toggle=\"collapse\" href= \"#accordion_{{ i }}\" role=\"button\" aria-expanded=\"false\" [innerHTML]=\"info.name\"></a> \n                   \n                </div>\n                <div class=\"collapse\" id= \"accordion_{{ i }}\">\n                    <div class=\"card-body\">\n                        <div class=\"row\">\n                            <div class=\"col-6\">\n                                <div>\n                                    <h6>Content:</h6>\n                                         <div [innerHTML]=\"info.content\"></div>\n                                </div>       \n                            </div>\n                            <div class=\"col-6\">\n                                <h6>Comments:</h6>\n                                    <div [innerHTML]=\"info.comment\">\n                                </div>\n                            </div>  \n                        </div>\n                    </div>\n                </div>\n            </div>\n        </div>\n    </div>\n    \n        \n        \n    <div class=\"card\">\n        <h5 class=\"card-header bg-light p-1\">Resources</h5>\n        <ng-container [ngSwitch]=\"this.info.node_seq\">\n            <app-tc-characterization [info]=\"this.info\" *ngSwitchCase=\"2\"></app-tc-characterization>\n        </ng-container>\n        \n        <div *ngIf=\"this.info.resources.length > 0\" class=\"card\" style=\"margin-bottom:0px\">\n            <h6 class=\"card-header bg-light p-1\">Links</h6>\n            <div class=\"card-body p-2\">\n                <ul class=\"list-group list-group-flush\">\n                    <li class=\"list-group-item p-1\" *ngFor=\"let info of this.info.resources ;\">\n                    {{this.info.resources_name}}  <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"{{this.info.resources_link}}\"> ( {{this.info.resources_link}} )</a>\n                    </li>\n                \n                </ul>\n            </div>\n        </div>\n         \n    </div>\n    <!--<div class=\"card\">\n            <h5 class=\"card-header bg-light p-1\">Input</h5>\n            <ng-container [ngSwitch]=\"this.info.node_seq\">\n                <ng-container *ngSwitchDefault>\n                    <div class=\"card-body p-0\">\n                    <ckeditor [editor]=\"Editor\" [(ngModel)]=\"this.info.inputs_comments\" [disabled]=\"inline_input\"></ckeditor>\n                    </div>\n                </ng-container>\n            </ng-container>\n    </div>-->\n           \n    \n    <div class=\"card\">\n            <h5 class=\"card-header bg-light p-1\">New knowledge</h5>\n            <ng-container [ngSwitch]=\"this.info.node_seq\">\n                <app-node1-problem-formulation [Editor]=\"this.Editor\" [Editor_config]=\"this.Editor_config_copy\" [info]=\"this.info\" *ngSwitchCase=\"1\"></app-node1-problem-formulation>\n                <ng-container *ngSwitchDefault>\n                    <div class=\"smiles-micromodal-container\">\n                        <app-smiles-micromodal [id]=\"this.ckeditor_id_outputs+'-smiles-micromodal'\"></app-smiles-micromodal>\n                    </div>\n                    <div class=\"upload-angular-container\" class=\"card-body p-0\">\n                        <ckeditor #ckeditor_dynamic_outputs [id]=\"this.ckeditor_id_outputs\" [editor]=\"Editor\" [config]=\"this.Editor_config_outputs\" [(ngModel)]=\"this.info.outputs\" [disabled]=\"inline_output\"></ckeditor>\n                    </div>\n                </ng-container>\n            </ng-container>\n    </div>\n    <div class=\"card\">\n        <h5 class=\"card-header bg-light p-1\">Comments</h5>\n        <div class=\"smiles-micromodal-container\">\n            <app-smiles-micromodal [id]=\"this.ckeditor_id_comments+'-smiles-micromodal'\"></app-smiles-micromodal>\n        </div>\n        <div class=\"upload-angular-container\" class=\"card-body p-0\">\n           <!--<textarea class=\"form-control\" id=\"exampleFormControlTextarea1\" [(ngModel)]=\"this.info.outputs_comments\" rows=\"10\"></textarea>-->\n            <ckeditor #ckeditor_dynamic_comments [id]=\"this.ckeditor_id_comments\" [editor]=\"Editor\" [config]=\"this.Editor_config_comments\" [(ngModel)]=\"this.info.outputs_comments\" [disabled]=\"inline_comments\"></ckeditor>\n        </div>\n    </div>\n    <!--<footer class=\"text-right\" style=\"font-size:0.75rem\">Benzene icon made by <a href=\"https://www.flaticon.com/authors/freepik\" title=\"Freepik\">Freepik</a> from <a href=\"https://www.flaticon.com/\" title=\"Flaticon\"> www.flaticon.com</a></footer>-->\n</div>      \n      \n<div mat-dialog-actions>\n    <button mat-button [mat-dialog-close]=\"'cancel'\">Cancel</button>\n    <button mat-button (click)=\"NodeCompleted()\" [mat-dialog-close]=\"'OK'\">OK</button>\n</div>"
+module.exports = "<h1 mat-dialog-title style=\"margin-bottom: 0px;\" [innerHTML]=\"this.info.name\"></h1>\n<div mat-dialog-content>\n    <!--<div class=\"card\">-->\n      <div style=\"padding-top: 0px;\" class=\"card-body\" [innerHTML]=\"this.info.description\">\n      </div>\n    <!--</div>-->\n    <div class=\"card\" *ngIf=\"this.info.inputs.length>0\">\n        <h5 class=\"card-header bg-light p-1\">Previous knowledge</h5>\n        <div class=\"card-body p-0\">\n            <div class=\"card m-0\" *ngFor=\"let info of this.info.inputs ; let i=index;\"> \n                <div class=\"card-header p-0\">\n                    \n                    <a class=\"btn m-0\" data-toggle=\"collapse\" href= \"#accordion_{{ i }}\" role=\"button\" aria-expanded=\"false\" [innerHTML]=\"info.name\"></a> \n                   \n                </div>\n                <div class=\"collapse\" id= \"accordion_{{ i }}\">\n                    <div class=\"card-body\">\n                        <div class=\"row\">\n                            <div class=\"col-6\">\n                                <div>\n                                    <h6>Content:</h6>\n                                         <div [innerHTML]=\"info.content\"></div>\n                                </div>       \n                            </div>\n                            <div class=\"col-6\">\n                                <h6>Comments:</h6>\n                                    <div [innerHTML]=\"info.comment\">\n                                </div>\n                            </div>  \n                        </div>\n                    </div>\n                </div>\n            </div>\n        </div>\n    </div>\n    \n        \n        \n    <div class=\"card\">\n        <h5 class=\"card-header bg-light p-1\">Resources</h5>\n        <ng-container [ngSwitch]=\"this.info.node_seq\">\n            <app-tc-characterization [info]=\"this.info\" *ngSwitchCase=\"2\"></app-tc-characterization>\n        </ng-container>\n        \n        <div *ngIf=\"this.info.resources.length > 0\" class=\"card\" style=\"margin-bottom:0px\">\n            <h6 class=\"card-header bg-light p-1\">Links</h6>\n            <div class=\"card-body p-2\">\n                <ul class=\"list-group list-group-flush\">\n                    <li class=\"list-group-item p-1\" *ngFor=\"let info of this.info.resources ;\">\n                    {{this.info.resources_name}}  <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"{{this.info.resources_link}}\"> ( {{this.info.resources_link}} )</a>\n                    </li>\n                \n                </ul>\n            </div>\n        </div>\n         \n    </div>\n    <!--<div class=\"card\">\n            <h5 class=\"card-header bg-light p-1\">Input</h5>\n            <ng-container [ngSwitch]=\"this.info.node_seq\">\n                <ng-container *ngSwitchDefault>\n                    <div class=\"card-body p-0\">\n                    <ckeditor [editor]=\"Editor\" [(ngModel)]=\"this.info.inputs_comments\" [disabled]=\"inline_input\"></ckeditor>\n                    </div>\n                </ng-container>\n            </ng-container>\n    </div>-->\n           \n    \n    <div class=\"card\">\n            <h5 class=\"card-header bg-light p-1\">New knowledge</h5>\n            <app-compound *ngIf=\"this.info.node_seq == 2\" [info]=\"this.info\"  [ra_type]=\"'tc'\"></app-compound>\n            <ng-container [ngSwitch]=\"this.info.node_seq\">\n                <app-node1-problem-formulation [Editor]=\"this.Editor\" [Editor_config]=\"this.Editor_config_copy\" [info]=\"this.info\" *ngSwitchCase=\"1\"></app-node1-problem-formulation>\n                <ng-container *ngSwitchDefault>\n                    <div class=\"smiles-micromodal-container\">\n                        <app-smiles-micromodal [id]=\"this.ckeditor_id_outputs+'-smiles-micromodal'\"></app-smiles-micromodal>\n                    </div>\n                    <div class=\"upload-angular-container\" class=\"card-body p-0\">\n                        <ckeditor #ckeditor_dynamic_outputs [id]=\"this.ckeditor_id_outputs\" [editor]=\"Editor\" [config]=\"this.Editor_config_outputs\" [(ngModel)]=\"this.info.outputs\" [disabled]=\"inline_output\"></ckeditor>\n                    </div>\n                </ng-container>\n            </ng-container>\n    </div>\n    <div class=\"card\">\n        <h5 class=\"card-header bg-light p-1\">Comments</h5>\n        <div class=\"smiles-micromodal-container\">\n            <app-smiles-micromodal [id]=\"this.ckeditor_id_comments+'-smiles-micromodal'\"></app-smiles-micromodal>\n        </div>\n        <div class=\"upload-angular-container\" class=\"card-body p-0\">\n           <!--<textarea class=\"form-control\" id=\"exampleFormControlTextarea1\" [(ngModel)]=\"this.info.outputs_comments\" rows=\"10\"></textarea>-->\n            <ckeditor #ckeditor_dynamic_comments [id]=\"this.ckeditor_id_comments\" [editor]=\"Editor\" [config]=\"this.Editor_config_comments\" [(ngModel)]=\"this.info.outputs_comments\" [disabled]=\"inline_comments\"></ckeditor>\n        </div>\n    </div>\n    <!--<footer class=\"text-right\" style=\"font-size:0.75rem\">Benzene icon made by <a href=\"https://www.flaticon.com/authors/freepik\" title=\"Freepik\">Freepik</a> from <a href=\"https://www.flaticon.com/\" title=\"Flaticon\"> www.flaticon.com</a></footer>-->\n</div>      \n      \n<div mat-dialog-actions>\n    <button mat-button [mat-dialog-close]=\"'cancel'\">Cancel</button>\n    <button mat-button (click)=\"NodeCompleted()\" [mat-dialog-close]=\"'OK'\">OK</button>\n</div>"
 
 /***/ }),
 
@@ -247,7 +258,7 @@ module.exports = "\n<div class=\"d-flex flex-row\">\n    <div>\n        \n      
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"card\">\n    <h6 class=\"card-header bg-light p-1\">Name2CAS/SMILES resolver</h6>\n    <app-name2cas [info]=\"this.info\"></app-name2cas>\n</div>\n<div class=\"card\">\n    <h6 class=\"card-header bg-light p-1\">ChEMBL resolver</h6>\n    <app-chembl [info]=\"this.info\"></app-chembl>\n</div>"
+module.exports = "<div class=\"card\">\n    <h6 class=\"card-header bg-light p-1\">Name2CAS/SMILES resolver</h6>\n    <app-name2cas #name2cas [info]=\"this.info\"></app-name2cas>\n</div>\n<div class=\"card\">\n    <div class=\"row justify-content-center\" style=\"text-align: center;\">\n        <div class=\"col-6\">\n        <button type=\"button\" class=\"btn btn-primary\" (click)=\"saveCompound()\">Save compound</button>\n        </div>\n    </div>\n</div>\n<div class=\"card\">\n    <h6 class=\"card-header bg-light p-1\">ChEMBL resolver</h6>\n    <app-chembl #chembl [info]=\"this.info\"></app-chembl>\n</div>\n"
 
 /***/ }),
 
@@ -466,20 +477,26 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _overlay_overlay_component__WEBPACK_IMPORTED_MODULE_44__ = __webpack_require__(/*! ./overlay/overlay.component */ "./src/app/overlay/overlay.component.ts");
 /* harmony import */ var _name2cas_name2cas_component__WEBPACK_IMPORTED_MODULE_45__ = __webpack_require__(/*! ./name2cas/name2cas.component */ "./src/app/name2cas/name2cas.component.ts");
 /* harmony import */ var _chembl_chembl_component__WEBPACK_IMPORTED_MODULE_46__ = __webpack_require__(/*! ./chembl/chembl.component */ "./src/app/chembl/chembl.component.ts");
-/* harmony import */ var _keys_pipe__WEBPACK_IMPORTED_MODULE_47__ = __webpack_require__(/*! ./keys.pipe */ "./src/app/keys.pipe.ts");
-/* harmony import */ var _editable_view_mode_directive__WEBPACK_IMPORTED_MODULE_48__ = __webpack_require__(/*! ./editable/view-mode.directive */ "./src/app/editable/view-mode.directive.ts");
-/* harmony import */ var _editable_edit_mode_directive__WEBPACK_IMPORTED_MODULE_49__ = __webpack_require__(/*! ./editable/edit-mode.directive */ "./src/app/editable/edit-mode.directive.ts");
-/* harmony import */ var _editable_edit_on_enter_directive__WEBPACK_IMPORTED_MODULE_50__ = __webpack_require__(/*! ./editable/edit-on-enter.directive */ "./src/app/editable/edit-on-enter.directive.ts");
-/* harmony import */ var _http_interceptors_index__WEBPACK_IMPORTED_MODULE_51__ = __webpack_require__(/*! ./http-interceptors/index */ "./src/app/http-interceptors/index.ts");
-/* harmony import */ var _login_login_service__WEBPACK_IMPORTED_MODULE_52__ = __webpack_require__(/*! ./login/login.service */ "./src/app/login/login.service.ts");
-/* harmony import */ var _tabs_tabs_service__WEBPACK_IMPORTED_MODULE_53__ = __webpack_require__(/*! ./tabs/tabs.service */ "./src/app/tabs/tabs.service.ts");
-/* harmony import */ var _each_workflow_each_workflow_service__WEBPACK_IMPORTED_MODULE_54__ = __webpack_require__(/*! ./each-workflow/each-workflow.service */ "./src/app/each-workflow/each-workflow.service.ts");
-/* harmony import */ var _node1_problem_formulation_node1_problem_formulation_service__WEBPACK_IMPORTED_MODULE_55__ = __webpack_require__(/*! ./node1-problem-formulation/node1-problem-formulation.service */ "./src/app/node1-problem-formulation/node1-problem-formulation.service.ts");
-/* harmony import */ var _node_info_node_info_service__WEBPACK_IMPORTED_MODULE_56__ = __webpack_require__(/*! ./node-info/node-info.service */ "./src/app/node-info/node-info.service.ts");
-/* harmony import */ var ngx_cookie_service__WEBPACK_IMPORTED_MODULE_57__ = __webpack_require__(/*! ngx-cookie-service */ "./node_modules/ngx-cookie-service/ngx-cookie-service.es5.js");
-/* harmony import */ var _tc_characterization_tc_characterization_service__WEBPACK_IMPORTED_MODULE_58__ = __webpack_require__(/*! ./tc-characterization/tc-characterization.service */ "./src/app/tc-characterization/tc-characterization.service.ts");
-/* harmony import */ var _name2cas_name2cas_service__WEBPACK_IMPORTED_MODULE_59__ = __webpack_require__(/*! ./name2cas/name2cas.service */ "./src/app/name2cas/name2cas.service.ts");
-/* harmony import */ var _chembl_chembl_service__WEBPACK_IMPORTED_MODULE_60__ = __webpack_require__(/*! ./chembl/chembl.service */ "./src/app/chembl/chembl.service.ts");
+/* harmony import */ var _compound_compound_component__WEBPACK_IMPORTED_MODULE_47__ = __webpack_require__(/*! ./compound/compound.component */ "./src/app/compound/compound.component.ts");
+/* harmony import */ var _keys_pipe__WEBPACK_IMPORTED_MODULE_48__ = __webpack_require__(/*! ./keys.pipe */ "./src/app/keys.pipe.ts");
+/* harmony import */ var _editable_view_mode_directive__WEBPACK_IMPORTED_MODULE_49__ = __webpack_require__(/*! ./editable/view-mode.directive */ "./src/app/editable/view-mode.directive.ts");
+/* harmony import */ var _editable_edit_mode_directive__WEBPACK_IMPORTED_MODULE_50__ = __webpack_require__(/*! ./editable/edit-mode.directive */ "./src/app/editable/edit-mode.directive.ts");
+/* harmony import */ var _editable_edit_on_enter_directive__WEBPACK_IMPORTED_MODULE_51__ = __webpack_require__(/*! ./editable/edit-on-enter.directive */ "./src/app/editable/edit-on-enter.directive.ts");
+/* harmony import */ var _http_interceptors_index__WEBPACK_IMPORTED_MODULE_52__ = __webpack_require__(/*! ./http-interceptors/index */ "./src/app/http-interceptors/index.ts");
+/* harmony import */ var _login_login_service__WEBPACK_IMPORTED_MODULE_53__ = __webpack_require__(/*! ./login/login.service */ "./src/app/login/login.service.ts");
+/* harmony import */ var _tabs_tabs_service__WEBPACK_IMPORTED_MODULE_54__ = __webpack_require__(/*! ./tabs/tabs.service */ "./src/app/tabs/tabs.service.ts");
+/* harmony import */ var _each_workflow_each_workflow_service__WEBPACK_IMPORTED_MODULE_55__ = __webpack_require__(/*! ./each-workflow/each-workflow.service */ "./src/app/each-workflow/each-workflow.service.ts");
+/* harmony import */ var _node1_problem_formulation_node1_problem_formulation_service__WEBPACK_IMPORTED_MODULE_56__ = __webpack_require__(/*! ./node1-problem-formulation/node1-problem-formulation.service */ "./src/app/node1-problem-formulation/node1-problem-formulation.service.ts");
+/* harmony import */ var _node_info_node_info_service__WEBPACK_IMPORTED_MODULE_57__ = __webpack_require__(/*! ./node-info/node-info.service */ "./src/app/node-info/node-info.service.ts");
+/* harmony import */ var ngx_cookie_service__WEBPACK_IMPORTED_MODULE_58__ = __webpack_require__(/*! ngx-cookie-service */ "./node_modules/ngx-cookie-service/ngx-cookie-service.es5.js");
+/* harmony import */ var _tc_characterization_tc_characterization_service__WEBPACK_IMPORTED_MODULE_59__ = __webpack_require__(/*! ./tc-characterization/tc-characterization.service */ "./src/app/tc-characterization/tc-characterization.service.ts");
+/* harmony import */ var _name2cas_name2cas_service__WEBPACK_IMPORTED_MODULE_60__ = __webpack_require__(/*! ./name2cas/name2cas.service */ "./src/app/name2cas/name2cas.service.ts");
+/* harmony import */ var _chembl_chembl_service__WEBPACK_IMPORTED_MODULE_61__ = __webpack_require__(/*! ./chembl/chembl.service */ "./src/app/chembl/chembl.service.ts");
+/* harmony import */ var _compound_compound_service__WEBPACK_IMPORTED_MODULE_62__ = __webpack_require__(/*! ./compound/compound.service */ "./src/app/compound/compound.service.ts");
+/* harmony import */ var _tc_characterization_tc_compounds_service__WEBPACK_IMPORTED_MODULE_63__ = __webpack_require__(/*! ./tc-characterization/tc-compounds.service */ "./src/app/tc-characterization/tc-compounds.service.ts");
+
+
+
 
 
 
@@ -557,10 +574,10 @@ var AppModule = /** @class */ (function () {
                 _each_workflow_each_workflow_component__WEBPACK_IMPORTED_MODULE_35__["EachWorkflowComponent"],
                 _node_info_node_info_component__WEBPACK_IMPORTED_MODULE_38__["NodeInfoComponent"],
                 _editable_editable_component__WEBPACK_IMPORTED_MODULE_39__["EditableComponent"],
-                _editable_view_mode_directive__WEBPACK_IMPORTED_MODULE_48__["ViewModeDirective"],
-                _editable_edit_mode_directive__WEBPACK_IMPORTED_MODULE_49__["EditModeDirective"],
-                _editable_edit_on_enter_directive__WEBPACK_IMPORTED_MODULE_50__["EditableOnEnterDirective"],
-                _keys_pipe__WEBPACK_IMPORTED_MODULE_47__["KeysPipe"],
+                _editable_view_mode_directive__WEBPACK_IMPORTED_MODULE_49__["ViewModeDirective"],
+                _editable_edit_mode_directive__WEBPACK_IMPORTED_MODULE_50__["EditModeDirective"],
+                _editable_edit_on_enter_directive__WEBPACK_IMPORTED_MODULE_51__["EditableOnEnterDirective"],
+                _keys_pipe__WEBPACK_IMPORTED_MODULE_48__["KeysPipe"],
                 _node1_problem_formulation_node1_problem_formulation_component__WEBPACK_IMPORTED_MODULE_40__["Node1ProblemFormulationComponent"],
                 _welcome_welcome_component__WEBPACK_IMPORTED_MODULE_36__["WelcomeComponent"],
                 _smiles_micromodal_smiles_micromodal_component__WEBPACK_IMPORTED_MODULE_37__["SmilesMicromodalComponent"],
@@ -570,6 +587,7 @@ var AppModule = /** @class */ (function () {
                 _overlay_overlay_component__WEBPACK_IMPORTED_MODULE_44__["OverlayComponent"],
                 _name2cas_name2cas_component__WEBPACK_IMPORTED_MODULE_45__["Name2casComponent"],
                 _chembl_chembl_component__WEBPACK_IMPORTED_MODULE_46__["ChemblComponent"],
+                _compound_compound_component__WEBPACK_IMPORTED_MODULE_47__["CompoundComponent"],
             ],
             imports: [
                 _angular_platform_browser__WEBPACK_IMPORTED_MODULE_3__["BrowserModule"],
@@ -605,17 +623,19 @@ var AppModule = /** @class */ (function () {
                 }) // ToastrModule added
             ],
             providers: [
-                _http_interceptors_index__WEBPACK_IMPORTED_MODULE_51__["httpInterceptorProviders"],
+                _http_interceptors_index__WEBPACK_IMPORTED_MODULE_52__["httpInterceptorProviders"],
                 _globals__WEBPACK_IMPORTED_MODULE_27__["Globals"],
-                _login_login_service__WEBPACK_IMPORTED_MODULE_52__["LoginService"],
-                ngx_cookie_service__WEBPACK_IMPORTED_MODULE_57__["CookieService"],
-                _tabs_tabs_service__WEBPACK_IMPORTED_MODULE_53__["TabsService"],
-                _each_workflow_each_workflow_service__WEBPACK_IMPORTED_MODULE_54__["EachWorkflowService"],
-                _node_info_node_info_service__WEBPACK_IMPORTED_MODULE_56__["NodeInfoService"],
-                _node1_problem_formulation_node1_problem_formulation_service__WEBPACK_IMPORTED_MODULE_55__["Node1ProblemFormulationService"],
-                _tc_characterization_tc_characterization_service__WEBPACK_IMPORTED_MODULE_58__["TcCharacterizationService"],
-                _name2cas_name2cas_service__WEBPACK_IMPORTED_MODULE_59__["Name2casService"],
-                _chembl_chembl_service__WEBPACK_IMPORTED_MODULE_60__["ChemblService"],
+                _login_login_service__WEBPACK_IMPORTED_MODULE_53__["LoginService"],
+                ngx_cookie_service__WEBPACK_IMPORTED_MODULE_58__["CookieService"],
+                _tabs_tabs_service__WEBPACK_IMPORTED_MODULE_54__["TabsService"],
+                _each_workflow_each_workflow_service__WEBPACK_IMPORTED_MODULE_55__["EachWorkflowService"],
+                _node_info_node_info_service__WEBPACK_IMPORTED_MODULE_57__["NodeInfoService"],
+                _node1_problem_formulation_node1_problem_formulation_service__WEBPACK_IMPORTED_MODULE_56__["Node1ProblemFormulationService"],
+                _tc_characterization_tc_characterization_service__WEBPACK_IMPORTED_MODULE_59__["TcCharacterizationService"],
+                _name2cas_name2cas_service__WEBPACK_IMPORTED_MODULE_60__["Name2casService"],
+                _chembl_chembl_service__WEBPACK_IMPORTED_MODULE_61__["ChemblService"],
+                _compound_compound_service__WEBPACK_IMPORTED_MODULE_62__["CompoundService"],
+                _tc_characterization_tc_compounds_service__WEBPACK_IMPORTED_MODULE_63__["TcCompoundsService"],
                 { provide: _angular_cdk_overlay__WEBPACK_IMPORTED_MODULE_26__["OverlayContainer"], useClass: _angular_cdk_overlay__WEBPACK_IMPORTED_MODULE_26__["FullscreenOverlayContainer"] }
             ],
             entryComponents: [_node_info_node_info_component__WEBPACK_IMPORTED_MODULE_38__["NodeInfoComponent"], _overlay_overlay_component__WEBPACK_IMPORTED_MODULE_44__["OverlayComponent"]],
@@ -1099,6 +1119,260 @@ var ChemblService = /** @class */ (function () {
             _globals__WEBPACK_IMPORTED_MODULE_5__["Globals"]])
     ], ChemblService);
     return ChemblService;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/compound/compound.component.css":
+/*!*************************************************!*\
+  !*** ./src/app/compound/compound.component.css ***!
+  \*************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiJzcmMvYXBwL2NvbXBvdW5kL2NvbXBvdW5kLmNvbXBvbmVudC5jc3MifQ== */"
+
+/***/ }),
+
+/***/ "./src/app/compound/compound.component.ts":
+/*!************************************************!*\
+  !*** ./src/app/compound/compound.component.ts ***!
+  \************************************************/
+/*! exports provided: CompoundComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CompoundComponent", function() { return CompoundComponent; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _compound_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./compound.service */ "./src/app/compound/compound.service.ts");
+/* harmony import */ var _tc_characterization_tc_compounds_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../tc-characterization/tc-compounds.service */ "./src/app/tc-characterization/tc-compounds.service.ts");
+
+
+
+
+var CompoundComponent = /** @class */ (function () {
+    function CompoundComponent(service, tc_compounds) {
+        this.service = service;
+        this.tc_compounds = tc_compounds;
+        this.running = false;
+    }
+    CompoundComponent_1 = CompoundComponent;
+    CompoundComponent.prototype.ngOnInit = function () {
+        this.ra_type_title = CompoundComponent_1.ra_abbr_to_ra_type_title[this.ra_type];
+        switch (this.ra_type) {
+            case 'tc': {
+                this.ra_compound_service = this.tc_compounds;
+                break;
+            }
+            case 'sc': {
+                this.ra_compound_service = null;
+                this.compounds$ = null;
+                break;
+            }
+            default: {
+                alert('Invalid CompoundComponent RA type.');
+                break;
+            }
+        }
+        this.tc_compounds.getCompounds(this.info.project);
+    };
+    CompoundComponent.prototype.deleteCompound = function (int_id) {
+        var _this = this;
+        this.running = true;
+        var subs = this.service.deleteCompound(this.info.project, CompoundComponent_1.ra_abbr_to_ra_type[this.ra_type], int_id).subscribe(function (result) {
+            _this.tc_compounds.getCompounds(_this.info.project);
+        }, function (error) {
+            alert('Cannot delete compound #' + int_id.toString());
+            _this.running = false;
+        }, function () {
+            subs.unsubscribe();
+            _this.running = false;
+        });
+    };
+    CompoundComponent.prototype.copySmiles = function (textarea_id) {
+        setTimeout(function (textarea_id) {
+            document.getElementById(textarea_id).select();
+            document.execCommand('copy');
+        }.bind(this, textarea_id), 0);
+    };
+    var CompoundComponent_1;
+    CompoundComponent.ctorParameters = function () { return [
+        { type: _compound_service__WEBPACK_IMPORTED_MODULE_2__["CompoundService"] },
+        { type: _tc_characterization_tc_compounds_service__WEBPACK_IMPORTED_MODULE_3__["TcCompoundsService"] }
+    ]; };
+    CompoundComponent.ra_abbr_to_ra_type_title = { tc: 'Target', sc: 'Source' };
+    CompoundComponent.ra_abbr_to_ra_type = { tc: _compound_service__WEBPACK_IMPORTED_MODULE_2__["Compound"].TARGET_COMPOUND, sc: _compound_service__WEBPACK_IMPORTED_MODULE_2__["Compound"].SOURCE_COMPOUND };
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])('info'),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Object)
+    ], CompoundComponent.prototype, "info", void 0);
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])('ra_type'),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Object)
+    ], CompoundComponent.prototype, "ra_type", void 0);
+    CompoundComponent = CompoundComponent_1 = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
+            selector: 'app-compound',
+            template: __webpack_require__(/*! raw-loader!./compound.component.html */ "./node_modules/raw-loader/index.js!./src/app/compound/compound.component.html"),
+            styles: [__webpack_require__(/*! ./compound.component.css */ "./src/app/compound/compound.component.css")]
+        }),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_compound_service__WEBPACK_IMPORTED_MODULE_2__["CompoundService"],
+            _tc_characterization_tc_compounds_service__WEBPACK_IMPORTED_MODULE_3__["TcCompoundsService"]])
+    ], CompoundComponent);
+    return CompoundComponent;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/compound/compound.service.ts":
+/*!**********************************************!*\
+  !*** ./src/app/compound/compound.service.ts ***!
+  \**********************************************/
+/*! exports provided: Compound, CompoundService */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Compound", function() { return Compound; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CompoundService", function() { return CompoundService; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
+/* harmony import */ var _environments_environment__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../environments/environment */ "./src/environments/environment.ts");
+/* harmony import */ var _globals__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../globals */ "./src/app/globals.ts");
+/* harmony import */ var _login_login_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../login/login.service */ "./src/app/login/login.service.ts");
+/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
+
+
+
+
+
+
+
+var Compound = /** @class */ (function () {
+    function Compound(compound_obj) {
+        var _this = this;
+        if (typeof compound_obj !== 'undefined') {
+            Compound.data_fields.forEach(function (field) {
+                if (compound_obj.hasOwnProperty(field)) {
+                    _this[field] = compound_obj[field];
+                }
+            });
+        }
+    }
+    Compound.prototype.getObject = function (undef) {
+        var _this = this;
+        if (undef === void 0) { undef = false; }
+        var obj = {};
+        Compound.data_fields.forEach(function (field) {
+            if (typeof _this[field] !== 'undefined' || undef) {
+                obj[field] = _this[field];
+            }
+        });
+        return obj;
+    };
+    Compound.ctorParameters = function () { return [
+        { type: Object }
+    ]; };
+    Compound.TARGET_COMPOUND = 0;
+    Compound.SOURCE_COMPOUND = 1;
+    Compound.ra_type_abbrev_to_value_dict = { 0: 'tc', 1: 'sc' };
+    Compound.data_fields = ['smiles', 'cas_rn', 'name',
+        'project', 'int_id', 'ra_type'];
+    return Compound;
+}());
+
+var CompoundService = /** @class */ (function () {
+    function CompoundService(globals, http, loginService) {
+        this.globals = globals;
+        this.http = http;
+        this.loginService = loginService;
+    }
+    CompoundService.prototype.getCompound = function (project, ra_type, int_id) {
+        var compounds$ = new rxjs__WEBPACK_IMPORTED_MODULE_6__["AsyncSubject"]();
+        var url = _environments_environment__WEBPACK_IMPORTED_MODULE_3__["environment"].baseUrl + 'project/' + project + '/compound/' +
+            Compound.ra_type_abbrev_to_value_dict[ra_type] + '/' + int_id.toString() + '/';
+        var subs = this.http.get(url, { withCredentials: true }).subscribe(function (result) {
+            compounds$.next(new Compound(result));
+        }, function (error) {
+            compounds$.error(error);
+            subs.unsubscribe();
+        }, function () {
+            compounds$.complete();
+            subs.unsubscribe();
+        });
+        return compounds$;
+    };
+    CompoundService.prototype.getCompounds = function (project, ra_type) {
+        var compounds$ = new rxjs__WEBPACK_IMPORTED_MODULE_6__["BehaviorSubject"]([]);
+        var url = _environments_environment__WEBPACK_IMPORTED_MODULE_3__["environment"].baseUrl + 'project/' + project + '/compound/' +
+            Compound.ra_type_abbrev_to_value_dict[ra_type] + '/';
+        var subs = this.http.get(url, { withCredentials: true }).subscribe(function (result) {
+            var compounds = [];
+            result.forEach(function (compound) {
+                compounds.push(new Compound(compound));
+            });
+            compounds$.next(compounds);
+        }, function (error) {
+            compounds$.error(error);
+            subs.unsubscribe();
+        }, function () {
+            compounds$.complete();
+            subs.unsubscribe();
+        });
+        return compounds$;
+    };
+    CompoundService.prototype.saveCompound = function (compound, create_new) {
+        if (create_new === void 0) { create_new = true; }
+        var compound_obj = compound.getObject(false);
+        if (!create_new && !compound_obj.hasOwnProperty('int_id')) {
+            throw new Error('"int_id" property undefined when updating a compound.');
+        }
+        var url_suffix;
+        if (create_new) {
+            url_suffix = '';
+        }
+        else {
+            url_suffix = compound.int_id.toString() + '/';
+        }
+        var formData = new FormData();
+        Object.keys(compound_obj).forEach(function (field) {
+            formData.append(field, compound_obj[field]);
+        });
+        var url = _environments_environment__WEBPACK_IMPORTED_MODULE_3__["environment"].baseUrl + 'project/' + compound.project + '/compound/' +
+            Compound.ra_type_abbrev_to_value_dict[compound.ra_type] + '/' + url_suffix;
+        if (create_new) {
+            return this.http.post(url, formData, this.loginService.getPOSTHttpOptions());
+        }
+        else {
+            return this.http.put(url, formData, this.loginService.getPOSTHttpOptions());
+        }
+    };
+    CompoundService.prototype.deleteCompound = function (project, ra_type, int_id) {
+        var url = _environments_environment__WEBPACK_IMPORTED_MODULE_3__["environment"].baseUrl + 'project/' + project + '/compound/' +
+            Compound.ra_type_abbrev_to_value_dict[ra_type] + '/' + int_id.toString() + '/';
+        return this.http.delete(url, this.loginService.getPOSTHttpOptions());
+    };
+    CompoundService.ctorParameters = function () { return [
+        { type: _globals__WEBPACK_IMPORTED_MODULE_4__["Globals"] },
+        { type: _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpClient"] },
+        { type: _login_login_service__WEBPACK_IMPORTED_MODULE_5__["LoginService"] }
+    ]; };
+    CompoundService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
+            providedIn: 'root'
+        }),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_globals__WEBPACK_IMPORTED_MODULE_4__["Globals"],
+            _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpClient"],
+            _login_login_service__WEBPACK_IMPORTED_MODULE_5__["LoginService"]])
+    ], CompoundService);
+    return CompoundService;
 }());
 
 
@@ -2528,53 +2802,55 @@ var Name2casComponent = /** @class */ (function () {
         this.finished_cactvs_from_name_query$ = new rxjs__WEBPACK_IMPORTED_MODULE_5__["Subject"]();
         var subs = this.finished_cactvs_from_name_query$.subscribe(function (interface_name) {
             var default_value = { int_id: 0, value: _this.search_string, html_rep: _this.search_string, string_rep: _this.search_string };
-            if (_this.cactus_interfaces[interface_name].item_list[0]['string_class'] === 'CAS Registry Number') {
-                _this.compound_name_running = true;
-                var subs_synonyms_1 = _this.service.getFromName(_this.search_string, 'names', 'cas', 120000).subscribe(function (result) {
-                    Object(xml2js__WEBPACK_IMPORTED_MODULE_3__["parseString"])(result, function (err, result) {
-                        console.log(result);
-                        console.log(err);
-                        if (err !== null) {
-                            alert('Error while parsing CACTVS query');
-                            console.log('Error while parsing CACTVS query:');
-                            console.log(err);
-                            return;
-                        }
-                        if (!result.hasOwnProperty('request')) {
-                            alert('Error in CACTVS query');
-                            console.log('Error in CACTVS query. Response:');
+            if (_this.cactus_interfaces[interface_name].item_list.length > 0) {
+                if (_this.cactus_interfaces[interface_name].item_list[0]['string_class'] === 'CAS Registry Number') {
+                    _this.compound_name_running = true;
+                    var subs_synonyms_1 = _this.service.getFromName(_this.search_string, 'names', 'cas', 120000).subscribe(function (result) {
+                        Object(xml2js__WEBPACK_IMPORTED_MODULE_3__["parseString"])(result, function (err, result) {
                             console.log(result);
-                        }
-                        else {
-                            this.compound_synonyms = this.service.cactusXMLparsed(result);
-                            if (this.compound_synonyms.length === 0) {
-                                this.compound_synonyms.push(default_value);
+                            console.log(err);
+                            if (err !== null) {
+                                alert('Error while parsing CACTVS query');
+                                console.log('Error while parsing CACTVS query:');
+                                console.log(err);
+                                return;
                             }
-                            this.compound_name_executed = true;
-                        }
-                    }.bind(_this));
-                }, function (error) {
-                    alert('Error in CACTVS query');
+                            if (!result.hasOwnProperty('request')) {
+                                alert('Error in CACTVS query');
+                                console.log('Error in CACTVS query. Response:');
+                                console.log(result);
+                            }
+                            else {
+                                this.compound_synonyms = this.service.cactusXMLparsed(result);
+                                if (this.compound_synonyms.length === 0) {
+                                    this.compound_synonyms.push(default_value);
+                                }
+                                this.compound_name_executed = true;
+                            }
+                        }.bind(_this));
+                    }, function (error) {
+                        alert('Error in CACTVS query');
+                        _this.compound_name_running = false;
+                    }, function () {
+                        _this.compound_name_running = false;
+                        subs_synonyms_1.unsubscribe();
+                    });
+                }
+                else if (_this.cactus_interfaces[interface_name].item_list[0]['string_class'] === 'chemical name (CIR)' ||
+                    _this.cactus_interfaces[interface_name].item_list[0]['string_class'] === 'IUPAC name (OPSIN)') {
+                    _this.compound_name = _this.search_string;
+                    _this.compound_synonyms.push(default_value);
+                    _this.compound_name_int_id = 0;
+                    _this.compound_name_executed = true;
                     _this.compound_name_running = false;
-                }, function () {
+                }
+                else {
+                    _this.compound_name = _this.search_string;
+                    _this.compound_synonyms.push(default_value);
+                    _this.compound_name_int_id = 0;
+                    _this.compound_name_executed = true;
                     _this.compound_name_running = false;
-                    subs_synonyms_1.unsubscribe();
-                });
-            }
-            else if (_this.cactus_interfaces[interface_name].item_list[0]['string_class'] === 'chemical name (CIR)' ||
-                _this.cactus_interfaces[interface_name].item_list[0]['string_class'] === 'IUPAC name (OPSIN)') {
-                _this.compound_name = _this.search_string;
-                _this.compound_synonyms.push(default_value);
-                _this.compound_name_int_id = 0;
-                _this.compound_name_executed = true;
-                _this.compound_name_running = false;
-            }
-            else {
-                _this.compound_name = _this.search_string;
-                _this.compound_synonyms.push(default_value);
-                _this.compound_name_int_id = 0;
-                _this.compound_name_executed = true;
-                _this.compound_name_running = false;
+                }
             }
         }, function (error) {
             _this.compound_name_running = false;
@@ -3731,22 +4007,65 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TcCharacterizationComponent", function() { return TcCharacterizationComponent; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _name2cas_name2cas_component__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../name2cas/name2cas.component */ "./src/app/name2cas/name2cas.component.ts");
+/* harmony import */ var _chembl_chembl_component__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../chembl/chembl.component */ "./src/app/chembl/chembl.component.ts");
+/* harmony import */ var _compound_compound_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../compound/compound.service */ "./src/app/compound/compound.service.ts");
+/* harmony import */ var _tc_compounds_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./tc-compounds.service */ "./src/app/tc-characterization/tc-compounds.service.ts");
+
+
+
+
 
 
 var TcCharacterizationComponent = /** @class */ (function () {
-    function TcCharacterizationComponent() {
+    function TcCharacterizationComponent(compound_service, tc_compound) {
+        this.compound_service = compound_service;
+        this.tc_compound = tc_compound;
+        this.resources_compound = new _compound_compound_service__WEBPACK_IMPORTED_MODULE_4__["Compound"]();
     }
-    TcCharacterizationComponent.prototype.ngOnInit = function () { };
+    TcCharacterizationComponent.prototype.ngOnInit = function () {
+        this.resources_compound.project = this.info.project;
+        this.resources_compound.ra_type = _compound_compound_service__WEBPACK_IMPORTED_MODULE_4__["Compound"].TARGET_COMPOUND;
+    };
+    TcCharacterizationComponent.prototype.saveCompound = function () {
+        var _this = this;
+        this.resources_compound.name = this.name2cas.compound_name;
+        this.resources_compound.cas_rn = this.name2cas.cas.current_item['value'];
+        this.resources_compound.smiles = this.name2cas.smiles.current_item['value'];
+        var subs = this.compound_service.saveCompound(this.resources_compound).subscribe(function (result) {
+            _this.tc_compound.getCompounds(_this.info.project);
+            alert('Compound saved');
+        }, function (error) {
+            alert('Error saving the compound.');
+            subs.unsubscribe();
+        }, function () {
+            subs.unsubscribe();
+        });
+    };
+    TcCharacterizationComponent.ctorParameters = function () { return [
+        { type: _compound_compound_service__WEBPACK_IMPORTED_MODULE_4__["CompoundService"] },
+        { type: _tc_compounds_service__WEBPACK_IMPORTED_MODULE_5__["TcCompoundsService"] }
+    ]; };
     tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Object)
     ], TcCharacterizationComponent.prototype, "info", void 0);
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["ViewChild"])('name2cas', { static: false }),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", _name2cas_name2cas_component__WEBPACK_IMPORTED_MODULE_2__["Name2casComponent"])
+    ], TcCharacterizationComponent.prototype, "name2cas", void 0);
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["ViewChild"])('chembl', { static: false }),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", _chembl_chembl_component__WEBPACK_IMPORTED_MODULE_3__["ChemblComponent"])
+    ], TcCharacterizationComponent.prototype, "chembl", void 0);
     TcCharacterizationComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
             selector: 'app-tc-characterization',
             template: __webpack_require__(/*! raw-loader!./tc-characterization.component.html */ "./node_modules/raw-loader/index.js!./src/app/tc-characterization/tc-characterization.component.html"),
             styles: [__webpack_require__(/*! ./tc-characterization.component.css */ "./src/app/tc-characterization/tc-characterization.component.css")]
-        })
+        }),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_compound_compound_service__WEBPACK_IMPORTED_MODULE_4__["CompoundService"],
+            _tc_compounds_service__WEBPACK_IMPORTED_MODULE_5__["TcCompoundsService"]])
     ], TcCharacterizationComponent);
     return TcCharacterizationComponent;
 }());
@@ -3779,6 +4098,45 @@ var TcCharacterizationService = /** @class */ (function () {
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [])
     ], TcCharacterizationService);
     return TcCharacterizationService;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/tc-characterization/tc-compounds.service.ts":
+/*!*************************************************************!*\
+  !*** ./src/app/tc-characterization/tc-compounds.service.ts ***!
+  \*************************************************************/
+/*! exports provided: TcCompoundsService */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TcCompoundsService", function() { return TcCompoundsService; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _compound_compound_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../compound/compound.service */ "./src/app/compound/compound.service.ts");
+
+
+
+var TcCompoundsService = /** @class */ (function () {
+    function TcCompoundsService(compound_service) {
+        this.compound_service = compound_service;
+    }
+    TcCompoundsService.prototype.getCompounds = function (project_id) {
+        this.compounds$ = this.compound_service.getCompounds(project_id, _compound_compound_service__WEBPACK_IMPORTED_MODULE_2__["Compound"].TARGET_COMPOUND);
+    };
+    TcCompoundsService.ctorParameters = function () { return [
+        { type: _compound_compound_service__WEBPACK_IMPORTED_MODULE_2__["CompoundService"] }
+    ]; };
+    TcCompoundsService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
+            providedIn: 'root'
+        }),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_compound_compound_service__WEBPACK_IMPORTED_MODULE_2__["CompoundService"]])
+    ], TcCompoundsService);
+    return TcCompoundsService;
 }());
 
 
