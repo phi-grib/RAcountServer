@@ -14,9 +14,10 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 
-from django.urls import path,re_path
+from django.conf import settings
+from django.urls import path, re_path
 from .views import ListProjects, ProjectStatus, ManageProject, ManageNodes, User, Resources, FileUploadView
-from .views import ProblemDescriptionView
+from .views import ProblemDescriptionView, CompoundView, CompoundByIntIdView
 from .chembl import ChEMBLSmilesToInChIKeyView
 
 urlpatterns = [
@@ -25,9 +26,14 @@ urlpatterns = [
     path("RX/user/projects/", ListProjects.as_view()),
     path("RX/project/<int:project>/status/", ProjectStatus.as_view()),
     path("RX/project/<int:project>/node/<int:node>/", ManageNodes.as_view()),
+    re_path(r'^RX/project/(?P<project>\d+)/compound/(?P<ra_type>(?:tc)|(?:sc))/(?P<int_id>\d+)/$', CompoundByIntIdView.as_view()),
+    re_path(r'^RX/project/(?P<project>\d+)/compound/(?P<ra_type>(?:tc)|(?:sc))/$', CompoundView.as_view()),
     path("RX/node/<int:node>/resources/", Resources.as_view()),
     path("RX/project/<int:project>/problem_description/",ProblemDescriptionView.as_view()),
     path("RX/upload/<int:project>/<int:node>/<int:part>/", FileUploadView.as_view()),
     path("RX/chembl/smiles2inchikey/", ChEMBLSmilesToInChIKeyView.as_view())
 
 ]
+
+handler500 = 'rest_framework.exceptions.server_error'
+handler400 = 'rest_framework.exceptions.bad_request'

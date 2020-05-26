@@ -1,7 +1,9 @@
 
 from django.db import models
 from django.conf import settings
-
+from django.core.validators import MinValueValidator,  RegexValidator
+from .validators import CASRNValidator
+from djchoices import ChoiceItem, DjangoChoices
 # Create your models here.
 
 class Projects(models.Model):
@@ -91,6 +93,21 @@ class CommentFile(models.Model):
         ]
 
 
+class Compound(models.Model):
+    class RAType(DjangoChoices):
+        target = ChoiceItem(0, "Target compound")
+        source = ChoiceItem(1, "Source compound")
 
+    smiles = models.TextField(null=False, blank=False)
+    cas_rn = models.CharField(null=True, blank=False, max_length=12, validators=[CASRNValidator()])
+    name = models.TextField(null=True, blank=False)
+    project = models.ForeignKey(Projects, on_delete=models.CASCADE)
+    int_id = models.IntegerField(null=False, blank=False, validators=[MinValueValidator(1)])
+    ra_type = models.IntegerField(null=False, blank=False, choices=RAType.choices)
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['project','smiles'], name='unique_project_smiles'),
+            models.UniqueConstraint(fields=['project','ra_type','int_id'], name='unique_project_ra_type_int_id'),
 
+        ]
 

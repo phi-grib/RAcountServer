@@ -1,7 +1,8 @@
 from django.contrib.auth import get_user_model
 
 from rest_framework import serializers
-from .models import Projects, Nodes, Resources, ProblemDescription
+from .models import Projects, Nodes, Resources, ProblemDescription, Compound
+from .validators import CASRNValidator
 
 class ProjectSerializer (serializers.ModelSerializer):
 
@@ -48,3 +49,15 @@ class ProblemDescriptionSerializer(serializers.ModelSerializer):
 class ProblemDescriptionSerializerInput(serializers.Serializer):
     project = serializers.IntegerField()
     description = serializers.CharField(allow_blank=True, trim_whitespace=False)
+    
+class CompoundSerializer(serializers.ModelSerializer):
+    name = serializers.CharField(allow_blank=False, trim_whitespace=True)
+    cas_rn = serializers.CharField(allow_blank=False, trim_whitespace=True)
+    smiles = serializers.CharField(allow_blank=False, trim_whitespace=True)
+    def validate_cas_rn(self, value):
+        cas_rn_validator = CASRNValidator()
+        cas_rn_validator(value)
+        return value
+    class Meta:
+        model = Compound
+        fields = "__all__"

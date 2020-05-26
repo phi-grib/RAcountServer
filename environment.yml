@@ -17,3 +17,4 @@ dependencies:
     - pytablereader
     - pytablewriter
     - django-debug-toolbar==2.2
+    - django-choices

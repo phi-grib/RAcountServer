@@ -19,7 +19,8 @@ from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import csrf_protect, ensure_csrf_cookie
 from django.middleware.csrf import get_token
 from django.utils import timezone
-from django.db.models import F
+from django.db.models import F, Max
+from django.db import transaction
 from django.db import OperationalError
 from django.http import Http404
 
@@ -27,21 +28,23 @@ from rest_framework.decorators import api_view
 from rest_framework import serializers, status
 
 from rest_framework.views import APIView
-from rest_framework.generics import GenericAPIView, RetrieveUpdateDestroyAPIView, ListAPIView
-from rest_framework.mixins import UpdateModelMixin, CreateModelMixin, RetrieveModelMixin
+from rest_framework.generics import GenericAPIView, RetrieveUpdateDestroyAPIView, ListAPIView, ListCreateAPIView
+from rest_framework.mixins import UpdateModelMixin, CreateModelMixin, RetrieveModelMixin, ListModelMixin
 from rest_framework.response import Response
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.parsers import MultiPartParser
-from rest_framework.exceptions import PermissionDenied
+from rest_framework.exceptions import PermissionDenied, server_error
 
 from .models import Projects as ProjectsModel, ProblemDescription
 from .models import Nodes as NodesModel
 from .models import Resources as ResourcesModel
 from .models import File, FileType
+from .models import Compound
 
 from .serializer import ProjectSerializer, UserSerializer, NodeSerializer, FullNodeSerializer
 from .serializer import StatusSerializer, ResourcesSerializer, ProblemDescriptionSerializer, ProblemDescriptionSerializerInput
+from .serializer import CompoundSerializer
 
 from .permissions import IsProjectOwner
 
@@ -79,6 +82,7 @@ class ProjectStatus(ListAPIView):
     def get_queryset(self):
         return self.queryset.filter(**{self.lookup_field:self.kwargs[self.lookup_url_kwarg]})
 
+@method_decorator((csrf_protect,ensure_csrf_cookie), name='dispatch')
 class ListProjects(ListAPIView):
     serializer_class = ProjectSerializer
     authentication_classes = [SessionAuthentication]
@@ -380,4 +384,105 @@ class CSVFileToHTML(APIView):
 
         return Response(data={'msg':'OK','URL':new_obj.url},status=status.HTTP_200_OK)
 
+compound_ra_type_abbreviation = {'tc' : Compound.RAType.target,
+                                 'sc': Compound.RAType.source}
 
+@method_decorator((csrf_protect,ensure_csrf_cookie), name='dispatch')
+class CompoundView(GenericAPIView, CreateModelMixin, ListModelMixin):
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated,IsProjectOwner]
+    serializer_class = CompoundSerializer
+    lookup_field = 'project'
+    lookup_url_kwarg = 'project'
+    
+    def get_queryset(self):
+        # The first thing that get(), post(), put() and delete() methods 
+        # of a GenericView from Django REST framework is to call get_queryset()
+        # directly or indirectly (the first thing that get_objects() method does
+        # is calling get_queryset()). This way we are we are overwriting 
+        # self.kwargs before they are used.
+        if self.kwargs['ra_type'] in compound_ra_type_abbreviation:
+            self.kwargs['ra_type'] = compound_ra_type_abbreviation[self.kwargs['ra_type']]
+        elif self.kwargs['ra_type'] in compound_ra_type_abbreviation.values():
+            pass
+        else:
+            return server_error(self.request)
+        self.kwargs['project'] = int(self.kwargs['project'])
+        return Compound.objects.filter(project=int(self.kwargs['project']),
+                                        ra_type=self.kwargs['ra_type'])
+    
+    def get(self, request, project, ra_type):
+        return self.list(request)
+    def post(self, request, project, ra_type):
+        data = dict(request.data)
+        for key in data:
+            data[key] = data[key][0]
+        last_int_id = self.get_queryset().aggregate(Max('int_id'))['int_id__max']
+        if (last_int_id is None):
+            data['int_id'] = 1
+        else:
+            data['int_id'] = last_int_id + 1
+        data['ra_type'] = compound_ra_type_abbreviation[ra_type]
+        serializer = self.get_serializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        
+
+@method_decorator((csrf_protect,ensure_csrf_cookie), name='dispatch')    
+class CompoundByIntIdView(RetrieveUpdateDestroyAPIView):
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated,IsProjectOwner]
+    serializer_class = CompoundSerializer
+    lookup_field = 'int_id'
+    lookup_url_kwarg = 'int_id'
+    
+    def get_queryset(self):
+        # The first thing that get(), post(), put() and delete() methods 
+        # of a GenericView from Django REST framework is to call get_queryset()
+        # directly or indirectly (the first thing that get_objects() method does
+        # is calling get_queryset()). This way we are we are overwriting 
+        # self.kwargs before they are used.
+        if self.kwargs['ra_type'] in compound_ra_type_abbreviation:
+            self.kwargs['ra_type'] = compound_ra_type_abbreviation[self.kwargs['ra_type']]
+        elif self.kwargs['ra_type'] in compound_ra_type_abbreviation.values():
+            pass
+        else:
+            return server_error(self.request)
+        self.kwargs['project'] = int(self.kwargs['project'])
+        self.kwargs['int_id'] = int(self.kwargs['int_id'])
+        
+        return Compound.objects.filter(project=self.kwargs['project'],
+                                     ra_type=self.kwargs['ra_type'])
+        
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        data = dict(request.data)
+        data['ra_type'] = self.kwargs['ra_type']
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+
+        if getattr(instance, '_prefetched_objects_cache', None):
+            # If 'prefetch_related' has been applied to a queryset, we need to
+            # forcibly invalidate the prefetch cache on the instance.
+            instance._prefetched_objects_cache = {}
+
+        return Response(serializer.data)
+    
+    def delete(self, request, project, ra_type, int_id):
+        with transaction.atomic():
+            compounds = self.get_queryset().order_by('int_id')
+            compounds_l = compounds.select_for_update(nowait=True)
+            compounds_l = [q for q in compounds_l if q.int_id != self.kwargs['int_id']]
+            response = super().delete(request, project, ra_type, int_id)
+            compounds_to_update = []
+            for idx, q in enumerate(compounds_l):
+                if (q.int_id != idx + 1):
+                    q.int_id = idx + 1
+                    compounds_to_update.append(q)
+            Compound.objects.bulk_update(compounds_to_update,['int_id'])
+
+            return response
