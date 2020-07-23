@@ -104,6 +104,7 @@ class Compound(models.Model):
     project = models.ForeignKey(Projects, on_delete=models.CASCADE)
     int_id = models.IntegerField(null=False, blank=False, validators=[MinValueValidator(1)])
     ra_type = models.IntegerField(null=False, blank=False, choices=RAType.choices)
+    rdkit = models.TextField(null=True, blank=False, default=None)
     class Meta:
         constraints = [
             models.UniqueConstraint(fields=['project','smiles'], name='unique_project_smiles'),
@@ -111,3 +112,28 @@ class Compound(models.Model):
 
         ]
 
+class DataMatrix(models.Model):
+    compound = models.ForeignKey(Compound, on_delete=models.CASCADE)
+    project = models.ForeignKey(Projects, on_delete=models.CASCADE)
+
+class UnitType(models.Model):
+    name = models.TextField(null=False, blank=False)
+    std_unit = models.ForeignKey('Unit', null=True, on_delete=models.DO_NOTHING)
+    project = models.ForeignKey(Projects, on_delete=models.CASCADE)
+
+class Unit(models.Model):
+    type = models.ForeignKey(UnitType, on_delete=models.DO_NOTHING)
+    equivalence = models.FloatField()
+    name = models.TextField(null=False, blank=False)
+    symbol= models.TextField(null=False, blank=False, unique=True)
+    
+
+class DataMatrixFields(models.Model):
+    name = models.TextField(null=False, blank=False)
+    description = models.TextField(null=False, blank=False)
+    value = models.FloatField(null=True)
+    std_value = models.FloatField(null=True)
+    row = models.ForeignKey(DataMatrix, on_delete=models.CASCADE)
+    unit = models.ForeignKey(Unit, null=True, related_name='datamatrixunit', on_delete=models.DO_NOTHING)
+    std_unit = models.ForeignKey(Unit, null=True, related_name='datamatrixstdunit', on_delete=models.DO_NOTHING)
+    assay_id = models.TextField(null=False, blank=False)

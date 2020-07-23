@@ -3,6 +3,16 @@ import base64
 import datetime
 import os
 import time
+import bokeh
+from bokeh.plotting import figure 
+from bokeh.embed import components
+#from bokeh.models.tools import HoverTool
+from bokeh.models import HoverTool, TapTool, CustomJS, LogTicker, NumeralTickFormatter #,PanTool
+from bokeh.models import BasicTicker, ColorBar, ColumnDataSource, LinearColorMapper, PrintfTickFormatter
+from bokeh.transform import transform
+from bokeh.embed import json_item
+import xml.etree.ElementTree as ET
+
 
 from .utils import order_queryset_list_by_values_list
 
@@ -40,11 +50,12 @@ from .models import Projects as ProjectsModel, ProblemDescription
 from .models import Nodes as NodesModel
 from .models import Resources as ResourcesModel
 from .models import File, FileType
-from .models import Compound
+from .models import Compound, DataMatrix, DataMatrixFields, UnitType, Unit
 
 from .serializer import ProjectSerializer, UserSerializer, NodeSerializer, FullNodeSerializer
 from .serializer import StatusSerializer, ResourcesSerializer, ProblemDescriptionSerializer, ProblemDescriptionSerializerInput
-from .serializer import CompoundSerializer
+from .serializer import CompoundSerializer, DataMatrixSerializer, UnitTypeSerializer, UnitSerializer
+from .serializer import DataMatrixFieldsSerializer, DataMatrixFieldsReadSerializer, ChemblDataMatrixSerializer, CompoundDataMatrixSerializer
 
 from .permissions import IsProjectOwner
 
@@ -486,3 +497,374 @@ class CompoundByIntIdView(RetrieveUpdateDestroyAPIView):
             Compound.objects.bulk_update(compounds_to_update,['int_id'])
 
             return response
+        
+@method_decorator((csrf_protect,ensure_csrf_cookie), name='dispatch')
+class ChemblDataMatrixView(APIView):
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated,IsProjectOwner]
+    def get(self, request, project, ra_type, int_id, compound_init_id):
+        # The first thing that get(), post(), put() and delete() methods 
+        # of a GenericView from Django REST framework is to call get_queryset()
+        # directly or indirectly (the first thing that get_objects() method does
+        # is calling get_queryset()). This way we are we are overwriting 
+        # self.kwargs before they are used.
+        if self.kwargs['ra_type'] in compound_ra_type_abbreviation:
+            self.kwargs['ra_type'] = compound_ra_type_abbreviation[self.kwargs['ra_type']]
+        elif self.kwargs['ra_type'] in compound_ra_type_abbreviation.values():
+            pass
+        else:
+            return server_error(self.request)
+        respdata = {'msg': 'OK'}
+        respdata['CSRF_TOKEN'] = get_token(request) 
+        return JsonResponse(respdata, status=status.HTTP_200_OK)
+    def post(self, request, project, ra_type, int_id):
+        chembl2data_matrix = {
+            'assay_description': 'description',
+            'standard_type': 'name',
+            'standard_units': 'std_unit',
+            'standard_value': 'std_value',
+            'units': 'unit',
+            'value': 'value',
+            'assay_chembl_id': 'assay_id'
+        }
+        
+        
+        # The first thing that get(), post(), put() and delete() methods 
+        # of a GenericView from Django REST framework is to call get_queryset()
+        # directly or indirectly (the first thing that get_objects() method does
+        # is calling get_queryset()). This way we are we are overwriting 
+        # self.kwargs before they are used.
+        if self.kwargs['ra_type'] in compound_ra_type_abbreviation:
+            self.kwargs['ra_type'] = compound_ra_type_abbreviation[self.kwargs['ra_type']]
+        elif self.kwargs['ra_type'] in compound_ra_type_abbreviation.values():
+            pass
+        else:
+            return server_error(self.request)
+        serializer = ChemblDataMatrixSerializer(data=request.data, many=True)
+        serializer.is_valid(raise_exception=True)
+        data = serializer.data
+        
+        units_set = set()
+        standard_units = {}
+        for col in data:
+            unit = col['units']
+            std_unit = col['standard_units']
+            if unit is None and std_unit is not None:
+                col['units'] = col['standard_units']
+                col['value'] = col['standard_value']
+            elif  unit is None and std_unit is None:
+                continue
+            if unit not in standard_units:
+                if col['value'] is not None and col['standard_value'] is not None:
+                    equivalence = col['value'] / col['standard_value']
+                else:
+                    equivalence = None
+                standard_units[unit] = [std_unit, equivalence]
+            units_set.add(unit)
+            units_set.add(std_unit)
+            
+        with transaction.atomic():
+            units = Unit.objects.filter(symbol__in=list(units_set))
+            defined_units = set([unit.symbol for unit in units])
+            
+            undefined_units = units_set - defined_units
+            undefined_std_units = set()
+            std_units = set()
+            for unit in undefined_units:
+                if unit in standard_units:
+                    if standard_units[unit][0] is not None: 
+                        if standard_units[unit][0] not in defined_units:
+                            undefined_std_units.add(standard_units[unit][0])
+                        std_units.add(standard_units[unit][0])
+            
+            new_std_std_units_data = []
+            new_std_units_data = []
+            for unit in undefined_std_units:
+                new_std_std_units_data.append({'name': unit, 'std_unit':None, 'project': project})
+                new_std_units_data.append({'name': unit, 'type':None, 'equivalence': 1.0, 'symbol': unit})
+            unit_type_serializer = UnitTypeSerializer(data=new_std_std_units_data, many=True)
+            unit_type_serializer.is_valid(raise_exception=True)
+            unit_type_serializer.save()
+            new_std_std_units = UnitType.objects.filter(name__in=list(undefined_std_units))
+            unit_type_std_unit_name2id = { unit.name: unit.id for unit in new_std_std_units }
+            for unit in new_std_units_data:
+                unit['type'] = unit_type_std_unit_name2id[unit['name']]
+            unit_std_serializer = UnitSerializer(data = new_std_units_data, many=True)
+            unit_std_serializer.is_valid(raise_exception=True)
+            unit_std_serializer.save()
+            new_std_units = Unit.objects.filter(name__in=list(undefined_std_units))
+            std_unit_name2id = { unit.name: unit.id for unit in new_std_units }
+            partial_new_std_std_units_data = []
+            for unit in new_std_units_data:
+                partial_new_std_std_units_data.append({'id': unit_type_std_unit_name2id[unit['name']],
+                                                       'std_unit': std_unit_name2id[unit['name']],
+                                                       'project': project})
+            partial_unit_type_serializer = UnitTypeSerializer(data=partial_new_std_std_units_data, many=True, partial=True)
+            partial_unit_type_serializer.is_valid(raise_exception=True)
+            partial_unit_type_serializer.save()
+            non_std_undefined_units = undefined_units - undefined_std_units
+            saved_std_units = Unit.objects.filter(symbol__in=list(std_units))
+            saved_std_units_symbol2id = {unit.symbol: unit.id for unit in saved_std_units}
+            new_units_data = []
+            for unit in non_std_undefined_units:
+                new_units_data.append({'name': unit, 'type':saved_std_units_symbol2id[standard_units[unit][0]],
+                                        'equivalence': standard_units[unit][1], 'symbol': unit})
+            
+            unit_serializer = UnitSerializer(data = new_units_data, many=True)
+            unit_serializer.is_valid(raise_exception=True)
+            unit_serializer.save()
+        saved_units = Unit.objects.filter(symbol__in=list(units_set))
+        saved_units_symbol2id = {unit.symbol: unit.id for unit in saved_units}
+        
+        compound_id = Compound.objects.get(project=project, ra_type=self.kwargs['ra_type'],
+                                              int_id=int_id).pk
+        
+        new_data_matrix_data = {'compound': compound_id, 'project': project}
+        if not DataMatrix.objects.filter(**new_data_matrix_data).exists():
+            data_matrix_serializer = DataMatrixSerializer(data=new_data_matrix_data,many=False)
+            data_matrix_serializer.is_valid(raise_exception=True)
+            data_matrix_serializer.save()
+        row_id = DataMatrix.objects.get(**new_data_matrix_data).pk
+        data = data.copy()
+        fields_to_keep = set()
+        for field in chembl2data_matrix:
+            fields_to_keep.add(chembl2data_matrix[field])
+        print('hola:', saved_units_symbol2id)
+        for col in data:
+            for old_field in chembl2data_matrix.keys():
+                new_field = chembl2data_matrix[old_field]
+                if new_field in {'unit','std_unit'}:
+                    if col[old_field] is not None:
+                        col[new_field] = saved_units_symbol2id[col[old_field]]
+                    else:
+                        col[new_field] = None
+                    col.pop(old_field)
+                elif new_field != old_field:
+                    col[new_field] = col[old_field]
+                    col.pop(old_field)
+            for field in list(col.keys()):
+                if field not in fields_to_keep:
+                    col.pop(field)
+            col['row'] = row_id   
+    
+      
+        data_matrix_fields_serializer = DataMatrixFieldsSerializer(data=data,many=True)
+        data_matrix_fields_serializer.is_valid(raise_exception=True)
+        data_matrix_fields_serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        
+@method_decorator((csrf_protect,ensure_csrf_cookie), name='dispatch')
+class DataMatrixFieldsView(ListAPIView):
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated,IsProjectOwner]
+    serializer_class = DataMatrixFieldsReadSerializer
+    lookup_field = 'int_id'
+    lookup_url_kwarg = 'int_id'
+    
+    def get_queryset(self):
+        # The first thing that get(), post(), put() and delete() methods 
+        # of a GenericView from Django REST framework is to call get_queryset()
+        # directly or indirectly (the first thing that get_objects() method does
+        # is calling get_queryset()). This way we are we are overwriting 
+        # self.kwargs before they are used.
+        if self.kwargs['ra_type'] in compound_ra_type_abbreviation:
+            self.kwargs['ra_type'] = compound_ra_type_abbreviation[self.kwargs['ra_type']]
+        elif self.kwargs['ra_type'] in compound_ra_type_abbreviation.values():
+            pass
+        else:
+            return server_error(self.request)
+        self.kwargs['project'] = int(self.kwargs['project'])
+        self.kwargs['int_id'] = int(self.kwargs['int_id'])
+        
+        q = DataMatrixFields.objects.annotate(int_id=F('row__compound__int_id'))
+        q = q.annotate(ra_type=F('row__compound__ra_type'))
+        q = q.annotate(project=F('row__project'))
+        q = q.filter(project=self.kwargs['project'], ra_type=self.kwargs['ra_type'])
+        q = q.select_related('unit').select_related('std_unit')
+        return q
+    
+@method_decorator((csrf_protect,ensure_csrf_cookie), name='dispatch')
+class DataMatrixView(ListAPIView):
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated,IsProjectOwner]
+    serializer_class = CompoundDataMatrixSerializer
+    lookup_field = 'project'
+    lookup_url_kwarg = 'project'
+    queryset = Compound.objects.all()
+    
+    def get_queryset(self):
+        # The first thing that get(), post(), put() and delete() methods 
+        # of a GenericView from Django REST framework is to call get_queryset()
+        # directly or indirectly (the first thing that get_objects() method does
+        # is calling get_queryset()). This way we are we are overwriting 
+        # self.kwargs before they are used.
+        if self.kwargs['ra_type'] in compound_ra_type_abbreviation:
+            self.kwargs['ra_type'] = compound_ra_type_abbreviation[self.kwargs['ra_type']]
+        elif self.kwargs['ra_type'] in compound_ra_type_abbreviation.values():
+            pass
+        else:
+            return server_error(self.request)
+        self.kwargs['project'] = int(self.kwargs['project'])
+        return super().get_queryset().filter(ra_type=self.kwargs['ra_type'],project=self.kwargs['project'])
+    
+@method_decorator((csrf_protect,ensure_csrf_cookie), name='dispatch')
+class DataMatrixHeatmapView(GenericAPIView, ListModelMixin):
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated,IsProjectOwner]
+    serializer_class = CompoundDataMatrixSerializer
+    lookup_field = 'project'
+    lookup_url_kwarg = 'project'
+    queryset = Compound.objects.all()
+    
+    def get_queryset(self):
+        # The first thing that get(), post(), put() and delete() methods 
+        # of a GenericView from Django REST framework is to call get_queryset()
+        # directly or indirectly (the first thing that get_objects() method does
+        # is calling get_queryset()). This way we are we are overwriting 
+        # self.kwargs before they are used.
+        self.kwargs['project'] = int(self.kwargs['project'])
+        return super().get_queryset().filter(project=self.kwargs['project']).order_by('ra_type','-int_id')
+    
+    def get(self,request, project, json):
+        queryset = self.filter_queryset(self.get_queryset())
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        
+        data = serializer.data
+        
+        x_values_set = set()
+        y_values = []
+        values_dict_list = []
+        values_unit_dict_list = []
+        for compound in data:
+            y_values.append('#' + str(compound['int_id'])+': '+compound['name'])
+            values_dict = {}
+            values_unit_dict = {}
+            for field in compound['data_matrix'][0]['data_matrix_fields']:
+                x_values_set.add(field['assay_id'])
+                values_dict[field['assay_id']] = field['std_value']
+                if field['std_value'] is None:
+                    values_unit_dict[field['assay_id']] = 'N/A'
+                else:
+                    if field['std_unit'] is None:
+                        unit_suffix = ''
+                    else:
+                        unit_suffix = ' ' + field['std_unit']
+                    values_unit_dict[field['assay_id']] = str(field['std_value']) + unit_suffix
+            values_dict_list.append(values_dict)
+            values_unit_dict_list.append(values_unit_dict)
+        x_values = sorted(list(x_values_set))
+        
+        colums_dict = {'Compound': [],'Assay_ID': [], 'value': [], 'value_unit': []}
+
+        for comp, values_dict in zip(y_values, values_dict_list):
+            for assay_id in x_values:
+                if assay_id in values_dict:
+                    z_value = values_dict[assay_id]
+                    z_value_unit = values_unit_dict[assay_id]
+                else:
+                    z_value = None
+                if z_value is None:
+                    z_value = 0
+                colums_dict['Compound'].append(comp)
+                colums_dict['Assay_ID'].append(assay_id)
+                colums_dict['value'].append(z_value)
+                colums_dict['value_unit'].append(z_value_unit)
+        
+        #Map colors
+        mapper = LinearColorMapper(palette=bokeh.palettes.RdYlBu[10], low = 0, high = max(colums_dict['value']))
+
+        # Define a figure
+
+        #pan=PanTool(dimensions="width")
+        #mytools = ["hover","tap","save","reset","wheel_zoom",pan]
+
+        mytools = ["hover","tap","save","reset","wheel_zoom","pan"]
+        #w=int(len(df_t.columns)*40,)
+        cw=275
+        ch=30
+        #h=int(((w-cw)*len(df_t.index)/len(df_t.columns))+ch)
+        w= 760
+        h= 132
+
+        p = figure(
+            plot_width=18*len(x_values)+80,
+            plot_height=80*len(y_values)+300,
+            #title="Example freq",
+            y_range= y_values,
+            x_range = x_values,
+            tools=mytools, 
+            x_axis_location="above",
+            active_drag=None,
+            toolbar_location="left",
+            toolbar_sticky = False
+            )
+
+        # Create rectangle for heatmap
+        mysource = ColumnDataSource(colums_dict)
+        p.rect(
+            y='Compound', 
+            x='Assay_ID', 
+            width=0.9, 
+            height=1, 
+            source=mysource,
+            line_color=None, 
+            fill_color=transform('value', mapper),
+
+            # set visual properties for selected glyphs
+            selection_line_color="crimson",
+            selection_fill_color=transform('value', mapper),
+            # set visual properties for non-selected glyphs
+            nonselection_fill_alpha=1,
+            nonselection_fill_color=transform('value', mapper),
+            nonselection_line_color=None
+
+            )
+
+        # Add legend
+
+        color_bar = ColorBar(color_mapper=mapper, ticker=BasicTicker(), 
+                             formatter=PrintfTickFormatter(format=r'%f'),
+                             orientation="vertical", label_standoff=12, location=(0,0),
+                             major_label_text_font_size = "9pt",major_tick_line_color="black")
+        
+        
+        p.add_layout(color_bar, 'left')
+
+
+        p.axis.axis_line_color = None
+        p.axis.major_tick_line_color = None
+        p.xaxis.major_label_text_font_size = "9pt"
+        p.yaxis.major_label_text_font_size = "8pt"
+        p.axis.major_label_standoff = 0
+        p.xaxis.major_label_orientation = 1#"vertical"
+        
+        #Hover tool:
+        p.select_one(HoverTool).tooltips = [
+         ('Compound', '@Compound'),
+         ('Assay ID', '@Assay_ID'),
+         ('Value', '@value_unit'),
+    ]
+    
+        
+        script, div = components(p)
+        heatmap_div_id = "heatmap_datamatrix_bio_activity_project_"+str(self.kwargs['project'])
+        json_p = json_item(p,heatmap_div_id)
+        json_p['doc']['title'] = heatmap_div_id
+        if json is None:
+            context={
+                'script' : script , 
+                'div' : div,
+            }
+            return render(request, 'API/datamatrix.html', context)
+        else:
+            root = ET.fromstring("<document>"+script+"</document>")
+            scripts= []
+            for tag in root.findall('script'):
+                 scripts.append(tag.text)
+            return Response({"item": json_p,'heatmap_div_id': heatmap_div_id})

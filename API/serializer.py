@@ -2,6 +2,7 @@ from django.contrib.auth import get_user_model
 
 from rest_framework import serializers
 from .models import Projects, Nodes, Resources, ProblemDescription, Compound
+from .models import DataMatrix, UnitType, Unit, DataMatrixFields
 from .validators import CASRNValidator
 
 class ProjectSerializer (serializers.ModelSerializer):
@@ -61,3 +62,52 @@ class CompoundSerializer(serializers.ModelSerializer):
     class Meta:
         model = Compound
         fields = "__all__"
+
+class DataMatrixSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DataMatrix
+        fields = "__all__"
+
+class UnitTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UnitType
+        fields = "__all__"    
+
+class UnitSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Unit
+        fields = "__all__"    
+    
+class DataMatrixFieldsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DataMatrixFields
+        fields = "__all__"
+
+class DataMatrixFieldsReadSerializer(serializers.ModelSerializer):
+    unit = serializers.SlugRelatedField(slug_field='symbol', read_only=True)
+    std_unit = serializers.SlugRelatedField(slug_field='symbol', read_only=True)
+    class Meta:
+        model = DataMatrixFields
+        fields = "__all__"    
+
+class NestedDataMatrixFiledsSerializer(serializers.ModelSerializer):
+    data_matrix_fields = DataMatrixFieldsReadSerializer(many=True, read_only=True, source='datamatrixfields_set')
+    class Meta:
+        model = DataMatrix
+        fields = "__all__"
+        
+class CompoundDataMatrixSerializer(serializers.ModelSerializer):
+    data_matrix = NestedDataMatrixFiledsSerializer(many=True, read_only=True, source='datamatrix_set')
+    class Meta:
+        model = Compound
+        fields = "__all__"
+
+
+class ChemblDataMatrixSerializer(serializers.Serializer):
+    assay_description = serializers.CharField(allow_blank=False, trim_whitespace=True)
+    standard_type = serializers.CharField(allow_blank=True, trim_whitespace=True)
+    standard_units = serializers.CharField(allow_blank=True,allow_null=True, trim_whitespace=True)
+    standard_value = serializers.FloatField(allow_null=True)
+    units = serializers.CharField(allow_blank=True,allow_null=True, trim_whitespace=True)
+    value = serializers.FloatField(allow_null=True)
+    assay_chembl_id = serializers.CharField(allow_blank=False, trim_whitespace=True)

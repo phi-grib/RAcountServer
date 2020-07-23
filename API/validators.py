@@ -7,7 +7,6 @@ class CASRNValidator(RegexValidator):
         super().__init__(regex=r'\d{2,7}-\d{2}-\d{1}', 
                        message="Invalid CAS registry number format")
     def __call__(self, value):
-        print('hola',value)
         super().__call__(value)
         control_digit = int(value[-1])
         n = []
