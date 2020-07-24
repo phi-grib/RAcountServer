@@ -115,7 +115,7 @@ module.exports = "\n<router-outlet></router-outlet>\n"
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"row m-5 form-group\" style=\"margin-bottom:0px !important;margin-top:10px !important\">\n    <table style=\"width:100%;vertical-align:bottom\">\n        <tr>\n\n                <td style=\"width:9rem\">\n                    <label style=\"margin-bottom:0px\" for=\"chembl_search_string\" >SMILES:</label>\n                </td>\n                <td><input id=\"chembl_search_string\" class=\"form-control\" name=\"search_string\" [(ngModel)]=\"chembl_search_string\" type=\"text\"></td>\n                <td style=\"width:8rem\"><button class=\"btn btn-primary\" [disabled]=\"chembl_running\" (click)=\"chemblIdFromSmilesButton()\">Search</button>\n                    <mat-spinner *ngIf=\"chembl_running\" style=\"display:inline-block\" ProgressSpinnerMode=\"indeterminate\" diameter=\"14\"></mat-spinner>\n                </td>\n        <tr>\n\n                    <td style=\"width:9rem\"><label style=\"margin-bottom:0px\" for=\"chembl_chembl_ids\" >ChEMBL ID(s):</label></td>\n                    <td style=\"width:auto\">\n                            <select id=\"chembl_chembl_ids\" size=5 class=\"form-control\" name=\"selected_cas\" [(ngModel)]=\"chembl_selected_item_int_id_list\" multiple>\n                            <option *ngFor=\"let item of chembl_item_list\" [ngValue]=\"item.int_id\" [innerHTML]=\"item.html_rep\"></option>\n                            </select>\n                            \n                    </td>\n                    <td style=\"width:auto\">\n                    </td>\n        </tr>\n        <tr>\n            <td></td>\n            <td style=\"display:inline-block\"><button style=\"display:inline-block\" class=\"btn\" [disabled]=\"chembl_selected_item_int_id_list.length === 0\" (click)=\"chemblDeleteSelectedItems()\">Delete</button>\n            <button style=\"display:inline-block\" class=\"btn\" [disabled]=\"chembl_selected_item_int_id_list.length === 0\" (click)=\"openCopy(content,true)\">Copy in clipboard</button>\n            <button style=\"display:inline-block\" class=\"btn\" [disabled]=\"chembl_item_list.length === 0\" (click)=\"openCopy(content,false)\">Copy all in clipboard</button></td>\n        </tr>\n    </table>\n    <div [innerHTML]=\"activity\"></div>\n</div>\n<ng-template #content let-modal>\n    <div class=\"modal-header\">\n        <h4 class=\"modal-title\" id=\"chembl-copy-clipboard-basic-title\">ChEMBL(s)</h4>\n        <button type=\"button\" class=\"close\" aria-label=\"Close\" (click)=\"modal.dismiss('close')\">\n        <span aria-hidden=\"true\">&times;</span>\n        </button>\n    </div>\n    <div class=\"modal-body\">\n        <div class=\"form-group\">\n            <div class=\"input-group\">\n                <p>The following ChEMBL have been copied in your clipboard:</p>\n            </div>\n            <div class=\"input-group\">\n            <textarea id=\"chembl_copy_textarea\" style=\"width:100%\" class=\"form-control\" (change)=\"chemblChangeContentItemTextarea()\" [(ngModel)]=\"chembl_content_item_textarea\" rows=10></textarea>\n            </div>\n        </div>\n    </div>\n    <div class=\"modal-footer\">\n        <button type=\"button\" class=\"btn btn-outline-dark\" (click)=\"modal.dismiss('close')\">Close</button>\n    </div>\n</ng-template>"
+module.exports = "<div class=\"row m-5 form-group\" style=\"margin-bottom:0px !important;margin-top:10px !important\">\n    <table style=\"width:100%;vertical-align:bottom\">\n        <tr>\n            <ng-container [ngSwitch]=\"input_type_radio_value\">\n                <ng-container *ngSwitchCase=\"'smiles'\">\n                    <td style=\"width:9rem\">\n                        <label style=\"margin-bottom:0px\" for=\"chembl_search_string\" >SMILES:</label>\n                    </td>\n                    <td>\n                        <br>\n                        <input id=\"chembl_search_string\" class=\"form-control\" name=\"search_string\" [(ngModel)]=\"chembl_search_string\" type=\"text\">\n                        <br>\n\n                    </td>\n                    <td style=\"width:8rem\"><button class=\"btn btn-primary\" [disabled]=\"chembl_running\" (click)=\"chemblIdFromSmilesButton()\">Search</button>\n                        <mat-spinner *ngIf=\"chembl_running\" style=\"display:inline-block\" ProgressSpinnerMode=\"indeterminate\" diameter=\"14\"></mat-spinner>\n                    </td>\n                </ng-container>\n                <ng-container *ngSwitchCase=\"'compound'\">\n                    <td style=\"width:9rem\">\n                        <br>\n                        <label style=\"margin-bottom:0px\" for=\"selected_compound\" >Compound:</label><br><br>\n                    </td>\n                    <td style=\"width:auto\">\n                        <mat-form-field>\n                            <mat-select id=\"selected_compound\" class=\"form-control\" name=\"selected_compound_name\" (selectionChange)=\"this.compoundChange($event)\" [(ngModel)]=\"this.selected_compound_int_id\">\n                                <mat-option *ngFor=\"let compound of (ra_compound_service.compounds$ | async)\" [value]=\"compound.int_id\" [innerHTML]=\"compound.int_id.toString()+': '+compound.name\"></mat-option>\n                            </mat-select>\n                        </mat-form-field>\n                        <br>\n                    </td>\n                    <td style=\"width:8rem\"><button class=\"btn btn-primary\" [disabled]=\"chembl_running\" (click)=\"chemblIdFromCompoundButton()\">Search</button>\n                        <mat-spinner *ngIf=\"chembl_running\" style=\"display:inline-block\" ProgressSpinnerMode=\"indeterminate\" diameter=\"14\"></mat-spinner>\n                    </td>\n                </ng-container>\n            </ng-container>\n        <tr>\n            <td style=\"width:9rem\"></td>\n            <td>\n                <div class=\"custom-control custom-radio custom-control-inline\">\n                    <input type=\"radio\" id=\"input_type_radio1\" name=\"input_type_radio\" ng-control=\"input_type_radio\" class=\"custom-control-input\" [value]=\"'smiles'\" [(ngModel)]=\"input_type_radio_value\">\n                    <label class=\"custom-control-label\" for=\"input_type_radio1\">SMILES</label>\n                  </div>\n                  <div class=\"custom-control custom-radio custom-control-inline\">\n                    <input type=\"radio\" id=\"input_type_radio2\" name=\"input_type_radio\" ng-control=\"input_type_radio\" class=\"custom-control-input\" (change)=\"this.ra_compound_service.getCompounds(this.info.project)\" [value]=\"'compound'\" [(ngModel)]=\"input_type_radio_value\">\n                    <label class=\"custom-control-label\" for=\"input_type_radio2\">Saved compound</label>\n                  </div>\n                  <br>                  \n            </td>\n\n        </tr>\n\n        <tr><td><br></td><td><br></td><td><br></td></tr>\n        <tr>\n\n                    <td style=\"width:9rem\"><label style=\"margin-bottom:0px\" for=\"chembl_chembl_ids\" >ChEMBL ID(s):</label></td>\n                    <td style=\"width:auto\">\n                            <select id=\"chembl_chembl_ids\" size=5 class=\"form-control\" name=\"selected_cas\" [(ngModel)]=\"chembl_selected_item_int_id_list\" multiple>\n                            <option *ngFor=\"let item of chembl_item_list\" [ngValue]=\"item.int_id\" [innerHTML]=\"item.html_rep\"></option>\n                            </select>\n                            \n                    </td>\n                    <td style=\"width:auto\">\n                    </td>\n        </tr>\n        <tr>\n            <td></td>\n            <td style=\"display:inline-block\"><button style=\"display:inline-block\" class=\"btn\" [disabled]=\"chembl_selected_item_int_id_list.length === 0\" (click)=\"chemblDeleteSelectedItems()\">Delete</button>\n            <button style=\"display:inline-block\" class=\"btn\" [disabled]=\"chembl_selected_item_int_id_list.length === 0\" (click)=\"openCopy(content,true)\">Copy in clipboard</button>\n            <button style=\"display:inline-block\" class=\"btn\" [disabled]=\"chembl_item_list.length === 0\" (click)=\"openCopy(content,false)\">Copy all in clipboard</button></td>\n        </tr>\n    </table>\n    <div>\n        <p *ngIf=\"typeof(activity_compound) !== 'undefined'\"><b [innerText]=\"'Compound #' + activity_compound.int_id.toString()+ ': ' + activity_compound.name\"></b></p>\n        <p *ngIf=\"typeof(activity_chembl_ids) !== 'undefined' && activity_chembl_ids.length > 0\"><b [innerText]=\"activity_chembl_ids.join(',')\"></b></p>\n        <p *ngIf=\"typeof(activity_chembl_ids) !== 'undefined' && activity_chembl_ids.length === 0\">No CHEMBL IDs found.</p>\n        <button  class=\"btn btn-primary\" [disabled]=\"chembl_running || typeof(activity_compound) === 'undefined' || this.chembl_activity_rows.length === 0\" (click)=\"saveActivityButton()\">Save</button>\n        <div [innerHTML]=\"activity\"></div>\n    </div>\n</div>\n<ng-template #content let-modal>\n    <div class=\"modal-header\">\n        <h4 class=\"modal-title\" id=\"chembl-copy-clipboard-basic-title\">ChEMBL(s)</h4>\n        <button type=\"button\" class=\"close\" aria-label=\"Close\" (click)=\"modal.dismiss('close')\">\n        <span aria-hidden=\"true\">&times;</span>\n        </button>\n    </div>\n    <div class=\"modal-body\">\n        <div class=\"form-group\">\n            <div class=\"input-group\">\n                <p>The following ChEMBL have been copied in your clipboard:</p>\n            </div>\n            <div class=\"input-group\">\n            <textarea id=\"chembl_copy_textarea\" style=\"width:100%\" class=\"form-control\" (change)=\"chemblChangeContentItemTextarea()\" [(ngModel)]=\"chembl_content_item_textarea\" rows=10></textarea>\n            </div>\n        </div>\n    </div>\n    <div class=\"modal-footer\">\n        <button type=\"button\" class=\"btn btn-outline-dark\" (click)=\"modal.dismiss('close')\">Close</button>\n    </div>\n</ng-template>"
 
 /***/ }),
 
@@ -126,7 +126,18 @@ module.exports = "<div class=\"row m-5 form-group\" style=\"margin-bottom:0px !i
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"card\">\n    <h6 class=\"card-header bg-light p-1\">{{ra_type_title}} compounds</h6>\n    <div class=\"row m-5 form-group\" style=\"margin-bottom:0px !important;margin-top:10px !important\">\n    <table class=\"table\">\n        <tr>\n            <th>Compound #</th><th>Name</th><th>CAS registry #</th><th></th><th></th><th style=\"display: hidden;\"></th>\n        </tr>\n\n        <tr *ngFor=\"let compound of (this.ra_compound_service.compounds$| async); index as i;\">\n            <td>{{compound.int_id}}</td>\n            <td>{{compound.name}}</td>\n            <td>{{compound.cas_rn}}</td>\n            <td><button class=\"btn\" [disabled]=\"running\" (click)=\"deleteCompound(compound.int_id)\">Delete</button></td>\n            <td><button class=\"btn\" (click)=\"copySmiles(ra_type + '_compound_smiles_textarea_' + i)\">Copy smiles</button>\n                <textarea class=\"invisible_textarea\" [id]=\"ra_type + '_compound_smiles_textarea_' + i\" [innerText]=\"compound.smiles\"></textarea>\n            </td>\n        </tr>\n    </table>\n    </div>\n</div>\n"
+module.exports = "<div class=\"card\">\n    <h6 class=\"card-header bg-light p-1\">{{ra_type_title}} compounds</h6>\n    <div class=\"row m-5 form-group\" style=\"margin-bottom:0px !important;margin-top:10px !important\">\n    <table class=\"table\">\n        <tr>\n            <th>Compound #</th><th>Name</th><th>CAS registry #</th><th></th><th></th><th style=\"display: hidden;\"></th>\n        </tr>\n\n        <tr *ngFor=\"let compound of (this.ra_compound_service.compounds$ | async); index as i;\">\n            <td>{{compound.int_id}}</td>\n            <td>{{compound.name}}</td>\n            <td>{{compound.cas_rn}}</td>\n            <td><button class=\"btn\" [disabled]=\"running\" (click)=\"deleteCompound(compound.int_id)\">Delete</button></td>\n            <td><button class=\"btn\" (click)=\"copySmiles(ra_type + '_compound_smiles_textarea_' + i)\">Copy smiles</button>\n                <textarea class=\"invisible_textarea\" [id]=\"ra_type + '_compound_smiles_textarea_' + i\" [innerText]=\"compound.smiles\"></textarea>\n            </td>\n        </tr>\n    </table>\n    </div>\n</div>\n"
+
+/***/ }),
+
+/***/ "./node_modules/raw-loader/index.js!./src/app/datamatrix/datamatrix.component.html":
+/*!********************************************************************************!*\
+  !*** ./node_modules/raw-loader!./src/app/datamatrix/datamatrix.component.html ***!
+  \********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "<div style=\"max-height: 80vh; overflow-y:auto\" *ngIf=\"heatmap_div_reset\" [id]=\"heatmap_id\">\n\n<!-- <div style=\"max-height: 80vh; overflow-y:auto\" [innerHTML]=\"heatmap | keepHtml\"> -->\n    \n<!--     <table mat-table [dataSource]=\"this.dataSource\" class=\"mat-elevation-z8\" matSort>\n    <ng-container [matColumnDef]=\"column\" *ngFor=\"let column of displayedColumns\">\n        <th mat-header-cell *matHeaderCellDef  mat-sort-header> {{column}} </th>\n        <td mat-cell *matCellDef=\"let element;let index = index\"> \n            {{element[column]}}\n        </td>\n    </ng-container>\n    <tr mat-header-row *matHeaderRowDef=\"columnsToDisplay\"></tr>\n    <tr mat-row *matRowDef=\"let row; columns: columnsToDisplay;\"></tr>\n    </table>\n    <mat-paginator [pageSizeOptions]=\"[5, 10, 20]\" showFirstLastButtons></mat-paginator> -->\n</div>\n"
 
 /***/ }),
 
@@ -137,7 +148,7 @@ module.exports = "<div class=\"card\">\n    <h6 class=\"card-header bg-light p-1
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "\n<div class=\"limit\">\n    <div class=\"row p-5 justify-content-center\">\n        <div class=\"card node {{projectName}}\" [ngClass]=\"{'checked':this.checked.node1}\" id=\"{{projectName}}_id_1\"    (click)=\"nodeInfo_selected(projectName,1)\">\n            <div class=\"card-body\">\n                1.Problem formulation\n            </div>\n        </div>\n    </div>\n    <div class=\"row m-5 justify-content-center\">\n        <div class=\"card parent\"   >\n            <div class=\"card-body\">\n                <div class=\"card node m-5 {{projectName}}\" [ngClass]=\"{'checked':this.checked.node2}\" id=\"{{projectName}}_id_2\" (click)=\"nodeInfo_selected(projectName,2)\">\n                    <div class=\"card-body\">\n                    2.TC Characterization\n                    </div>\n                </div>\n                <div class=\"card node m-5 {{projectName}}\" [ngClass]=\"{'checked':this.checked.node3}\" id=\"{{projectName}}_id_3\" (click)=\"nodeInfo_selected(projectName,3)\">\n                    <div class=\"card-body\">\n                    Metabolism data gathering\n                    </div>\n                </div>\n                <div class=\"card node m-5 {{projectName}}\" [ngClass]=\"{'checked':this.checked.node4}\" id=\"{{projectName}}_id_4\" (click)=\"nodeInfo_selected(projectName,4)\">\n                    <div class=\"card-body\">\n                    Initial RAX hypothesis\n                    </div>\n                </div>\n                <div id=\"nam_title\" class=\"row m-1\" style=\"margin-right:0px;\">\n                    <div style=\"padding-right:0px;\" class=\"col text-right\" >TC Characterization</div>\n                </div>\n            </div>\n        </div>\n    </div>\n    <div class=\"row m-5 justify-content-center\">\n        <div class=\"card node {{projectName}}\"  [ngClass]=\"{'checked':this.checked.node5}\" id=\"{{projectName}}_id_5\"    (click)=\"nodeInfo_selected(projectName,5)\">\n            <div class=\"card-body\">\n                3.SCs identification\n            </div>\n        </div>\n    </div>\n    <div class=\"row m-5 justify-content-center\">\n        <div class=\"card node {{projectName}}\"  [ngClass]=\"{'checked':this.checked.node6}\" id=\"{{projectName}}_id_6\"    (click)=\"nodeInfo_selected(projectName,6)\">\n            <div class=\"card-body\">\n                4.SCs evaluation\n            </div>\n        </div>\n    </div>\n    <div class=\"row m-5 justify-content-center\">\n        <div class=\"card node {{projectName}}\"  [ngClass]=\"{'checked':this.checked.node7}\" id=\"{{projectName}}_id_7\"    (click)=\"nodeInfo_selected(projectName,7)\">\n            <div class=\"card-body\">\n                Overarching RAX hypothesis\n            </div>\n        </div>\n    </div>\n    <div class=\"row m-5 justify-content-center\">\n        <div class=\"card parent2\"   >\n            <div class=\"card-body\">\n                <div id=\"nam_title\" class=\"row m-1\" style=\"color:rgb(245,245,245);margin-right:0px;\">\n                    <div class=\"col text-right\" >NAM based knowledge</div>\n                </div>\n                <div class=\"row\" style=\"margin-left:0px;margin-right:0px;\">\n                    <div class=\"card node m-5 {{projectName}}\" [ngClass]=\"{'checked':this.checked.node8}\"  id=\"{{projectName}}_id_8\"   (click)=\"nodeInfo_selected(projectName,8)\">\n                        <div style=\"padding-left:3rem;padding-right:3rem;\" class=\"card-body\">\n                        NAM testing and evaluation (in vitro & in silico)\n                        </div>\n                    </div>\n                </div>\n                <div class=\"row m-5\" style=\"margin-left:0px;margin-right:0px;\"> \n                    <div style=\"box-sizing:content-box\" class=\"col card node {{projectName}} text-center\" [ngClass]=\"{'checked':this.checked.node9}\" id=\"{{projectName}}_id_9\"   (click)=\"openTK()\">\n                        <div class=\"card-body\">\n                        TK\n                        </div>\n                    </div>\n                    <div class=\"col\"></div>\n                    <div style=\"box-sizing:content-box\" class=\"col card node {{projectName}} justify-content-end text-center\" [ngClass]=\"{'checked':this.checked.node10}\" id=\"{{projectName}}_id_10\"   (click)=\"openTD()\">\n                        <div class=\"card-body\">\n                        TD\n                        </div>\n                    </div>\n                </div>\n            </div>\n        </div>\n    </div>\n    <div class=\"row m-5 justify-content-center\">\n        <div class=\"card node {{projectName}}\" style=\"box-sizing:content-box\"  [ngClass]=\"{'checked':this.checked.node11}\" id=\"{{projectName}}_id_11\"    (click)=\"nodeInfo_selected(projectName,11)\">\n            <div class=\"card-body\">\n                5.Uncertainty assessment\n            </div>\n        </div>\n    </div>\n    <div class=\"row m-5 justify-content-center\">\n        <div class=\"card node {{projectName}}\"  [ngClass]=\"{'checked':this.checked.node12}\" id=\"{{projectName}}_id_12\"    (click)=\"nodeInfo_selected(projectName,12)\">\n            <div class=\"card-body\">\n                6.Data gap filling\n            </div>\n        </div>\n    </div>\n</div>"
+module.exports = "\n<div id=\"{{projectName}}_workflow\" style=\"min-width: 550px;\" class=\"limit\">\n    <div class=\"row p-5 justify-content-center\">\n        <div class=\"card node {{projectName}}\" [ngClass]=\"{'checked':this.checked.node1}\" id=\"{{projectName}}_id_1\"    (click)=\"nodeInfo_selected(projectName,1)\">\n            <div class=\"card-body\">\n                1.Problem formulation\n            </div>\n        </div>\n    </div>\n    <div class=\"row m-5 justify-content-center\">\n        <div class=\"card parent\"   >\n            <div class=\"card-body\">\n                <div class=\"card node m-5 {{projectName}}\" [ngClass]=\"{'checked':this.checked.node2}\" id=\"{{projectName}}_id_2\" (click)=\"nodeInfo_selected(projectName,2)\">\n                    <div class=\"card-body\">\n                    2.TC Characterization\n                    </div>\n                </div>\n                <div class=\"card node m-5 {{projectName}}\" [ngClass]=\"{'checked':this.checked.node3}\" id=\"{{projectName}}_id_3\" (click)=\"nodeInfo_selected(projectName,3)\">\n                    <div class=\"card-body\">\n                    Metabolism data gathering\n                    </div>\n                </div>\n                <div class=\"card node m-5 {{projectName}}\" [ngClass]=\"{'checked':this.checked.node4}\" id=\"{{projectName}}_id_4\" (click)=\"nodeInfo_selected(projectName,4)\">\n                    <div class=\"card-body\">\n                    Initial RAX hypothesis\n                    </div>\n                </div>\n                <div id=\"nam_title\" class=\"row m-1\" style=\"margin-right:0px;\">\n                    <div style=\"padding-right:0px;\" class=\"col text-right\" >TC Characterization</div>\n                </div>\n            </div>\n        </div>\n    </div>\n    <div class=\"row m-5 justify-content-center\">\n        <div class=\"card node {{projectName}}\"  [ngClass]=\"{'checked':this.checked.node5}\" id=\"{{projectName}}_id_5\"    (click)=\"nodeInfo_selected(projectName,5)\">\n            <div class=\"card-body\">\n                3.SCs identification\n            </div>\n        </div>\n    </div>\n    <div class=\"row m-5 justify-content-center\">\n        <div class=\"card node {{projectName}}\"  [ngClass]=\"{'checked':this.checked.node6}\" id=\"{{projectName}}_id_6\"    (click)=\"nodeInfo_selected(projectName,6)\">\n            <div class=\"card-body\">\n                4.SCs evaluation\n            </div>\n        </div>\n    </div>\n    <div class=\"row m-5 justify-content-center\">\n        <div class=\"card node {{projectName}}\"  [ngClass]=\"{'checked':this.checked.node7}\" id=\"{{projectName}}_id_7\"    (click)=\"nodeInfo_selected(projectName,7)\">\n            <div class=\"card-body\">\n                Overarching RAX hypothesis\n            </div>\n        </div>\n    </div>\n    <div class=\"row m-5 justify-content-center\">\n        <div class=\"card parent2\"   >\n            <div class=\"card-body\">\n                <div id=\"nam_title\" class=\"row m-1\" style=\"color:rgb(245,245,245);margin-right:0px;\">\n                    <div class=\"col text-right\" >NAM based knowledge</div>\n                </div>\n                <div class=\"row\" style=\"margin-left:0px;margin-right:0px;\">\n                    <div class=\"card node m-5 {{projectName}}\" [ngClass]=\"{'checked':this.checked.node8}\"  id=\"{{projectName}}_id_8\"   (click)=\"nodeInfo_selected(projectName,8)\">\n                        <div style=\"padding-left:3rem;padding-right:3rem;\" class=\"card-body\">\n                        NAM testing and evaluation (in vitro & in silico)\n                        </div>\n                    </div>\n                </div>\n                <div class=\"row m-5\" style=\"margin-left:0px;margin-right:0px;\"> \n                    <div style=\"box-sizing:content-box\" class=\"col card node {{projectName}} text-center\" [ngClass]=\"{'checked':this.checked.node9}\" id=\"{{projectName}}_id_9\"   (click)=\"openTK()\">\n                        <div class=\"card-body\">\n                        TK\n                        </div>\n                    </div>\n                    <div class=\"col\"></div>\n                    <div style=\"box-sizing:content-box\" class=\"col card node {{projectName}} justify-content-end text-center\" [ngClass]=\"{'checked':this.checked.node10}\" id=\"{{projectName}}_id_10\"   (click)=\"openTD()\">\n                        <div class=\"card-body\">\n                        TD\n                        </div>\n                    </div>\n                </div>\n            </div>\n        </div>\n    </div>\n    <div class=\"row m-5 justify-content-center\">\n        <div class=\"card node {{projectName}}\" style=\"box-sizing:content-box\"  [ngClass]=\"{'checked':this.checked.node11}\" id=\"{{projectName}}_id_11\"    (click)=\"nodeInfo_selected(projectName,11)\">\n            <div class=\"card-body\">\n                5.Uncertainty assessment\n            </div>\n        </div>\n    </div>\n    <div class=\"row m-5 justify-content-center\">\n        <div class=\"card node {{projectName}}\"  [ngClass]=\"{'checked':this.checked.node12}\" id=\"{{projectName}}_id_12\"    (click)=\"nodeInfo_selected(projectName,12)\">\n            <div class=\"card-body\">\n                6.Data gap filling\n            </div>\n        </div>\n    </div>\n</div>"
 
 /***/ }),
 
@@ -159,7 +170,7 @@ module.exports = "\n<head>\n    <meta charset=\"utf-8\">\n    <meta http-equiv=\
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<app-navbar></app-navbar>\n<div class=\"container-fluid\">\n    <div class=\"d-flex flex-row\">\n        <div id=\"sidebar\" class=\"d-flex flex-column col-lg-2 bg-light active\">\n            <app-sidebar></app-sidebar>\n        </div>\n        <div class=\"d-flex flex-column col-lg\">\n            <div class=\"d-flex flex-row\">\n                <button type=\"button\" id=\"sidebarCollapse\" class=\"btn btn-primary\" (click)=\"change()\">\n                    <i class=\"fas fa-align-left\"></i>\n                    <h3><span>&#9776;</span></h3>\n                </button>\n            </div>\n            <app-tabs></app-tabs>\n            <app-workflows></app-workflows>   \n               \n        </div>\n    </div>      \n</div> \n\n"
+module.exports = "<app-navbar></app-navbar>\n<!-- <div class=\"rectangle\"\nmwlResizable\n[ngStyle]=\"style\"\n[resizeSnapGrid]=\"{ left: 50, right: 50 }\"\n[enableGhostResize]=\"true\"\n[resizeEdges]=\"{ bottom: true, right: true, top: true, left: true }\"\n(resizeEnd)=\"onResizeEnd($event)\"></div> -->\n<div class=\"container-fluid\">\n    <div class=\"d-flex flex-row\">\n        <div id=\"sidebar\" class=\"d-flex flex-column col-lg-2 bg-light active\">\n            <app-sidebar></app-sidebar>\n        </div>\n        <div class=\"d-flex flex-column col-lg\">\n            <div class=\"d-flex flex-row\">\n                <button type=\"button\" id=\"sidebarCollapse\" class=\"btn btn-primary\" (click)=\"change()\">\n                    <i class=\"fas fa-align-left\"></i>\n                    <h3><span>&#9776;</span></h3>\n                </button>\n                <div class=\"ml-auto\">\n                    <div class=\"btn-group\">\n                        <button type=\"button\" class=\"btn btn-primary dropdown-toggle\" style=\"margin-bottom: 0; padding-bottom: 0;\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"true\">\n                            Projects\n                        </button>\n                        <div class=\"dropdown-menu\" [ngClass]=\"{'disabled': objectKeys(this.globals.current_user.projects$ | async).length > 0 }\">\n                            <!--<div class=\"dropdown-divider\"></div>-->\n                            <a *ngFor=\"let name of objectKeys(this.globals.current_user.projects$ | async);\" class=\"dropdown-item\"  (click)=\"swapProject(this.globals.visible_project, name)\"> {{name}} </a>\n                        </div>\n                    </div>\n                </div>\n            </div>\n\n\n            <div class=\"d-md-flex h-md-100 align-items-center\">\n                <div *ngIf=\"this.globals.active_projects.length > 0\" id=\"resizible-workflows\" class=\"\" mwlResizable [enableGhostResize]=\"true\"\n                 [resizeEdges]=\"{ bottom: false, right: true, top: false, left: this.globals.active_projects.length > 0 }\"\n                 (resizeStart)=\"onResizeStart($event)\"\n                 (resizeEnd)=\"onResizeEnd($event)\"\n                 (resizing)=\"onResizing($event)\"\n                 [ngStyle]=\"workflowStyle\">\n                    <app-tabs></app-tabs>\n                    <app-workflows [workflow_resize_start]=\"workflow_resize_start\"\n                     [redraw]=\"workflowRedraw\" [workflow_resize_update]=\"workflow_resize_update\"></app-workflows>\n                </div>\n                <div *ngIf=\"this.globals.active_projects.length==0\" style=\"width: 100%\">\n                    <div style=\"margin-left: 0px; margin-right: 0px;\" class=\"row shadow bg-white  justify-content-center\" >\n                        <p class=\"font-italic pb-5\">--Open a project--</p>\n                    </div>\n                </div>\n                <div  id=\"app-datamatrix-container\" *ngIf=\"this.globals.active_projects.length > 0\" class=\"overflow-auto col\">\n                    <app-datamatrix [workflow_scroll]=\"this.globals.workflow_scroll\" [redraw]=\"datamatrixRedraw\" [projectName]=\"this.globals.current_main_project\"></app-datamatrix>\n                </div>\n            </div>  \n               \n        </div>\n    </div>      \n</div> \n\n"
 
 /***/ }),
 
@@ -247,7 +258,7 @@ module.exports = "<!-- [1] -->\n<div [id]=\"id\" class=\"modal\" aria-hidden=\"t
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "\n<div class=\"d-flex flex-row\">\n    <div>\n        \n        <ul class=\"nav nav-pills\" id=\"pills-tab\" role=\"tablist\">\n            <li *ngFor=\"let project of this.globals.active_projects.slice(); let i = index\" class=\"nav-item\" (click)=\"visibleProject(project)\">\n\n                <a class=\"nav-link\" [ngClass]=\"{'active show': project===this.globals.visible_project}\" data-toggle=\"pill\" href=\"#pills-{{project}}\" role=\"tab\" aria-controls=\"pills-Project1\" aria-selected=\"true\">\n                        {{project}}<button type=\"button\" class=\"close\" aria-label=\"Close\"(click)=\"deleteProject(project)\">\n                                <span aria-hidden=\"true\">&times;</span>\n                            </button>\n                    </a>\n            </li>    \n        </ul>\n    </div>\n    \n    <div class=\"ml-auto\">\n        <div class=\"btn-group\">\n            <button type=\"button\" class=\"btn btn-primary dropdown-toggle\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"true\">\n                Projects\n            </button>\n            <div class=\"dropdown-menu\" [ngClass]=\"{'disabled': objectKeys(this.globals.current_user.projects$ | async).length > 0 }\">\n                <!--<div class=\"dropdown-divider\"></div>-->\n                <a *ngFor=\"let name of objectKeys(this.globals.current_user.projects$ | async);\" class=\"dropdown-item\"  (click)=\"swapProject(this.globals.visible_project, name)\"> {{name}} </a>\n            </div>\n        </div>\n    </div>\n</div>\n"
+module.exports = "\n<div class=\"d-flex flex-row\">\n    <div>\n        \n        <ul class=\"nav nav-pills\" id=\"pills-tab\" role=\"tablist\">\n            <li *ngFor=\"let project of this.globals.active_projects.slice(); let i = index\" class=\"nav-item\" (click)=\"visibleProject(project)\">\n\n                <a class=\"nav-link\" [ngClass]=\"{'active show': project===this.globals.visible_project}\" data-toggle=\"pill\" href=\"#pills-{{project}}\" role=\"tab\" aria-controls=\"pills-Project1\" aria-selected=\"true\">\n                        {{project}}<button type=\"button\" class=\"close\" aria-label=\"Close\"(click)=\"deleteProject(project)\">\n                                <span aria-hidden=\"true\">&times;</span>\n                            </button>\n                    </a>\n            </li>    \n        </ul>\n    </div>\n</div>\n"
 
 /***/ }),
 
@@ -258,7 +269,7 @@ module.exports = "\n<div class=\"d-flex flex-row\">\n    <div>\n        \n      
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"card\">\n    <h6 class=\"card-header bg-light p-1\">Name2CAS/SMILES resolver</h6>\n    <app-name2cas #name2cas [info]=\"this.info\"></app-name2cas>\n</div>\n<div class=\"card\">\n    <div class=\"row justify-content-center\" style=\"text-align: center;\">\n        <div class=\"col-6\">\n        <button type=\"button\" class=\"btn btn-primary\" (click)=\"saveCompound()\">Save compound</button>\n        </div>\n    </div>\n</div>\n<div class=\"card\">\n    <h6 class=\"card-header bg-light p-1\">ChEMBL resolver</h6>\n    <app-chembl #chembl [info]=\"this.info\"></app-chembl>\n</div>\n"
+module.exports = "<div class=\"card\">\n    <h6 class=\"card-header bg-light p-1\">Name2CAS/SMILES resolver</h6>\n    <app-name2cas #name2cas [info]=\"this.info\"></app-name2cas>\n</div>\n<div class=\"card\">\n    <div class=\"row justify-content-center\" style=\"text-align: center;\">\n        <div class=\"col-6\">\n        <button type=\"button\" class=\"btn btn-primary\" (click)=\"saveCompound()\">Save compound</button>\n        </div>\n    </div>\n</div>\n<div class=\"card\">\n    <h6 class=\"card-header bg-light p-1\">ChEMBL resolver</h6>\n    <app-chembl #chembl [ra_type]=\"'tc'\" [info]=\"this.info\"></app-chembl>\n</div>\n"
 
 /***/ }),
 
@@ -269,7 +280,7 @@ module.exports = "<div class=\"card\">\n    <h6 class=\"card-header bg-light p-1
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"limit\">\n    <div class=\"row p-5 justify-content-center\">\n        <div>\n            <div style=\"display:inline-block;width:0.05rem\"></div>\n            <div style=\"display:inline-block\">\n                <div class=\"card card-body\" style=\"max-width:100%;width:auto;border:0px;box-shadow:none\">\n                    <div class=\"row\" style=\"margin-left:0px;margin-right:0px;\">\n                        <div class=\"card node {{projectClass}}\" style=\"margin-left:0px;margin-right:0px;\"  [ngClass]=\"{'checked':this.checked.node13}\" id=\"{{projectClass}}_id_13\"    (click)=\"nodeInfo_selected(mainProjectName,13)\">\n                            <div class=\"card-body\">\n                                AOP known\n                            </div>\n                        </div>\n                    </div>\n                    <br>\n                </div>\n            </div>\n            <div style=\"display:inline-block;width:1rem\"></div>\n            <div style=\"display:inline-block\">\n                <div class=\"card-body card\" style=\"max-width:100%;width:auto;border:0px;box-shadow:none\">\n                    <div class=\"row\" style=\"margin-left:0px;margin-right:0px;\">\n                        <div class=\"card node {{projectClass}}\" style=\"margin-left:0px;margin-right:0px;\" [ngClass]=\"{'checked':this.checked.node14}\" id=\"{{projectClass}}_id_14\"    (click)=\"nodeInfo_selected(mainProjectName,14)\">\n                            <div class=\"card-body\">\n                                Shared critical effects\n                            </div>\n                        </div>\n                    </div>\n                    <br>\n                </div>\n            </div>\n            <div class=\"card parent\" style=\"display:block;\">\n                <div class=\"card-body\" style=\"display:inline-block\">\n                    <div class=\"card node {{projectClass}}\" [ngClass]=\"{'checked':this.checked.node16}\" id=\"{{projectClass}}_id_16\" (click)=\"nodeInfo_selected(mainProjectName,16)\">\n                        <div class=\"card-body\">\n                            Test for KEs<br>\n                            and MIEs\n                        </div>\n                    </div>\n                </div>\n                <div class=\"card-body\" style=\"display:inline-block\">\n                    <div class=\"card node {{projectClass}}\" [ngClass]=\"{'checked':this.checked.node17}\" id=\"{{projectClass}}_id_17\" (click)=\"nodeInfo_selected(mainProjectName,17)\">\n                        <div class=\"card-body\">\n                                Test for models mimicking<br>\n                                organ responses\n                        </div>\n                    </div>\n                </div>\n                <div class=\"card-body row justify-content-center\" style=\"margin-left:0px;margin-right:0px;\">\n                    <div class=\"card col-5 node {{projectClass}}\" style=\"padding-left:0px;padding-right:0px;\" [ngClass]=\"{'checked':this.checked.node19}\" id=\"{{projectClass}}_id_19\" (click)=\"nodeInfo_selected(mainProjectName,19)\">\n                        <div class=\"card-body\">\n                            Evaluation of medium\n                            and high dose effects\n                        </div>\n                    </div>\n                    <div style=\"width:12%\"></div>\n                </div>\n                <p class=\"p-2\">Targeted<br>tests</p>\n            </div>\n        </div>\n        <div>\n            <div class=\"card-body\">\n                <div class=\"row\" style=\"margin-left:0px;margin-right:0px;\">\n                    <div class=\"card node {{projectClass}}\" style=\"margin-left:0px;margin-right:0px;max-width:100%;width:100%\" [ngClass]=\"{'checked':this.checked.node15}\" id=\"{{projectClass}}_id_15\"    (click)=\"nodeInfo_selected(mainProjectName,15)\">\n                        <div class=\"card-body\">\n                            Unclear / no shared<br> critical  lead effects\n                        </div>\n                    </div>\n                </div>\n            </div>\n            <div class=\"card parent\" style=\"display:block;\">\n                <div class=\"card-body\">\n                    <div class=\"card node {{projectClass}}\" [ngClass]=\"{'checked':this.checked.node18}\" id=\"{{projectClass}}_id_18\" (click)=\"nodeInfo_selected(mainProjectName,18)\">\n                        <div class=\"card-body\">\n                                Broad testing: identify<br>\n                                potential hazard\n                        </div>\n                    </div>\n                </div>\n                <div class=\"card-body\">\n                    <div class=\"card node {{projectClass}}\" [ngClass]=\"{'checked':this.checked.node20}\" id=\"{{projectClass}}_id_20\" (click)=\"nodeInfo_selected(mainProjectName,20)\">\n                        <div class=\"card-body\">\n                                Generate MoA<br>\n                                hypothesis\n                        </div>\n                    </div>\n                </div>\n                <br>\n                <p class=\"p-2\">Untargeted<br>tests</p>\n            </div>\n            <div class=\"card-body\">\n                <div class=\"card node {{projectClass}}\" [ngClass]=\"{'checked':this.checked.node21}\" id=\"{{projectClass}}_id_21\" (click)=\"nodeInfo_selected(mainProjectName,21)\">\n                    <div class=\"card-body\">\n                            Run targeted tests\n                            <br>\n                            and continue with:<br>\n                            AOP known <br>\n                            and/or<br>\n                            Shared critical effects\n                    </div>\n                </div>\n            </div>\n        </div>\n    </div>\n</div>"
+module.exports = "<div id=\"{{projectClass}}_workflow\" style=\"min-width: 550px;\" class=\"limit\">\n    <div class=\"row p-5 justify-content-center\">\n        <div>\n            <div style=\"display:inline-block;width:0.05rem\"></div>\n            <div style=\"display:inline-block\">\n                <div class=\"card card-body\" style=\"max-width:100%;width:auto;border:0px;box-shadow:none\">\n                    <div class=\"row\" style=\"margin-left:0px;margin-right:0px;\">\n                        <div class=\"card node {{projectClass}}\" style=\"margin-left:0px;margin-right:0px;\"  [ngClass]=\"{'checked':this.checked.node13}\" id=\"{{projectClass}}_id_13\"    (click)=\"nodeInfo_selected(mainProjectName,13)\">\n                            <div class=\"card-body\">\n                                AOP known\n                            </div>\n                        </div>\n                    </div>\n                    <br>\n                </div>\n            </div>\n            <div style=\"display:inline-block;width:1rem\"></div>\n            <div style=\"display:inline-block\">\n                <div class=\"card-body card\" style=\"max-width:100%;width:auto;border:0px;box-shadow:none\">\n                    <div class=\"row\" style=\"margin-left:0px;margin-right:0px;\">\n                        <div class=\"card node {{projectClass}}\" style=\"margin-left:0px;margin-right:0px;\" [ngClass]=\"{'checked':this.checked.node14}\" id=\"{{projectClass}}_id_14\"    (click)=\"nodeInfo_selected(mainProjectName,14)\">\n                            <div class=\"card-body\">\n                                Shared critical effects\n                            </div>\n                        </div>\n                    </div>\n                    <br>\n                </div>\n            </div>\n            <div class=\"card parent\" style=\"display:block;\">\n                <div class=\"card-body\" style=\"display:inline-block\">\n                    <div class=\"card node {{projectClass}}\" [ngClass]=\"{'checked':this.checked.node16}\" id=\"{{projectClass}}_id_16\" (click)=\"nodeInfo_selected(mainProjectName,16)\">\n                        <div class=\"card-body\">\n                            Test for KEs<br>\n                            and MIEs\n                        </div>\n                    </div>\n                </div>\n                <div class=\"card-body\" style=\"display:inline-block\">\n                    <div class=\"card node {{projectClass}}\" [ngClass]=\"{'checked':this.checked.node17}\" id=\"{{projectClass}}_id_17\" (click)=\"nodeInfo_selected(mainProjectName,17)\">\n                        <div class=\"card-body\">\n                                Test for models mimicking<br>\n                                organ responses\n                        </div>\n                    </div>\n                </div>\n                <div class=\"card-body row justify-content-center\" style=\"margin-left:0px;margin-right:0px;\">\n                    <div class=\"card col-5 node {{projectClass}}\" style=\"padding-left:0px;padding-right:0px;\" [ngClass]=\"{'checked':this.checked.node19}\" id=\"{{projectClass}}_id_19\" (click)=\"nodeInfo_selected(mainProjectName,19)\">\n                        <div class=\"card-body\">\n                            Evaluation of medium\n                            and high dose effects\n                        </div>\n                    </div>\n                    <div style=\"width:12%\"></div>\n                </div>\n                <p class=\"p-2\">Targeted<br>tests</p>\n            </div>\n        </div>\n        <div>\n            <div class=\"card-body\">\n                <div class=\"row\" style=\"margin-left:0px;margin-right:0px;\">\n                    <div class=\"card node {{projectClass}}\" style=\"margin-left:0px;margin-right:0px;max-width:100%;width:100%\" [ngClass]=\"{'checked':this.checked.node15}\" id=\"{{projectClass}}_id_15\"    (click)=\"nodeInfo_selected(mainProjectName,15)\">\n                        <div class=\"card-body\">\n                            Unclear / no shared<br> critical  lead effects\n                        </div>\n                    </div>\n                </div>\n            </div>\n            <div class=\"card parent\" style=\"display:block;\">\n                <div class=\"card-body\">\n                    <div class=\"card node {{projectClass}}\" [ngClass]=\"{'checked':this.checked.node18}\" id=\"{{projectClass}}_id_18\" (click)=\"nodeInfo_selected(mainProjectName,18)\">\n                        <div class=\"card-body\">\n                                Broad testing: identify<br>\n                                potential hazard\n                        </div>\n                    </div>\n                </div>\n                <div class=\"card-body\">\n                    <div class=\"card node {{projectClass}}\" [ngClass]=\"{'checked':this.checked.node20}\" id=\"{{projectClass}}_id_20\" (click)=\"nodeInfo_selected(mainProjectName,20)\">\n                        <div class=\"card-body\">\n                                Generate MoA<br>\n                                hypothesis\n                        </div>\n                    </div>\n                </div>\n                <br>\n                <p class=\"p-2\">Untargeted<br>tests</p>\n            </div>\n            <div class=\"card-body\">\n                <div class=\"card node {{projectClass}}\" [ngClass]=\"{'checked':this.checked.node21}\" id=\"{{projectClass}}_id_21\" (click)=\"nodeInfo_selected(mainProjectName,21)\">\n                    <div class=\"card-body\">\n                            Run targeted tests\n                            <br>\n                            and continue with:<br>\n                            AOP known <br>\n                            and/or<br>\n                            Shared critical effects\n                    </div>\n                </div>\n            </div>\n        </div>\n    </div>\n</div>"
 
 /***/ }),
 
@@ -280,7 +291,7 @@ module.exports = "<div class=\"limit\">\n    <div class=\"row p-5 justify-conten
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"limit\">\n    <div class=\"p-5\">\n        <div class=\"row\">\n            <div style=\"width:30%\">\n                <div class=\"card-body\">\n                    <div class=\"row\" style=\"margin-left:0px;margin-right:0px;\">\n                        <div class=\"card node {{projectClass}}\" style=\"margin-left:0px;margin-right:0px;\"  [ngClass]=\"{'checked':this.checked.node22}\" id=\"{{projectClass}}_id_22\"    (click)=\"nodeInfo_selected(mainProjectName,22)\">\n                            <div class=\"card-body\">\n                                Assess <i>in vitro</i> biokinetics:\n                                <ul style=\"margin-bottom:0px;\">\n                                    <li>Unbound treatment concentration</li>\n                                    <li>Intracellular concentration <i>in vitro</i></li>\n                                </ul>\n                            </div>\n                        </div>\n                    </div>\n                    <br>\n                </div>\n            </div>\n            <div style=\"width:27%\">\n                <div class=\"card-body\">\n                    <div class=\"row\" style=\"margin-left:0px;margin-right:0px;\">\n                        <div class=\"card node {{projectClass}}\" style=\"margin-left:0px;margin-right:0px;\" [ngClass]=\"{'checked':this.checked.node23}\" id=\"{{projectClass}}_id_23\"    (click)=\"nodeInfo_selected(mainProjectName,23)\">\n                            <div class=\"card-body\">\n                                There is <i>in vitro</i> TK data<br>\n                                available for TC/SC(s)?<br>\n                            </div>\n                        </div>\n                    </div>\n                    <br>\n                </div>\n            </div>\n            <div class=\"\"  style=\"width:13%\">\n                <div style=\"height:30%\"></div>\n                <div style=\"\" class=\"row {{projectClass}}\" id=\"{{projectClass}}_node_23_no\" style=\"width:50%\">\n                    <!--<p style=\"padding-top:15%;padding-left:33%\">Yes</p>-->\n                    <table class=\"align-self-center\" style=\"width:100%;text-align: center\">\n                            <tr>\n                                <td>No</td>\n                            </tr>\n                    </table>\n                </div>\n            </div>\n            <div style=\"width:0%\"></div>\n            <div style=\"width:30%\">\n                <div class=\"card-body\">\n                    <div class=\"row\" style=\"margin-left:0px;margin-right:0px;\">\n                        <div class=\"card node {{projectClass}}\" style=\"margin-left:0px;margin-right:0px;\" [ngClass]=\"{'checked':this.checked.node24}\" id=\"{{projectClass}}_id_24\"    (click)=\"nodeInfo_selected(mainProjectName,24)\">\n                            <div class=\"card-body\">\n                                    There is <i>in vivo</i> TK data\n                                    available for TC/SC(s)\n                                    suitable for IVIVE-PBPK\n                                    parameters derivation?\n                                    \n                            </div>\n                        </div>\n                    </div>\n                    <br>\n                </div>\n            </div>\n        </div>\n        <div style=\"height:8rem\" class=\"row\">\n            <div style=\"width:50%\"></div>\n            <div>\n                <div style=\"height:6rem\"></div>\n                <div class=\"row {{projectClass}}\" id=\"{{projectClass}}_node_24_no\">\n                        <!--<p style=\"padding-top:15%;padding-left:33%\">Yes</p>-->\n                        <table class=\"align-self-center\" style=\"width:100%;text-align: center\">\n                                <tr>\n                                    <td>No</td>\n                                </tr>\n                        </table>\n                </div>\n            </div>\n            <div style=\"width:35%\"></div>\n            <div>\n                <div style=\"height:20%\"></div>\n                <div class=\"row {{projectClass}}\" id=\"{{projectClass}}_node_24_yes\" style=\"height:50%\">\n                        <!--<p style=\"padding-top:15%;padding-left:33%\">Yes</p>-->\n                        <table class=\"align-self-center\" style=\"width:4rem;text-align: center\">\n                                <tr>\n                                    <td>Yes</td>\n                                </tr>\n                        </table>\n                </div>\n            </div>\n\n        </div>\n        <div class=\"row\">\n            <div style=\"width:35%\"></div>\n            <div class=\"\"  style=\"width:10%\">\n                <div style=\"height:40%\"></div>\n                <div style=\"\" class=\"row {{projectClass}}\" id=\"{{projectClass}}_node_23_yes\" style=\"height:50%\">\n                    <!--<p style=\"padding-top:15%;padding-left:33%\">Yes</p>-->\n                    <table class=\"align-self-center\" style=\"width:100%;text-align: center\">\n                            <tr>\n                                <td>Yes</td>\n                            </tr>\n                    </table>\n                </div>\n            </div>\n            <div style=\"width:25%\">\n                <div class=\"card-body\">\n                    <div class=\"row\" style=\"margin-left:0px;margin-right:0px;\">\n                        <div class=\"card node {{projectClass}}\" style=\"margin-left:0px;margin-right:0px;max-width:75%;width:75%\" [ngClass]=\"{'checked':this.checked.node26}\" id=\"{{projectClass}}_id_26\"    (click)=\"nodeInfo_selected(mainProjectName,26)\">\n                            <div class=\"card-body\">\n                                    <i>In vitro</i> ADME assays<br>\n                                    and/or<br>\n                                    QSAR predictions<br>\n                            </div>\n                        </div>\n                    </div>\n                </div>\n            </div>\n            <div style=\"width:30%\">\n                <div class=\"card-body\">\n                    <div class=\"row\" style=\"margin-left:0px;margin-right:0px;\">\n                        <div class=\"card node {{projectClass}}\" style=\"margin-left:0px;margin-right:0px;max-width:100%;width:100%\" [ngClass]=\"{'checked':this.checked.node25}\" id=\"{{projectClass}}_id_25\"    (click)=\"nodeInfo_selected(mainProjectName,25)\">\n                            <div class=\"card-body\">\n                                Reverse translation PBPK                                    \n                            </div>\n                        </div>\n                    </div>\n                </div>\n            </div>\n        </div>\n        <div class=\"row\">\n            <div style=\"width:20%\"></div>\n            <div style=\"width:30%\"></div>\n            <div style=\"width:20%\"></div>\n            <div style=\"width:30%\">\n                <div class=\"card-body\">\n                    <div class=\"row\" style=\"margin-left:0px;margin-right:0px;\">\n                        <div class=\"card node {{projectClass}}\" style=\"margin-left:0px;margin-right:0px;max-width:100%;width:100%\" [ngClass]=\"{'checked':this.checked.node27}\" id=\"{{projectClass}}_id_27\"    (click)=\"nodeInfo_selected(mainProjectName,27)\">\n                            <div class=\"card-body\">\n                                Parametrize IVIVE-PBPK model                                    \n                            </div>\n                        </div>\n                    </div>\n                </div>\n            </div>\n        </div>\n        <div class=\"row\">\n            <div style=\"width:40%\"></div>\n            <div style=\"width:30%\"></div>\n            <div style=\"width:30%\">\n                <div class=\"card-body\">\n                    <div class=\"row\" style=\"margin-left:0px;margin-right:0px;\">\n                        <div class=\"card node {{projectClass}}\" style=\"margin-left:0px;margin-right:0px;max-width:100%;width:100%\" [ngClass]=\"{'checked':this.checked.node28}\" id=\"{{projectClass}}_id_28\"    (click)=\"nodeInfo_selected(mainProjectName,28)\">\n                            <div class=\"card-body\">\n                                Develop IVIVE-PBPK model                                    \n                            </div>\n                        </div>\n                    </div>\n                </div>\n            </div>\n        </div>\n        <div class=\"row\">\n            <div style=\"width:40%\"></div>\n            <div style=\"width:30%\"></div>\n            <div style=\"width:30%\">\n                <div class=\"card-body\">\n                    <div class=\"row\" style=\"margin-left:0px;margin-right:0px;\">\n                        <div class=\"card node {{projectClass}}\" style=\"margin-left:0px;margin-right:0px;max-width:100%;width:100%\" [ngClass]=\"{'checked':this.checked.node29}\" id=\"{{projectClass}}_id_29\"    (click)=\"nodeInfo_selected(mainProjectName,29)\">\n                            <div class=\"card-body\">\n                                <i>In vivo</i> data for at least one TC/SC                                    \n                            </div>\n                        </div>\n                    </div>\n                </div>\n            </div>\n        </div>\n        <div class=\"row\">\n            <div style=\"width:6%\"></div>    \n            <div style=\"width:34%\">\n                <div class=\"card-body\">\n                    <div class=\"row\" style=\"margin-left:0px;margin-right:0px;\">\n                        <div class=\"card node {{projectClass}}\" style=\"margin-left:0px;margin-right:0px;max-width:40%;width:40%\" [ngClass]=\"{'checked':this.checked.node30}\" id=\"{{projectClass}}_id_30\"    (click)=\"nodeInfo_selected(mainProjectName,30)\">\n                            <div class=\"card-body\">\n                                qIVIVE                                                                        \n                            </div>\n                        </div>\n                    </div>\n                </div>\n            </div>\n            <div style=\"width:30%\"></div>\n            <div style=\"width:30%\">\n                <div class=\"card-body\">\n                    <div class=\"row\" style=\"margin-left:0px;margin-right:0px;\">\n                        <div class=\"card node {{projectClass}}\" style=\"margin-left:0px;margin-right:0px;max-width:100%;width:100%\" [ngClass]=\"{'checked':this.checked.node31}\" id=\"{{projectClass}}_id_31\"    (click)=\"nodeInfo_selected(mainProjectName,31)\">\n                            <div class=\"card-body\">\n                                Verification of IVIVE-PBPK<br>\n                                Model with in vivo data                                 \n                            </div>\n                        </div>\n                    </div>\n                </div>\n            </div>\n        </div>\n        <div class=\"row\">\n            <div style=\"width:1.5%\"></div>     \n            <div style=\"width:38.5%\">\n                <div class=\"card-body\">\n                    <div class=\"row\" style=\"margin-left:0px;margin-right:0px;\">\n                        <div class=\"card node {{projectClass}}\" style=\"margin-left:0px;margin-right:0px;max-width:80%;width:80%\" [ngClass]=\"{'checked':this.checked.node32}\" id=\"{{projectClass}}_id_32\"    (click)=\"nodeInfo_selected(mainProjectName,32)\">\n                            <div class=\"card-body\">\n                                Human equivalent dose                                       \n                            </div>\n                        </div>\n                    </div>\n                </div>\n            </div>\n            <div style=\"width:30%\"></div>\n            <div style=\"width:30%\"></div>\n        </div>\n    </div>\n</div>\n\n"
+module.exports = "<div id=\"{{projectClass}}_workflow\" style=\"min-width: 725px;\" class=\"limit\">\n    <div class=\"p-5\">\n        <div class=\"row\">\n            <div style=\"width:30%\">\n                <div class=\"card-body\">\n                    <div class=\"row\" style=\"margin-left:0px;margin-right:0px;\">\n                        <div class=\"card node {{projectClass}}\" style=\"margin-left:0px;margin-right:0px;\"  [ngClass]=\"{'checked':this.checked.node22}\" id=\"{{projectClass}}_id_22\"    (click)=\"nodeInfo_selected(mainProjectName,22)\">\n                            <div class=\"card-body\">\n                                Assess <i>in vitro</i> biokinetics:\n                                <ul style=\"margin-bottom:0px;\">\n                                    <li>Unbound treatment concentration</li>\n                                    <li>Intracellular concentration <i>in vitro</i></li>\n                                </ul>\n                            </div>\n                        </div>\n                    </div>\n                    <br>\n                </div>\n            </div>\n            <div style=\"width:27%\">\n                <div class=\"card-body\">\n                    <div class=\"row\" style=\"margin-left:0px;margin-right:0px;\">\n                        <div class=\"card node {{projectClass}}\" style=\"margin-left:0px;margin-right:0px;\" [ngClass]=\"{'checked':this.checked.node23}\" id=\"{{projectClass}}_id_23\"    (click)=\"nodeInfo_selected(mainProjectName,23)\">\n                            <div class=\"card-body\">\n                                There is <i>in vitro</i> TK data<br>\n                                available for TC/SC(s)?<br>\n                            </div>\n                        </div>\n                    </div>\n                    <br>\n                </div>\n            </div>\n            <div class=\"\"  style=\"width:13%\">\n                <div style=\"height:30%\"></div>\n                <div style=\"\" class=\"row {{projectClass}}\" id=\"{{projectClass}}_node_23_no\" style=\"width:50%\">\n                    <!--<p style=\"padding-top:15%;padding-left:33%\">Yes</p>-->\n                    <table class=\"align-self-center\" style=\"width:100%;text-align: center\">\n                            <tr>\n                                <td>No</td>\n                            </tr>\n                    </table>\n                </div>\n            </div>\n            <div style=\"width:0%\"></div>\n            <div style=\"width:30%\">\n                <div class=\"card-body\">\n                    <div class=\"row\" style=\"margin-left:0px;margin-right:0px;\">\n                        <div class=\"card node {{projectClass}}\" style=\"margin-left:0px;margin-right:0px;\" [ngClass]=\"{'checked':this.checked.node24}\" id=\"{{projectClass}}_id_24\"    (click)=\"nodeInfo_selected(mainProjectName,24)\">\n                            <div class=\"card-body\">\n                                    There is <i>in vivo</i> TK data\n                                    available for TC/SC(s)\n                                    suitable for IVIVE-PBPK\n                                    parameters derivation?\n                                    \n                            </div>\n                        </div>\n                    </div>\n                    <br>\n                </div>\n            </div>\n        </div>\n        <div style=\"height:8rem\" class=\"row\">\n            <div style=\"width:50%\"></div>\n            <div>\n                <div style=\"height:6rem\"></div>\n                <div class=\"row {{projectClass}}\" id=\"{{projectClass}}_node_24_no\">\n                        <!--<p style=\"padding-top:15%;padding-left:33%\">Yes</p>-->\n                        <table class=\"align-self-center\" style=\"width:100%;text-align: center\">\n                                <tr>\n                                    <td>No</td>\n                                </tr>\n                        </table>\n                </div>\n            </div>\n            <div style=\"width:35%\"></div>\n            <div>\n                <div style=\"height:20%\"></div>\n                <div class=\"row {{projectClass}}\" id=\"{{projectClass}}_node_24_yes\" style=\"height:50%\">\n                        <!--<p style=\"padding-top:15%;padding-left:33%\">Yes</p>-->\n                        <table class=\"align-self-center\" style=\"width:4rem;text-align: center\">\n                                <tr>\n                                    <td>Yes</td>\n                                </tr>\n                        </table>\n                </div>\n            </div>\n\n        </div>\n        <div class=\"row\">\n            <div style=\"width:35%\"></div>\n            <div class=\"\"  style=\"width:10%\">\n                <div style=\"height:40%\"></div>\n                <div style=\"\" class=\"row {{projectClass}}\" id=\"{{projectClass}}_node_23_yes\" style=\"height:50%\">\n                    <!--<p style=\"padding-top:15%;padding-left:33%\">Yes</p>-->\n                    <table class=\"align-self-center\" style=\"width:100%;text-align: center\">\n                            <tr>\n                                <td>Yes</td>\n                            </tr>\n                    </table>\n                </div>\n            </div>\n            <div style=\"width:25%\">\n                <div class=\"card-body\">\n                    <div class=\"row\" style=\"margin-left:0px;margin-right:0px;\">\n                        <div class=\"card node {{projectClass}}\" style=\"margin-left:0px;margin-right:0px;max-width:75%;width:75%\" [ngClass]=\"{'checked':this.checked.node26}\" id=\"{{projectClass}}_id_26\"    (click)=\"nodeInfo_selected(mainProjectName,26)\">\n                            <div class=\"card-body\">\n                                    <i>In vitro</i> ADME assays<br>\n                                    and/or<br>\n                                    QSAR predictions<br>\n                            </div>\n                        </div>\n                    </div>\n                </div>\n            </div>\n            <div style=\"width:30%\">\n                <div class=\"card-body\">\n                    <div class=\"row\" style=\"margin-left:0px;margin-right:0px;\">\n                        <div class=\"card node {{projectClass}}\" style=\"margin-left:0px;margin-right:0px;max-width:100%;width:100%\" [ngClass]=\"{'checked':this.checked.node25}\" id=\"{{projectClass}}_id_25\"    (click)=\"nodeInfo_selected(mainProjectName,25)\">\n                            <div class=\"card-body\">\n                                Reverse translation PBPK                                    \n                            </div>\n                        </div>\n                    </div>\n                </div>\n            </div>\n        </div>\n        <div class=\"row\">\n            <div style=\"width:20%\"></div>\n            <div style=\"width:30%\"></div>\n            <div style=\"width:20%\"></div>\n            <div style=\"width:30%\">\n                <div class=\"card-body\">\n                    <div class=\"row\" style=\"margin-left:0px;margin-right:0px;\">\n                        <div class=\"card node {{projectClass}}\" style=\"margin-left:0px;margin-right:0px;max-width:100%;width:100%\" [ngClass]=\"{'checked':this.checked.node27}\" id=\"{{projectClass}}_id_27\"    (click)=\"nodeInfo_selected(mainProjectName,27)\">\n                            <div class=\"card-body\">\n                                Parametrize IVIVE-PBPK model                                    \n                            </div>\n                        </div>\n                    </div>\n                </div>\n            </div>\n        </div>\n        <div class=\"row\">\n            <div style=\"width:40%\"></div>\n            <div style=\"width:30%\"></div>\n            <div style=\"width:30%\">\n                <div class=\"card-body\">\n                    <div class=\"row\" style=\"margin-left:0px;margin-right:0px;\">\n                        <div class=\"card node {{projectClass}}\" style=\"margin-left:0px;margin-right:0px;max-width:100%;width:100%\" [ngClass]=\"{'checked':this.checked.node28}\" id=\"{{projectClass}}_id_28\"    (click)=\"nodeInfo_selected(mainProjectName,28)\">\n                            <div class=\"card-body\">\n                                Develop IVIVE-PBPK model                                    \n                            </div>\n                        </div>\n                    </div>\n                </div>\n            </div>\n        </div>\n        <div class=\"row\">\n            <div style=\"width:40%\"></div>\n            <div style=\"width:30%\"></div>\n            <div style=\"width:30%\">\n                <div class=\"card-body\">\n                    <div class=\"row\" style=\"margin-left:0px;margin-right:0px;\">\n                        <div class=\"card node {{projectClass}}\" style=\"margin-left:0px;margin-right:0px;max-width:100%;width:100%\" [ngClass]=\"{'checked':this.checked.node29}\" id=\"{{projectClass}}_id_29\"    (click)=\"nodeInfo_selected(mainProjectName,29)\">\n                            <div class=\"card-body\">\n                                <i>In vivo</i> data for at least one TC/SC                                    \n                            </div>\n                        </div>\n                    </div>\n                </div>\n            </div>\n        </div>\n        <div class=\"row\">\n            <div style=\"width:6%\"></div>    \n            <div style=\"width:34%\">\n                <div class=\"card-body\">\n                    <div class=\"row\" style=\"margin-left:0px;margin-right:0px;\">\n                        <div class=\"card node {{projectClass}}\" style=\"margin-left:0px;margin-right:0px;max-width:40%;width:40%\" [ngClass]=\"{'checked':this.checked.node30}\" id=\"{{projectClass}}_id_30\"    (click)=\"nodeInfo_selected(mainProjectName,30)\">\n                            <div class=\"card-body\">\n                                qIVIVE                                                                        \n                            </div>\n                        </div>\n                    </div>\n                </div>\n            </div>\n            <div style=\"width:30%\"></div>\n            <div style=\"width:30%\">\n                <div class=\"card-body\">\n                    <div class=\"row\" style=\"margin-left:0px;margin-right:0px;\">\n                        <div class=\"card node {{projectClass}}\" style=\"margin-left:0px;margin-right:0px;max-width:100%;width:100%\" [ngClass]=\"{'checked':this.checked.node31}\" id=\"{{projectClass}}_id_31\"    (click)=\"nodeInfo_selected(mainProjectName,31)\">\n                            <div class=\"card-body\">\n                                Verification of IVIVE-PBPK<br>\n                                Model with in vivo data                                 \n                            </div>\n                        </div>\n                    </div>\n                </div>\n            </div>\n        </div>\n        <div class=\"row\">\n            <div style=\"width:1.5%\"></div>     \n            <div style=\"width:38.5%\">\n                <div class=\"card-body\">\n                    <div class=\"row\" style=\"margin-left:0px;margin-right:0px;\">\n                        <div class=\"card node {{projectClass}}\" style=\"margin-left:0px;margin-right:0px;max-width:80%;width:80%\" [ngClass]=\"{'checked':this.checked.node32}\" id=\"{{projectClass}}_id_32\"    (click)=\"nodeInfo_selected(mainProjectName,32)\">\n                            <div class=\"card-body\">\n                                Human equivalent dose                                       \n                            </div>\n                        </div>\n                    </div>\n                </div>\n            </div>\n            <div style=\"width:30%\"></div>\n            <div style=\"width:30%\"></div>\n        </div>\n    </div>\n</div>\n\n"
 
 /***/ }),
 
@@ -302,7 +313,7 @@ module.exports = "<p></p>\n"
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = " <!-- Tab panes {Fade}  -->       \n <div class=\"container-fluid tab-content shadow bg-white rounded\" id=\"pills-tabContent\">\n    <div *ngFor=\"let project of this.globals.active_projects.slice().reverse(); let i = index\" class=\"tab-pane fade\" [ngClass]=\"{'active show': project===this.globals.visible_project}\" id=\"pills-{{project}}\" role=\"tabpanel\">\n        <ng-container [ngSwitch]=\"project.replace(this.subproject_suffix_separator_pattern, this.globals.subproject_suffix_separator)\">\n            <app-tk-workflow [projectName]=project [visibleProject]=globals.visible_project [change]=globals.change *ngSwitchCase=\"this.globals.tk_project_suffix\"></app-tk-workflow>\n            <app-td-workflow [projectName]=project [visibleProject]=globals.visible_project [change]=globals.change *ngSwitchCase=\"this.globals.td_project_suffix\"></app-td-workflow>\n            <app-each-workflow *ngSwitchDefault [projectName]=project [visibleProject]=globals.visible_project [change]=globals.change></app-each-workflow>\n        </ng-container>\n            \n    </div>  \n</div>   \n\n<div *ngIf=\"this.globals.active_projects.length==0\">\n        <div class=\"row shadow bg-white  justify-content-center\" id=\"pills-tabContent\">\n            <p class=\"font-italic pb-5\">--Open a project--</p>\n        </div>\n</div>\n<!---->"
+module.exports = " <!-- Tab panes {Fade}  -->       \n <div class=\"container-fluid tab-content shadow bg-white rounded\" id=\"pills-tabContent\">\n\n        <div (scroll)=\"triggerWorkflowRedraw()\" style=\"max-height: 80vh; overflow-y: auto\" *ngFor=\"let project of this.globals.active_projects.slice().reverse(); let i = index\" class=\"tab-pane fade\" [ngClass]=\"{'active show': project===this.globals.visible_project}\" id=\"pills-{{project}}\" role=\"tabpanel\">\n            <ng-container  [ngSwitch]=\"project.replace(this.subproject_suffix_separator_pattern, this.globals.subproject_suffix_separator)\">\n                <app-tk-workflow [projectName]=project [workflow_resize_start]=\"workflow_resize_start\" [resize_redraw]=\"resize_redraw\" [redraw]=\"redraw_workflow\" [visibleProject]=globals.visible_project [change]=globals.change *ngSwitchCase=\"this.globals.tk_project_suffix\"></app-tk-workflow>\n                <app-td-workflow [projectName]=project [workflow_resize_start]=\"workflow_resize_start\" [resize_redraw]=\"resize_redraw\" [redraw]=\"redraw_workflow\" [visibleProject]=globals.visible_project [change]=globals.change *ngSwitchCase=\"this.globals.td_project_suffix\"></app-td-workflow>\n                <app-each-workflow *ngSwitchDefault [workflow_resize_start]=\"workflow_resize_start\" [resize_redraw]=\"resize_redraw\" [workflow_resize_update]=\"workflow_resize_update\" [redraw]=\"redraw_workflow\" [projectName]=project [visibleProject]=globals.visible_project [change]=globals.change></app-each-workflow>\n            </ng-container>\n                \n        </div>\n\n</div>   \n\n\n<!---->\n"
 
 /***/ }),
 
@@ -442,54 +453,60 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var ngx_modal_dialog__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ngx-modal-dialog */ "./node_modules/ngx-modal-dialog/index.js");
 /* harmony import */ var _angular_material_progress_spinner__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! @angular/material/progress-spinner */ "./node_modules/@angular/material/esm2015/progress-spinner.js");
 /* harmony import */ var _ng_bootstrap_ng_bootstrap__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! @ng-bootstrap/ng-bootstrap */ "./node_modules/@ng-bootstrap/ng-bootstrap/fesm2015/ng-bootstrap.js");
-/* harmony import */ var _angular_material_table__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! @angular/material/table */ "./node_modules/@angular/material/esm2015/table.js");
-/* harmony import */ var _angular_material_paginator__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! @angular/material/paginator */ "./node_modules/@angular/material/esm2015/paginator.js");
-/* harmony import */ var _angular_material_sort__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! @angular/material/sort */ "./node_modules/@angular/material/esm2015/sort.js");
-/* harmony import */ var _angular_material_button__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! @angular/material/button */ "./node_modules/@angular/material/esm2015/button.js");
-/* harmony import */ var _angular_material_input__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! @angular/material/input */ "./node_modules/@angular/material/esm2015/input.js");
-/* harmony import */ var _angular_material_dialog__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! @angular/material/dialog */ "./node_modules/@angular/material/esm2015/dialog.js");
-/* harmony import */ var _angular_material_card__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! @angular/material/card */ "./node_modules/@angular/material/esm2015/card.js");
-/* harmony import */ var _angular_material_checkbox__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! @angular/material/checkbox */ "./node_modules/@angular/material/esm2015/checkbox.js");
-/* harmony import */ var _angular_material_select__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! @angular/material/select */ "./node_modules/@angular/material/esm2015/select.js");
-/* harmony import */ var _angular_cdk_portal__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! @angular/cdk/portal */ "./node_modules/@angular/cdk/esm2015/portal.js");
-/* harmony import */ var _angular_cdk_overlay__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! @angular/cdk/overlay */ "./node_modules/@angular/cdk/esm2015/overlay.js");
-/* harmony import */ var _globals__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! ./globals */ "./src/app/globals.ts");
-/* harmony import */ var _login_login_component__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(/*! ./login/login.component */ "./src/app/login/login.component.ts");
-/* harmony import */ var _main_main_component__WEBPACK_IMPORTED_MODULE_29__ = __webpack_require__(/*! ./main/main.component */ "./src/app/main/main.component.ts");
-/* harmony import */ var _app_component__WEBPACK_IMPORTED_MODULE_30__ = __webpack_require__(/*! ./app.component */ "./src/app/app.component.ts");
-/* harmony import */ var _navbar_navbar_component__WEBPACK_IMPORTED_MODULE_31__ = __webpack_require__(/*! ./navbar/navbar.component */ "./src/app/navbar/navbar.component.ts");
-/* harmony import */ var _sidebar_sidebar_component__WEBPACK_IMPORTED_MODULE_32__ = __webpack_require__(/*! ./sidebar/sidebar.component */ "./src/app/sidebar/sidebar.component.ts");
-/* harmony import */ var _tabs_tabs_component__WEBPACK_IMPORTED_MODULE_33__ = __webpack_require__(/*! ./tabs/tabs.component */ "./src/app/tabs/tabs.component.ts");
-/* harmony import */ var _workflows_workflows_component__WEBPACK_IMPORTED_MODULE_34__ = __webpack_require__(/*! ./workflows/workflows.component */ "./src/app/workflows/workflows.component.ts");
-/* harmony import */ var _each_workflow_each_workflow_component__WEBPACK_IMPORTED_MODULE_35__ = __webpack_require__(/*! ./each-workflow/each-workflow.component */ "./src/app/each-workflow/each-workflow.component.ts");
-/* harmony import */ var _welcome_welcome_component__WEBPACK_IMPORTED_MODULE_36__ = __webpack_require__(/*! ./welcome/welcome.component */ "./src/app/welcome/welcome.component.ts");
-/* harmony import */ var _smiles_micromodal_smiles_micromodal_component__WEBPACK_IMPORTED_MODULE_37__ = __webpack_require__(/*! ./smiles-micromodal/smiles-micromodal.component */ "./src/app/smiles-micromodal/smiles-micromodal.component.ts");
-/* harmony import */ var _node_info_node_info_component__WEBPACK_IMPORTED_MODULE_38__ = __webpack_require__(/*! ./node-info/node-info.component */ "./src/app/node-info/node-info.component.ts");
-/* harmony import */ var _editable_editable_component__WEBPACK_IMPORTED_MODULE_39__ = __webpack_require__(/*! ./editable/editable.component */ "./src/app/editable/editable.component.ts");
-/* harmony import */ var _node1_problem_formulation_node1_problem_formulation_component__WEBPACK_IMPORTED_MODULE_40__ = __webpack_require__(/*! ./node1-problem-formulation/node1-problem-formulation.component */ "./src/app/node1-problem-formulation/node1-problem-formulation.component.ts");
-/* harmony import */ var _tk_workflow_tk_workflow_component__WEBPACK_IMPORTED_MODULE_41__ = __webpack_require__(/*! ./tk-workflow/tk-workflow.component */ "./src/app/tk-workflow/tk-workflow.component.ts");
-/* harmony import */ var _td_workflow_td_workflow_component__WEBPACK_IMPORTED_MODULE_42__ = __webpack_require__(/*! ./td-workflow/td-workflow.component */ "./src/app/td-workflow/td-workflow.component.ts");
-/* harmony import */ var _tc_characterization_tc_characterization_component__WEBPACK_IMPORTED_MODULE_43__ = __webpack_require__(/*! ./tc-characterization/tc-characterization.component */ "./src/app/tc-characterization/tc-characterization.component.ts");
-/* harmony import */ var _overlay_overlay_component__WEBPACK_IMPORTED_MODULE_44__ = __webpack_require__(/*! ./overlay/overlay.component */ "./src/app/overlay/overlay.component.ts");
-/* harmony import */ var _name2cas_name2cas_component__WEBPACK_IMPORTED_MODULE_45__ = __webpack_require__(/*! ./name2cas/name2cas.component */ "./src/app/name2cas/name2cas.component.ts");
-/* harmony import */ var _chembl_chembl_component__WEBPACK_IMPORTED_MODULE_46__ = __webpack_require__(/*! ./chembl/chembl.component */ "./src/app/chembl/chembl.component.ts");
-/* harmony import */ var _compound_compound_component__WEBPACK_IMPORTED_MODULE_47__ = __webpack_require__(/*! ./compound/compound.component */ "./src/app/compound/compound.component.ts");
-/* harmony import */ var _keys_pipe__WEBPACK_IMPORTED_MODULE_48__ = __webpack_require__(/*! ./keys.pipe */ "./src/app/keys.pipe.ts");
-/* harmony import */ var _editable_view_mode_directive__WEBPACK_IMPORTED_MODULE_49__ = __webpack_require__(/*! ./editable/view-mode.directive */ "./src/app/editable/view-mode.directive.ts");
-/* harmony import */ var _editable_edit_mode_directive__WEBPACK_IMPORTED_MODULE_50__ = __webpack_require__(/*! ./editable/edit-mode.directive */ "./src/app/editable/edit-mode.directive.ts");
-/* harmony import */ var _editable_edit_on_enter_directive__WEBPACK_IMPORTED_MODULE_51__ = __webpack_require__(/*! ./editable/edit-on-enter.directive */ "./src/app/editable/edit-on-enter.directive.ts");
-/* harmony import */ var _http_interceptors_index__WEBPACK_IMPORTED_MODULE_52__ = __webpack_require__(/*! ./http-interceptors/index */ "./src/app/http-interceptors/index.ts");
-/* harmony import */ var _login_login_service__WEBPACK_IMPORTED_MODULE_53__ = __webpack_require__(/*! ./login/login.service */ "./src/app/login/login.service.ts");
-/* harmony import */ var _tabs_tabs_service__WEBPACK_IMPORTED_MODULE_54__ = __webpack_require__(/*! ./tabs/tabs.service */ "./src/app/tabs/tabs.service.ts");
-/* harmony import */ var _each_workflow_each_workflow_service__WEBPACK_IMPORTED_MODULE_55__ = __webpack_require__(/*! ./each-workflow/each-workflow.service */ "./src/app/each-workflow/each-workflow.service.ts");
-/* harmony import */ var _node1_problem_formulation_node1_problem_formulation_service__WEBPACK_IMPORTED_MODULE_56__ = __webpack_require__(/*! ./node1-problem-formulation/node1-problem-formulation.service */ "./src/app/node1-problem-formulation/node1-problem-formulation.service.ts");
-/* harmony import */ var _node_info_node_info_service__WEBPACK_IMPORTED_MODULE_57__ = __webpack_require__(/*! ./node-info/node-info.service */ "./src/app/node-info/node-info.service.ts");
-/* harmony import */ var ngx_cookie_service__WEBPACK_IMPORTED_MODULE_58__ = __webpack_require__(/*! ngx-cookie-service */ "./node_modules/ngx-cookie-service/ngx-cookie-service.js");
-/* harmony import */ var _tc_characterization_tc_characterization_service__WEBPACK_IMPORTED_MODULE_59__ = __webpack_require__(/*! ./tc-characterization/tc-characterization.service */ "./src/app/tc-characterization/tc-characterization.service.ts");
-/* harmony import */ var _name2cas_name2cas_service__WEBPACK_IMPORTED_MODULE_60__ = __webpack_require__(/*! ./name2cas/name2cas.service */ "./src/app/name2cas/name2cas.service.ts");
-/* harmony import */ var _chembl_chembl_service__WEBPACK_IMPORTED_MODULE_61__ = __webpack_require__(/*! ./chembl/chembl.service */ "./src/app/chembl/chembl.service.ts");
-/* harmony import */ var _compound_compound_service__WEBPACK_IMPORTED_MODULE_62__ = __webpack_require__(/*! ./compound/compound.service */ "./src/app/compound/compound.service.ts");
-/* harmony import */ var _tc_characterization_tc_compounds_service__WEBPACK_IMPORTED_MODULE_63__ = __webpack_require__(/*! ./tc-characterization/tc-compounds.service */ "./src/app/tc-characterization/tc-compounds.service.ts");
+/* harmony import */ var angular_resizable_element__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! angular-resizable-element */ "./node_modules/angular-resizable-element/fesm2015/angular-resizable-element.js");
+/* harmony import */ var _angular_material_table__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! @angular/material/table */ "./node_modules/@angular/material/esm2015/table.js");
+/* harmony import */ var _angular_material_paginator__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! @angular/material/paginator */ "./node_modules/@angular/material/esm2015/paginator.js");
+/* harmony import */ var _angular_material_sort__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! @angular/material/sort */ "./node_modules/@angular/material/esm2015/sort.js");
+/* harmony import */ var _angular_material_button__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! @angular/material/button */ "./node_modules/@angular/material/esm2015/button.js");
+/* harmony import */ var _angular_material_input__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! @angular/material/input */ "./node_modules/@angular/material/esm2015/input.js");
+/* harmony import */ var _angular_material_dialog__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! @angular/material/dialog */ "./node_modules/@angular/material/esm2015/dialog.js");
+/* harmony import */ var _angular_material_card__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! @angular/material/card */ "./node_modules/@angular/material/esm2015/card.js");
+/* harmony import */ var _angular_material_checkbox__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! @angular/material/checkbox */ "./node_modules/@angular/material/esm2015/checkbox.js");
+/* harmony import */ var _angular_material_select__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! @angular/material/select */ "./node_modules/@angular/material/esm2015/select.js");
+/* harmony import */ var _angular_cdk_portal__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! @angular/cdk/portal */ "./node_modules/@angular/cdk/esm2015/portal.js");
+/* harmony import */ var _angular_cdk_overlay__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! @angular/cdk/overlay */ "./node_modules/@angular/cdk/esm2015/overlay.js");
+/* harmony import */ var _globals__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(/*! ./globals */ "./src/app/globals.ts");
+/* harmony import */ var _login_login_component__WEBPACK_IMPORTED_MODULE_29__ = __webpack_require__(/*! ./login/login.component */ "./src/app/login/login.component.ts");
+/* harmony import */ var _main_main_component__WEBPACK_IMPORTED_MODULE_30__ = __webpack_require__(/*! ./main/main.component */ "./src/app/main/main.component.ts");
+/* harmony import */ var _app_component__WEBPACK_IMPORTED_MODULE_31__ = __webpack_require__(/*! ./app.component */ "./src/app/app.component.ts");
+/* harmony import */ var _navbar_navbar_component__WEBPACK_IMPORTED_MODULE_32__ = __webpack_require__(/*! ./navbar/navbar.component */ "./src/app/navbar/navbar.component.ts");
+/* harmony import */ var _sidebar_sidebar_component__WEBPACK_IMPORTED_MODULE_33__ = __webpack_require__(/*! ./sidebar/sidebar.component */ "./src/app/sidebar/sidebar.component.ts");
+/* harmony import */ var _tabs_tabs_component__WEBPACK_IMPORTED_MODULE_34__ = __webpack_require__(/*! ./tabs/tabs.component */ "./src/app/tabs/tabs.component.ts");
+/* harmony import */ var _workflows_workflows_component__WEBPACK_IMPORTED_MODULE_35__ = __webpack_require__(/*! ./workflows/workflows.component */ "./src/app/workflows/workflows.component.ts");
+/* harmony import */ var _each_workflow_each_workflow_component__WEBPACK_IMPORTED_MODULE_36__ = __webpack_require__(/*! ./each-workflow/each-workflow.component */ "./src/app/each-workflow/each-workflow.component.ts");
+/* harmony import */ var _welcome_welcome_component__WEBPACK_IMPORTED_MODULE_37__ = __webpack_require__(/*! ./welcome/welcome.component */ "./src/app/welcome/welcome.component.ts");
+/* harmony import */ var _smiles_micromodal_smiles_micromodal_component__WEBPACK_IMPORTED_MODULE_38__ = __webpack_require__(/*! ./smiles-micromodal/smiles-micromodal.component */ "./src/app/smiles-micromodal/smiles-micromodal.component.ts");
+/* harmony import */ var _node_info_node_info_component__WEBPACK_IMPORTED_MODULE_39__ = __webpack_require__(/*! ./node-info/node-info.component */ "./src/app/node-info/node-info.component.ts");
+/* harmony import */ var _editable_editable_component__WEBPACK_IMPORTED_MODULE_40__ = __webpack_require__(/*! ./editable/editable.component */ "./src/app/editable/editable.component.ts");
+/* harmony import */ var _node1_problem_formulation_node1_problem_formulation_component__WEBPACK_IMPORTED_MODULE_41__ = __webpack_require__(/*! ./node1-problem-formulation/node1-problem-formulation.component */ "./src/app/node1-problem-formulation/node1-problem-formulation.component.ts");
+/* harmony import */ var _tk_workflow_tk_workflow_component__WEBPACK_IMPORTED_MODULE_42__ = __webpack_require__(/*! ./tk-workflow/tk-workflow.component */ "./src/app/tk-workflow/tk-workflow.component.ts");
+/* harmony import */ var _td_workflow_td_workflow_component__WEBPACK_IMPORTED_MODULE_43__ = __webpack_require__(/*! ./td-workflow/td-workflow.component */ "./src/app/td-workflow/td-workflow.component.ts");
+/* harmony import */ var _tc_characterization_tc_characterization_component__WEBPACK_IMPORTED_MODULE_44__ = __webpack_require__(/*! ./tc-characterization/tc-characterization.component */ "./src/app/tc-characterization/tc-characterization.component.ts");
+/* harmony import */ var _overlay_overlay_component__WEBPACK_IMPORTED_MODULE_45__ = __webpack_require__(/*! ./overlay/overlay.component */ "./src/app/overlay/overlay.component.ts");
+/* harmony import */ var _name2cas_name2cas_component__WEBPACK_IMPORTED_MODULE_46__ = __webpack_require__(/*! ./name2cas/name2cas.component */ "./src/app/name2cas/name2cas.component.ts");
+/* harmony import */ var _chembl_chembl_component__WEBPACK_IMPORTED_MODULE_47__ = __webpack_require__(/*! ./chembl/chembl.component */ "./src/app/chembl/chembl.component.ts");
+/* harmony import */ var _compound_compound_component__WEBPACK_IMPORTED_MODULE_48__ = __webpack_require__(/*! ./compound/compound.component */ "./src/app/compound/compound.component.ts");
+/* harmony import */ var _keys_pipe__WEBPACK_IMPORTED_MODULE_49__ = __webpack_require__(/*! ./keys.pipe */ "./src/app/keys.pipe.ts");
+/* harmony import */ var _editable_view_mode_directive__WEBPACK_IMPORTED_MODULE_50__ = __webpack_require__(/*! ./editable/view-mode.directive */ "./src/app/editable/view-mode.directive.ts");
+/* harmony import */ var _editable_edit_mode_directive__WEBPACK_IMPORTED_MODULE_51__ = __webpack_require__(/*! ./editable/edit-mode.directive */ "./src/app/editable/edit-mode.directive.ts");
+/* harmony import */ var _editable_edit_on_enter_directive__WEBPACK_IMPORTED_MODULE_52__ = __webpack_require__(/*! ./editable/edit-on-enter.directive */ "./src/app/editable/edit-on-enter.directive.ts");
+/* harmony import */ var _http_interceptors_index__WEBPACK_IMPORTED_MODULE_53__ = __webpack_require__(/*! ./http-interceptors/index */ "./src/app/http-interceptors/index.ts");
+/* harmony import */ var _login_login_service__WEBPACK_IMPORTED_MODULE_54__ = __webpack_require__(/*! ./login/login.service */ "./src/app/login/login.service.ts");
+/* harmony import */ var _tabs_tabs_service__WEBPACK_IMPORTED_MODULE_55__ = __webpack_require__(/*! ./tabs/tabs.service */ "./src/app/tabs/tabs.service.ts");
+/* harmony import */ var _each_workflow_each_workflow_service__WEBPACK_IMPORTED_MODULE_56__ = __webpack_require__(/*! ./each-workflow/each-workflow.service */ "./src/app/each-workflow/each-workflow.service.ts");
+/* harmony import */ var _node1_problem_formulation_node1_problem_formulation_service__WEBPACK_IMPORTED_MODULE_57__ = __webpack_require__(/*! ./node1-problem-formulation/node1-problem-formulation.service */ "./src/app/node1-problem-formulation/node1-problem-formulation.service.ts");
+/* harmony import */ var _node_info_node_info_service__WEBPACK_IMPORTED_MODULE_58__ = __webpack_require__(/*! ./node-info/node-info.service */ "./src/app/node-info/node-info.service.ts");
+/* harmony import */ var ngx_cookie_service__WEBPACK_IMPORTED_MODULE_59__ = __webpack_require__(/*! ngx-cookie-service */ "./node_modules/ngx-cookie-service/ngx-cookie-service.js");
+/* harmony import */ var _tc_characterization_tc_characterization_service__WEBPACK_IMPORTED_MODULE_60__ = __webpack_require__(/*! ./tc-characterization/tc-characterization.service */ "./src/app/tc-characterization/tc-characterization.service.ts");
+/* harmony import */ var _name2cas_name2cas_service__WEBPACK_IMPORTED_MODULE_61__ = __webpack_require__(/*! ./name2cas/name2cas.service */ "./src/app/name2cas/name2cas.service.ts");
+/* harmony import */ var _chembl_chembl_service__WEBPACK_IMPORTED_MODULE_62__ = __webpack_require__(/*! ./chembl/chembl.service */ "./src/app/chembl/chembl.service.ts");
+/* harmony import */ var _compound_compound_service__WEBPACK_IMPORTED_MODULE_63__ = __webpack_require__(/*! ./compound/compound.service */ "./src/app/compound/compound.service.ts");
+/* harmony import */ var _tc_characterization_tc_compounds_service__WEBPACK_IMPORTED_MODULE_64__ = __webpack_require__(/*! ./tc-characterization/tc-compounds.service */ "./src/app/tc-characterization/tc-compounds.service.ts");
+/* harmony import */ var _datamatrix_datamatrix_component__WEBPACK_IMPORTED_MODULE_65__ = __webpack_require__(/*! ./datamatrix/datamatrix.component */ "./src/app/datamatrix/datamatrix.component.ts");
+/* harmony import */ var _pipes_keep_html_pipe__WEBPACK_IMPORTED_MODULE_66__ = __webpack_require__(/*! ./pipes/keep-html.pipe */ "./src/app/pipes/keep-html.pipe.ts");
+
+
+
 
 
 
@@ -559,30 +576,32 @@ let AppModule = class AppModule {
 AppModule = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
     Object(_angular_core__WEBPACK_IMPORTED_MODULE_4__["NgModule"])({
         declarations: [
-            _app_component__WEBPACK_IMPORTED_MODULE_30__["AppComponent"],
-            _login_login_component__WEBPACK_IMPORTED_MODULE_28__["LoginComponent"],
-            _main_main_component__WEBPACK_IMPORTED_MODULE_29__["MainComponent"],
-            _navbar_navbar_component__WEBPACK_IMPORTED_MODULE_31__["NavbarComponent"],
-            _sidebar_sidebar_component__WEBPACK_IMPORTED_MODULE_32__["SidebarComponent"],
-            _tabs_tabs_component__WEBPACK_IMPORTED_MODULE_33__["TabsComponent"],
-            _workflows_workflows_component__WEBPACK_IMPORTED_MODULE_34__["WorkflowsComponent"],
-            _each_workflow_each_workflow_component__WEBPACK_IMPORTED_MODULE_35__["EachWorkflowComponent"],
-            _node_info_node_info_component__WEBPACK_IMPORTED_MODULE_38__["NodeInfoComponent"],
-            _editable_editable_component__WEBPACK_IMPORTED_MODULE_39__["EditableComponent"],
-            _editable_view_mode_directive__WEBPACK_IMPORTED_MODULE_49__["ViewModeDirective"],
-            _editable_edit_mode_directive__WEBPACK_IMPORTED_MODULE_50__["EditModeDirective"],
-            _editable_edit_on_enter_directive__WEBPACK_IMPORTED_MODULE_51__["EditableOnEnterDirective"],
-            _keys_pipe__WEBPACK_IMPORTED_MODULE_48__["KeysPipe"],
-            _node1_problem_formulation_node1_problem_formulation_component__WEBPACK_IMPORTED_MODULE_40__["Node1ProblemFormulationComponent"],
-            _welcome_welcome_component__WEBPACK_IMPORTED_MODULE_36__["WelcomeComponent"],
-            _smiles_micromodal_smiles_micromodal_component__WEBPACK_IMPORTED_MODULE_37__["SmilesMicromodalComponent"],
-            _tk_workflow_tk_workflow_component__WEBPACK_IMPORTED_MODULE_41__["TkWorkflowComponent"],
-            _td_workflow_td_workflow_component__WEBPACK_IMPORTED_MODULE_42__["TdWorkflowComponent"],
-            _tc_characterization_tc_characterization_component__WEBPACK_IMPORTED_MODULE_43__["TcCharacterizationComponent"],
-            _overlay_overlay_component__WEBPACK_IMPORTED_MODULE_44__["OverlayComponent"],
-            _name2cas_name2cas_component__WEBPACK_IMPORTED_MODULE_45__["Name2casComponent"],
-            _chembl_chembl_component__WEBPACK_IMPORTED_MODULE_46__["ChemblComponent"],
-            _compound_compound_component__WEBPACK_IMPORTED_MODULE_47__["CompoundComponent"],
+            _app_component__WEBPACK_IMPORTED_MODULE_31__["AppComponent"],
+            _login_login_component__WEBPACK_IMPORTED_MODULE_29__["LoginComponent"],
+            _main_main_component__WEBPACK_IMPORTED_MODULE_30__["MainComponent"],
+            _navbar_navbar_component__WEBPACK_IMPORTED_MODULE_32__["NavbarComponent"],
+            _sidebar_sidebar_component__WEBPACK_IMPORTED_MODULE_33__["SidebarComponent"],
+            _tabs_tabs_component__WEBPACK_IMPORTED_MODULE_34__["TabsComponent"],
+            _workflows_workflows_component__WEBPACK_IMPORTED_MODULE_35__["WorkflowsComponent"],
+            _each_workflow_each_workflow_component__WEBPACK_IMPORTED_MODULE_36__["EachWorkflowComponent"],
+            _node_info_node_info_component__WEBPACK_IMPORTED_MODULE_39__["NodeInfoComponent"],
+            _editable_editable_component__WEBPACK_IMPORTED_MODULE_40__["EditableComponent"],
+            _editable_view_mode_directive__WEBPACK_IMPORTED_MODULE_50__["ViewModeDirective"],
+            _editable_edit_mode_directive__WEBPACK_IMPORTED_MODULE_51__["EditModeDirective"],
+            _editable_edit_on_enter_directive__WEBPACK_IMPORTED_MODULE_52__["EditableOnEnterDirective"],
+            _keys_pipe__WEBPACK_IMPORTED_MODULE_49__["KeysPipe"],
+            _node1_problem_formulation_node1_problem_formulation_component__WEBPACK_IMPORTED_MODULE_41__["Node1ProblemFormulationComponent"],
+            _welcome_welcome_component__WEBPACK_IMPORTED_MODULE_37__["WelcomeComponent"],
+            _smiles_micromodal_smiles_micromodal_component__WEBPACK_IMPORTED_MODULE_38__["SmilesMicromodalComponent"],
+            _tk_workflow_tk_workflow_component__WEBPACK_IMPORTED_MODULE_42__["TkWorkflowComponent"],
+            _td_workflow_td_workflow_component__WEBPACK_IMPORTED_MODULE_43__["TdWorkflowComponent"],
+            _tc_characterization_tc_characterization_component__WEBPACK_IMPORTED_MODULE_44__["TcCharacterizationComponent"],
+            _overlay_overlay_component__WEBPACK_IMPORTED_MODULE_45__["OverlayComponent"],
+            _name2cas_name2cas_component__WEBPACK_IMPORTED_MODULE_46__["Name2casComponent"],
+            _chembl_chembl_component__WEBPACK_IMPORTED_MODULE_47__["ChemblComponent"],
+            _compound_compound_component__WEBPACK_IMPORTED_MODULE_48__["CompoundComponent"],
+            _datamatrix_datamatrix_component__WEBPACK_IMPORTED_MODULE_65__["DatamatrixComponent"],
+            _pipes_keep_html_pipe__WEBPACK_IMPORTED_MODULE_66__["EscapeHtmlPipe"]
         ],
         imports: [
             _angular_platform_browser__WEBPACK_IMPORTED_MODULE_3__["BrowserModule"],
@@ -595,46 +614,47 @@ AppModule = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
             ngx_modal_dialog__WEBPACK_IMPORTED_MODULE_13__["ModalDialogModule"].forRoot(),
             _angular_platform_browser_animations__WEBPACK_IMPORTED_MODULE_9__["BrowserAnimationsModule"],
             _angular_cdk_drag_drop__WEBPACK_IMPORTED_MODULE_11__["DragDropModule"],
-            _angular_material_table__WEBPACK_IMPORTED_MODULE_16__["MatTableModule"],
-            _angular_material_paginator__WEBPACK_IMPORTED_MODULE_17__["MatPaginatorModule"],
-            _angular_material_sort__WEBPACK_IMPORTED_MODULE_18__["MatSortModule"],
-            _angular_material_button__WEBPACK_IMPORTED_MODULE_19__["MatButtonModule"],
-            _angular_material_input__WEBPACK_IMPORTED_MODULE_20__["MatInputModule"],
-            _angular_material_select__WEBPACK_IMPORTED_MODULE_24__["MatSelectModule"],
+            _angular_material_table__WEBPACK_IMPORTED_MODULE_17__["MatTableModule"],
+            _angular_material_paginator__WEBPACK_IMPORTED_MODULE_18__["MatPaginatorModule"],
+            _angular_material_sort__WEBPACK_IMPORTED_MODULE_19__["MatSortModule"],
+            _angular_material_button__WEBPACK_IMPORTED_MODULE_20__["MatButtonModule"],
+            _angular_material_input__WEBPACK_IMPORTED_MODULE_21__["MatInputModule"],
+            _angular_material_select__WEBPACK_IMPORTED_MODULE_25__["MatSelectModule"],
             _angular_forms__WEBPACK_IMPORTED_MODULE_5__["FormsModule"],
             _angular_forms__WEBPACK_IMPORTED_MODULE_5__["ReactiveFormsModule"],
-            _angular_material_dialog__WEBPACK_IMPORTED_MODULE_21__["MatDialogModule"],
-            _angular_material_card__WEBPACK_IMPORTED_MODULE_22__["MatCardModule"],
-            _angular_material_checkbox__WEBPACK_IMPORTED_MODULE_23__["MatCheckboxModule"],
+            _angular_material_dialog__WEBPACK_IMPORTED_MODULE_22__["MatDialogModule"],
+            _angular_material_card__WEBPACK_IMPORTED_MODULE_23__["MatCardModule"],
+            _angular_material_checkbox__WEBPACK_IMPORTED_MODULE_24__["MatCheckboxModule"],
             _angular_material_progress_spinner__WEBPACK_IMPORTED_MODULE_14__["MatProgressSpinnerModule"],
             _ckeditor_ckeditor5_angular__WEBPACK_IMPORTED_MODULE_8__["CKEditorModule"],
             _ng_bootstrap_ng_bootstrap__WEBPACK_IMPORTED_MODULE_15__["NgbModalModule"],
-            _angular_cdk_overlay__WEBPACK_IMPORTED_MODULE_26__["OverlayModule"],
-            _angular_cdk_portal__WEBPACK_IMPORTED_MODULE_25__["PortalModule"],
+            _angular_cdk_overlay__WEBPACK_IMPORTED_MODULE_27__["OverlayModule"],
+            _angular_cdk_portal__WEBPACK_IMPORTED_MODULE_26__["PortalModule"],
             ngx_toastr__WEBPACK_IMPORTED_MODULE_10__["ToastrModule"].forRoot({
                 timeOut: 3000,
                 positionClass: 'toast-top-center',
                 preventDuplicates: true,
-            }) // ToastrModule added
+            }),
+            angular_resizable_element__WEBPACK_IMPORTED_MODULE_16__["ResizableModule"]
         ],
         providers: [
-            _http_interceptors_index__WEBPACK_IMPORTED_MODULE_52__["httpInterceptorProviders"],
-            _globals__WEBPACK_IMPORTED_MODULE_27__["Globals"],
-            _login_login_service__WEBPACK_IMPORTED_MODULE_53__["LoginService"],
-            ngx_cookie_service__WEBPACK_IMPORTED_MODULE_58__["CookieService"],
-            _tabs_tabs_service__WEBPACK_IMPORTED_MODULE_54__["TabsService"],
-            _each_workflow_each_workflow_service__WEBPACK_IMPORTED_MODULE_55__["EachWorkflowService"],
-            _node_info_node_info_service__WEBPACK_IMPORTED_MODULE_57__["NodeInfoService"],
-            _node1_problem_formulation_node1_problem_formulation_service__WEBPACK_IMPORTED_MODULE_56__["Node1ProblemFormulationService"],
-            _tc_characterization_tc_characterization_service__WEBPACK_IMPORTED_MODULE_59__["TcCharacterizationService"],
-            _name2cas_name2cas_service__WEBPACK_IMPORTED_MODULE_60__["Name2casService"],
-            _chembl_chembl_service__WEBPACK_IMPORTED_MODULE_61__["ChemblService"],
-            _compound_compound_service__WEBPACK_IMPORTED_MODULE_62__["CompoundService"],
-            _tc_characterization_tc_compounds_service__WEBPACK_IMPORTED_MODULE_63__["TcCompoundsService"],
-            { provide: _angular_cdk_overlay__WEBPACK_IMPORTED_MODULE_26__["OverlayContainer"], useClass: _angular_cdk_overlay__WEBPACK_IMPORTED_MODULE_26__["FullscreenOverlayContainer"] }
+            _http_interceptors_index__WEBPACK_IMPORTED_MODULE_53__["httpInterceptorProviders"],
+            _globals__WEBPACK_IMPORTED_MODULE_28__["Globals"],
+            _login_login_service__WEBPACK_IMPORTED_MODULE_54__["LoginService"],
+            ngx_cookie_service__WEBPACK_IMPORTED_MODULE_59__["CookieService"],
+            _tabs_tabs_service__WEBPACK_IMPORTED_MODULE_55__["TabsService"],
+            _each_workflow_each_workflow_service__WEBPACK_IMPORTED_MODULE_56__["EachWorkflowService"],
+            _node_info_node_info_service__WEBPACK_IMPORTED_MODULE_58__["NodeInfoService"],
+            _node1_problem_formulation_node1_problem_formulation_service__WEBPACK_IMPORTED_MODULE_57__["Node1ProblemFormulationService"],
+            _tc_characterization_tc_characterization_service__WEBPACK_IMPORTED_MODULE_60__["TcCharacterizationService"],
+            _name2cas_name2cas_service__WEBPACK_IMPORTED_MODULE_61__["Name2casService"],
+            _chembl_chembl_service__WEBPACK_IMPORTED_MODULE_62__["ChemblService"],
+            _compound_compound_service__WEBPACK_IMPORTED_MODULE_63__["CompoundService"],
+            _tc_characterization_tc_compounds_service__WEBPACK_IMPORTED_MODULE_64__["TcCompoundsService"],
+            { provide: _angular_cdk_overlay__WEBPACK_IMPORTED_MODULE_27__["OverlayContainer"], useClass: _angular_cdk_overlay__WEBPACK_IMPORTED_MODULE_27__["FullscreenOverlayContainer"] }
         ],
-        entryComponents: [_node_info_node_info_component__WEBPACK_IMPORTED_MODULE_38__["NodeInfoComponent"], _overlay_overlay_component__WEBPACK_IMPORTED_MODULE_44__["OverlayComponent"]],
-        bootstrap: [_app_component__WEBPACK_IMPORTED_MODULE_30__["AppComponent"]]
+        entryComponents: [_node_info_node_info_component__WEBPACK_IMPORTED_MODULE_39__["NodeInfoComponent"], _overlay_overlay_component__WEBPACK_IMPORTED_MODULE_45__["OverlayComponent"]],
+        bootstrap: [_app_component__WEBPACK_IMPORTED_MODULE_31__["AppComponent"]]
     })
 ], AppModule);
 
@@ -667,22 +687,31 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm2015/core.js");
 /* harmony import */ var _ng_bootstrap_ng_bootstrap__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @ng-bootstrap/ng-bootstrap */ "./node_modules/@ng-bootstrap/ng-bootstrap/fesm2015/ng-bootstrap.js");
 /* harmony import */ var _chembl_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./chembl.service */ "./src/app/chembl/chembl.service.ts");
-/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm2015/index.js");
+/* harmony import */ var _compound_compound_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../compound/compound.service */ "./src/app/compound/compound.service.ts");
+/* harmony import */ var _tc_characterization_tc_compounds_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../tc-characterization/tc-compounds.service */ "./src/app/tc-characterization/tc-compounds.service.ts");
+/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm2015/index.js");
+
+
 
 
 
 
 
 let ChemblComponent = class ChemblComponent {
-    constructor(service, modalService) {
+    constructor(service, modalService, tc_compounds) {
         this.service = service;
         this.modalService = modalService;
+        this.tc_compounds = tc_compounds;
         this.chembl_running = false;
+        this.input_type_radio_value = 'smiles';
         this.chembl_item_list = [];
         this.chembl_selected_item_int_id_list = [];
         this.binded_multiselect_id = 'chembl_chembl_ids';
         this.activity = '';
-        this.chembl_activity_fields = ['standard_type', 'standard_value', 'standard_units', 'assay_description'];
+        this.chembl_activity_fields = ['standard_type', 'standard_value', 'standard_units',
+            'assay_description', 'value', 'units', 'assay_chembl_id'];
+        this.chembl_displayed_activity_fields = ['standard_type', 'standard_value', 'standard_units',
+            'assay_description'];
         this.chembl_activity_rows = [];
         this.ngb_modal_opt = {
             ariaLabelledBy: 'chembl-copy-clipboard-basic-title',
@@ -691,6 +720,21 @@ let ChemblComponent = class ChemblComponent {
         };
     }
     ngOnInit() {
+        switch (this.ra_type) {
+            case 'tc': {
+                this.ra_compound_service = this.tc_compounds;
+                break;
+            }
+            case 'sc': {
+                this.ra_compound_service = null;
+                break;
+            }
+            default: {
+                alert('Invalid CompoundComponent RA type.');
+                break;
+            }
+        }
+        this.ra_compound_service.getCompounds(this.info.project);
     }
     ngAfterViewInit() {
         this.setupMultiselect();
@@ -864,7 +908,7 @@ let ChemblComponent = class ChemblComponent {
         }
     }
     chEMBLGetADMETActivityDataByCompoundId(chembl_id, fields = null, limit = 1000000, _count = 0) {
-        let chembl_activity_rows$ = new rxjs__WEBPACK_IMPORTED_MODULE_4__["AsyncSubject"]();
+        let chembl_activity_rows$ = new rxjs__WEBPACK_IMPORTED_MODULE_6__["AsyncSubject"]();
         let activity_rows = [];
         const subs = this.service.chEMBLGetADMETActivityDataByCompoundId(chembl_id).subscribe(chembl_result => {
             this.parseChEMBLGetADMETActivityData(chembl_result, activity_rows, chembl_activity_rows$, _count, limit, fields);
@@ -876,24 +920,30 @@ let ChemblComponent = class ChemblComponent {
         });
         return chembl_activity_rows$;
     }
-    chemblIdFromSmilesButton() {
+    chemblIdFromSmilesButton(reset_activity_compound = true) {
         this.chembl_running = true;
         this.setItemList([]);
+        this.activity_chembl_ids = undefined;
+        if (reset_activity_compound) {
+            this.activity_compound = undefined;
+        }
+        this.chembl_activity_rows = [];
+        this.activity = '';
         const subscript = this.service.chemblSmilesToInChIKey(this.chembl_search_string).subscribe(result => {
             const unichem_subscript = this.service.uniChemGetSrcIdFromInChIKey(result.inchikey).subscribe((unichem_result) => {
                 const chembl_ids = this.service.getChEMBLIDFromUniChemData(unichem_result);
+                this.activity_chembl_ids = chembl_ids;
                 this.setItemList(this.service.arrayToItemList(chembl_ids));
-                this.chembl_activity_rows = [];
                 const chembl_activity_rows_obj = {};
                 let index = 0;
-                const chembl_activity$ = new rxjs__WEBPACK_IMPORTED_MODULE_4__["AsyncSubject"]();
+                const chembl_activity$ = new rxjs__WEBPACK_IMPORTED_MODULE_6__["AsyncSubject"]();
                 const chembl_act_subs = chembl_activity$.subscribe(result => {
                     let activity_rows = '';
                     Object.keys(chembl_activity_rows_obj).sort((a, b) => Number(a) - Number(b)).forEach(idx => {
-                        this.chembl_activity_rows += chembl_activity_rows_obj[idx];
+                        this.chembl_activity_rows.push(chembl_activity_rows_obj[idx]);
                         chembl_activity_rows_obj[idx].forEach(activity => {
                             activity_rows += '<tr>';
-                            this.chembl_activity_fields.forEach(field => {
+                            this.chembl_displayed_activity_fields.forEach(field => {
                                 activity_rows += '<td>' + activity[field] + '</td>';
                             });
                             activity_rows += '</tr>';
@@ -907,15 +957,15 @@ let ChemblComponent = class ChemblComponent {
                 }, () => {
                     chembl_act_subs.unsubscribe();
                 });
-                let sucess_count = 0;
+                let success_count = 0;
                 const chembl_ids_length = chembl_ids.length;
                 chembl_ids.forEach(chembl_id => {
                     const chembl_activity_rows$ = this.chEMBLGetADMETActivityDataByCompoundId(chembl_id, this.chembl_activity_fields);
                     const chembl_subs = chembl_activity_rows$.subscribe(chembl_result => {
                         chembl_activity_rows_obj[index] = chembl_result['activities'];
                         chembl_activity$.next(Object.keys(chembl_activity_rows_obj));
-                        sucess_count++;
-                        if (chembl_ids_length >= sucess_count) {
+                        success_count++;
+                        if (chembl_ids_length >= success_count) {
                             chembl_activity$.complete();
                         }
                     }, error => {
@@ -942,6 +992,35 @@ let ChemblComponent = class ChemblComponent {
         }, () => {
             subscript.unsubscribe();
         });
+    }
+    chemblIdFromCompoundButton() {
+        this.chembl_running = true;
+        const old_chembl_search_string = this.chembl_search_string;
+        let activity_compound;
+        const BreakException = {};
+        try {
+            this.ra_compound_service.compounds$.getValue().forEach(compound => {
+                if (compound.int_id === this.selected_compound_int_id) {
+                    activity_compound = compound;
+                    throw BreakException;
+                }
+            });
+        }
+        catch (e) {
+            if (e !== BreakException) {
+                throw e;
+            }
+        }
+        if (typeof activity_compound !== 'undefined') {
+            this.chembl_search_string = activity_compound.smiles;
+            this.activity_compound = activity_compound;
+            this.chemblIdFromSmilesButton(false);
+            this.chembl_search_string = old_chembl_search_string;
+        }
+        else {
+            alert('Compound #' + this.selected_compound_int_id.toString() + 'not found.');
+            this.chembl_running = false;
+        }
     }
     openCopy(content, copy_selection_only = true) {
         let closeResult;
@@ -973,15 +1052,37 @@ let ChemblComponent = class ChemblComponent {
             this.chembl_content_item_textarea = this.chembl_item_text_dump;
         }
     }
+    compoundChange() {
+    }
+    typeof(variable) {
+        return typeof variable;
+    }
+    saveActivityButton() {
+        const subs = this.service.saveChemblData(this.activity_compound, this.chembl_activity_rows)
+            .subscribe(result => {
+            alert('ChEMBL data saved.');
+        }, error => {
+            alert('Error while saving ChEMBL data.');
+            subs.unsubscribe();
+        }, () => {
+            subs.unsubscribe();
+        });
+    }
 };
+ChemblComponent.ra_abbr_to_ra_type = { tc: _compound_compound_service__WEBPACK_IMPORTED_MODULE_4__["Compound"].TARGET_COMPOUND, sc: _compound_compound_service__WEBPACK_IMPORTED_MODULE_4__["Compound"].SOURCE_COMPOUND };
 ChemblComponent.ctorParameters = () => [
     { type: _chembl_service__WEBPACK_IMPORTED_MODULE_3__["ChemblService"] },
-    { type: _ng_bootstrap_ng_bootstrap__WEBPACK_IMPORTED_MODULE_2__["NgbModal"] }
+    { type: _ng_bootstrap_ng_bootstrap__WEBPACK_IMPORTED_MODULE_2__["NgbModal"] },
+    { type: _tc_characterization_tc_compounds_service__WEBPACK_IMPORTED_MODULE_5__["TcCompoundsService"] }
 ];
 tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
     Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
     tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Object)
 ], ChemblComponent.prototype, "info", void 0);
+tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+    Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Object)
+], ChemblComponent.prototype, "ra_type", void 0);
 ChemblComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
     Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
         selector: 'app-chembl',
@@ -989,7 +1090,8 @@ ChemblComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         styles: [__webpack_require__(/*! ./chembl.component.css */ "./src/app/chembl/chembl.component.css")]
     }),
     tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_chembl_service__WEBPACK_IMPORTED_MODULE_3__["ChemblService"],
-        _ng_bootstrap_ng_bootstrap__WEBPACK_IMPORTED_MODULE_2__["NgbModal"]])
+        _ng_bootstrap_ng_bootstrap__WEBPACK_IMPORTED_MODULE_2__["NgbModal"],
+        _tc_characterization_tc_compounds_service__WEBPACK_IMPORTED_MODULE_5__["TcCompoundsService"]])
 ], ChemblComponent);
 
 
@@ -1012,6 +1114,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var ngx_cookie_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ngx-cookie-service */ "./node_modules/ngx-cookie-service/ngx-cookie-service.js");
 /* harmony import */ var _environments_environment__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../environments/environment */ "./src/environments/environment.ts");
 /* harmony import */ var _globals__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../globals */ "./src/app/globals.ts");
+/* harmony import */ var _login_login_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../login/login.service */ "./src/app/login/login.service.ts");
+/* harmony import */ var _compound_compound_service__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../compound/compound.service */ "./src/app/compound/compound.service.ts");
+
+
 
 
 
@@ -1019,10 +1125,11 @@ __webpack_require__.r(__webpack_exports__);
 
 
 let ChemblService = class ChemblService {
-    constructor(http, cookieService, globals) {
+    constructor(http, cookieService, globals, loginService) {
         this.http = http;
         this.cookieService = cookieService;
         this.globals = globals;
+        this.loginService = loginService;
     }
     encodeBoolean(bool) {
         if (bool) {
@@ -1077,11 +1184,19 @@ let ChemblService = class ChemblService {
         });
         return item_list;
     }
+    saveChemblData(compound, data) {
+        const url = _environments_environment__WEBPACK_IMPORTED_MODULE_4__["environment"].baseUrl + 'project/' + compound.project.toString() + '/compound/' +
+            _compound_compound_service__WEBPACK_IMPORTED_MODULE_7__["Compound"].ra_type_abbrev_to_value_dict[compound.ra_type] + '/' + compound.int_id.toString() + '/chembl_save/';
+        let options = this.loginService.getPOSTHttpOptions();
+        options['headers'] = options['headers'].append('Content-Type', 'application/json');
+        return this.http.post(url, JSON.stringify(data[0]), options);
+    }
 };
 ChemblService.ctorParameters = () => [
     { type: _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpClient"] },
     { type: ngx_cookie_service__WEBPACK_IMPORTED_MODULE_3__["CookieService"] },
-    { type: _globals__WEBPACK_IMPORTED_MODULE_5__["Globals"] }
+    { type: _globals__WEBPACK_IMPORTED_MODULE_5__["Globals"] },
+    { type: _login_login_service__WEBPACK_IMPORTED_MODULE_6__["LoginService"] }
 ];
 ChemblService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
     Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
@@ -1089,7 +1204,8 @@ ChemblService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
     }),
     tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpClient"],
         ngx_cookie_service__WEBPACK_IMPORTED_MODULE_3__["CookieService"],
-        _globals__WEBPACK_IMPORTED_MODULE_5__["Globals"]])
+        _globals__WEBPACK_IMPORTED_MODULE_5__["Globals"],
+        _login_login_service__WEBPACK_IMPORTED_MODULE_6__["LoginService"]])
 ], ChemblService);
 
 
@@ -1141,7 +1257,6 @@ let CompoundComponent = CompoundComponent_1 = class CompoundComponent {
             }
             case 'sc': {
                 this.ra_compound_service = null;
-                this.compounds$ = null;
                 break;
             }
             default: {
@@ -1149,7 +1264,7 @@ let CompoundComponent = CompoundComponent_1 = class CompoundComponent {
                 break;
             }
         }
-        this.tc_compounds.getCompounds(this.info.project);
+        this.ra_compound_service.getCompounds(this.info.project);
     }
     deleteCompound(int_id) {
         this.running = true;
@@ -1340,6 +1455,289 @@ CompoundService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
 
 /***/ }),
 
+/***/ "./src/app/datamatrix/datamatrix.component.css":
+/*!*****************************************************!*\
+  !*** ./src/app/datamatrix/datamatrix.component.css ***!
+  \*****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = ".mat-elevation-z8 {    \n    overflow-y: auto;\n    max-height: 80vh;\n}\n\n\n\n  .cdk-overlay-container,\n  .cdk-global-overlay-wrapper {\n    pointer-events: none !important;\n    top: 0 !important;\n    left: 0 !important;\n    height: 100% !important;\n    width: 100% !important;\n  }\n\n\n\n  .cdk-overlay-container {\n    position: fixed !important;\n    z-index: 1000 !important;\n  }\n\n\n\n  .cdk-overlay-pane {\n    position: absolute !important;\n    pointer-events: auto !important;\n    box-sizing: border-box !important;\n    z-index: 1000 !important;\n    display: -webkit-box !important;\n    display: flex !important;\n    max-width: 100% !important;\n    max-height: 100% !important;\n  }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvZGF0YW1hdHJpeC9kYXRhbWF0cml4LmNvbXBvbmVudC5jc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7SUFDSSxnQkFBZ0I7SUFDaEIsZ0JBQWdCO0FBQ3BCOzs7O0VBSUU7O0lBRUUsK0JBQStCO0lBQy9CLGlCQUFpQjtJQUNqQixrQkFBa0I7SUFDbEIsdUJBQXVCO0lBQ3ZCLHNCQUFzQjtFQUN4Qjs7OztFQUNBO0lBQ0UsMEJBQTBCO0lBQzFCLHdCQUF3QjtFQUMxQjs7OztFQUVBO0lBQ0UsNkJBQTZCO0lBQzdCLCtCQUErQjtJQUMvQixpQ0FBaUM7SUFDakMsd0JBQXdCO0lBQ3hCLCtCQUF3QjtJQUF4Qix3QkFBd0I7SUFDeEIsMEJBQTBCO0lBQzFCLDJCQUEyQjtFQUM3QiIsImZpbGUiOiJzcmMvYXBwL2RhdGFtYXRyaXgvZGF0YW1hdHJpeC5jb21wb25lbnQuY3NzIiwic291cmNlc0NvbnRlbnQiOlsiLm1hdC1lbGV2YXRpb24tejggeyAgICBcbiAgICBvdmVyZmxvdy15OiBhdXRvO1xuICAgIG1heC1oZWlnaHQ6IDgwdmg7XG59XG5cblxuXG4gIC5jZGstb3ZlcmxheS1jb250YWluZXIsXG4gIC5jZGstZ2xvYmFsLW92ZXJsYXktd3JhcHBlciB7XG4gICAgcG9pbnRlci1ldmVudHM6IG5vbmUgIWltcG9ydGFudDtcbiAgICB0b3A6IDAgIWltcG9ydGFudDtcbiAgICBsZWZ0OiAwICFpbXBvcnRhbnQ7XG4gICAgaGVpZ2h0OiAxMDAlICFpbXBvcnRhbnQ7XG4gICAgd2lkdGg6IDEwMCUgIWltcG9ydGFudDtcbiAgfVxuICAuY2RrLW92ZXJsYXktY29udGFpbmVyIHtcbiAgICBwb3NpdGlvbjogZml4ZWQgIWltcG9ydGFudDtcbiAgICB6LWluZGV4OiAxMDAwICFpbXBvcnRhbnQ7XG4gIH1cblxuICAuY2RrLW92ZXJsYXktcGFuZSB7XG4gICAgcG9zaXRpb246IGFic29sdXRlICFpbXBvcnRhbnQ7XG4gICAgcG9pbnRlci1ldmVudHM6IGF1dG8gIWltcG9ydGFudDtcbiAgICBib3gtc2l6aW5nOiBib3JkZXItYm94ICFpbXBvcnRhbnQ7XG4gICAgei1pbmRleDogMTAwMCAhaW1wb3J0YW50O1xuICAgIGRpc3BsYXk6IGZsZXggIWltcG9ydGFudDtcbiAgICBtYXgtd2lkdGg6IDEwMCUgIWltcG9ydGFudDtcbiAgICBtYXgtaGVpZ2h0OiAxMDAlICFpbXBvcnRhbnQ7XG4gIH1cbiJdfQ== */"
+
+/***/ }),
+
+/***/ "./src/app/datamatrix/datamatrix.component.ts":
+/*!****************************************************!*\
+  !*** ./src/app/datamatrix/datamatrix.component.ts ***!
+  \****************************************************/
+/*! exports provided: DatamatrixComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DatamatrixComponent", function() { return DatamatrixComponent; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm2015/core.js");
+/* harmony import */ var _angular_material_paginator__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/material/paginator */ "./node_modules/@angular/material/esm2015/paginator.js");
+/* harmony import */ var _angular_material_sort__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/material/sort */ "./node_modules/@angular/material/esm2015/sort.js");
+/* harmony import */ var _globals__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../globals */ "./src/app/globals.ts");
+/* harmony import */ var _datamatrix_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./datamatrix.service */ "./src/app/datamatrix/datamatrix.service.ts");
+/* harmony import */ var _compound_compound_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../compound/compound.service */ "./src/app/compound/compound.service.ts");
+
+
+
+
+
+
+
+const ELEMENT_DATA = [
+    { position: 1, name: 'Hydrogen', weight: 1.0079, symbol: 'H' },
+    { position: 2, name: 'Helium', weight: 4.0026, symbol: 'He' },
+    { position: 3, name: 'Lithium', weight: 6.941, symbol: 'Li' },
+    { position: 4, name: 'Beryllium', weight: 9.0122, symbol: 'Be' },
+    { position: 5, name: 'Boron', weight: 10.811, symbol: 'B' },
+    { position: 6, name: 'Carbon', weight: 12.0107, symbol: 'C' },
+    { position: 7, name: 'Nitrogen', weight: 14.0067, symbol: 'N' },
+    { position: 8, name: 'Oxygen', weight: 15.9994, symbol: 'O' },
+    { position: 9, name: 'Fluorine', weight: 18.9984, symbol: 'F' },
+    { position: 10, name: 'Neon', weight: 20.1797, symbol: 'Ne' },
+    { position: 11, name: 'Sodium', weight: 22.9897, symbol: 'Na' },
+    { position: 12, name: 'Magnesium', weight: 24.305, symbol: 'Mg' },
+    { position: 13, name: 'Aluminum', weight: 26.9815, symbol: 'Al' },
+    { position: 14, name: 'Silicon', weight: 28.0855, symbol: 'Si' },
+    { position: 15, name: 'Phosphorus', weight: 30.9738, symbol: 'P' },
+    { position: 16, name: 'Sulfur', weight: 32.065, symbol: 'S' },
+    { position: 17, name: 'Chlorine', weight: 35.453, symbol: 'Cl' },
+    { position: 18, name: 'Argon', weight: 39.948, symbol: 'Ar' },
+    { position: 19, name: 'Potassium', weight: 39.0983, symbol: 'K' },
+    { position: 20, name: 'Calcium', weight: 40.078, symbol: 'Ca' },
+];
+let DatamatrixComponent = class DatamatrixComponent {
+    constructor(globals, service) {
+        this.globals = globals;
+        this.service = service;
+        this.ra_type_2_abbrev = {};
+        this.heatmap = '';
+        this.heatmap_bkp = '';
+        this.heatmap_scripts = [];
+        this.heatmap_id = '';
+        this.heatmap_div_reset = true;
+        this.scroll_refreshing = false;
+    }
+    ngOnInit() {
+        this.heatmap_id = 'heatmap_datamatrix_bio_activity_project_' + this.project_number.toString();
+        this.ra_type_2_abbrev[_compound_compound_service__WEBPACK_IMPORTED_MODULE_6__["Compound"].TARGET_COMPOUND] = 'tc';
+        this.ra_type_2_abbrev[_compound_compound_service__WEBPACK_IMPORTED_MODULE_6__["Compound"].SOURCE_COMPOUND] = 'sc';
+    }
+    ngAfterViewInit() {
+        //redraw connector lines when div.limit resizes
+        /*     const that = this;
+            $(".limit").each(function() {
+              let resize_sensor = new ResizeSensor(this, function () {
+                console.log('resize3');
+                that.drawHeatmap();
+              });
+            }); */
+    }
+    ngOnChanges(changes) {
+        if (changes.hasOwnProperty('projectName')) {
+            console.log('hola:');
+            console.log(this.projectName);
+            this.deleteHeatmap();
+            this.project_number = this.globals.current_user.projects[this.projectName];
+            if (typeof this.project_number === 'undefined') {
+                return;
+            }
+            /*       const subs = this.service.getMatrixData(this.project_number, Compound.TARGET_COMPOUND)
+                  .subscribe(result => {
+                    const data_matrix: Array<Object> = [];
+                    let field_names: Object = {};
+                    result.forEach(compound => {
+                      let fields: Object = {'Compound name': compound.name, 'num': compound.int_id, 'type': this.ra_type_2_abbrev[compound.ra_type]};
+                      compound.data_matrix[0].data_matrix_fields.forEach(field => {
+                        let unit: string = field.std_unit;
+                        let sep = ' ';
+                        if (field.std_unit === null || typeof field.std_unit === 'undefined') {
+                          unit = '';
+                          sep = '';
+                        }
+                        if (field.std_value === null) {
+                          fields[field.assay_id] = 'NaN';
+                        } else {
+                          fields[field.assay_id] = field.std_value.toString() + sep + unit;
+                        }
+                        field_names[field.assay_id] = 0; */
+            /*             if (field.std_value === null) {
+                          fields[field.name] = 'NaN';
+                        } else {
+                          fields[field.name] = field.std_value.toString() + sep + unit;
+                        }
+                        field_names[field.name] = 0; */
+            /*           });
+                      data_matrix.push(fields);
+                    });
+                    console.log(data_matrix);
+                    this.displayedColumns = ['Compound name', 'num', 'type'].concat(Object.keys(field_names).sort());
+                    this.dataSource = new MatTableDataSource<Object>(data_matrix);
+                    this.columnsToDisplay = this.displayedColumns.slice();
+                    this.dataSource.paginator = this.paginator;
+                    this.dataSource.sort = this.sort; */
+            const subs = this.service.getMatrixHeatmap(this.project_number).subscribe(result => {
+                this.heatmap = result.item;
+                this.heatmap_bkp = result.item;
+                this.heatmap_id = result.heatmap_div_id;
+                /*           this.heatmap = result.div;
+                          this.heatmap_bkp = result.div;
+                          this.heatmap_scripts = result.scripts; */
+                this.drawHeatmap();
+            }, error => {
+                alert('Error retriving data matrix.');
+                subs.unsubscribe();
+            }, () => {
+                subs.unsubscribe();
+            });
+        }
+        /*     if (changes.hasOwnProperty('redraw')) {
+              console.log('datamatrix_change');
+              this.drawHeatmap();
+            }
+            if (changes.hasOwnProperty('workflow_scroll')) {
+              if (!this.scroll_refreshing) {
+                this.scroll_refreshing = true;
+                console.log('datamatrix_change');
+                this.heatmap = '';
+                this.drawHeatmap();
+                this.scroll_refreshing = false;
+              }
+            } */
+    }
+    drawHeatmap() {
+        const something = Bokeh.embed.embed_item(this.heatmap);
+        console.log('something');
+        console.log(something);
+        /*     this.heatmap = this.heatmap_bkp;
+            setTimeout(() => {
+              this.heatmap_scripts.forEach( (script) => {
+                eval(script);
+              });
+            }, 0); */
+    }
+    deleteHeatmap() {
+        this.heatmap_div_reset = false;
+        let doc_to_delete = [];
+        Bokeh.documents.forEach((doc, index) => {
+            if (doc._title === this.heatmap_id) {
+                doc.clear();
+                doc_to_delete.push(index);
+            }
+        });
+        doc_to_delete.forEach(idx => {
+            Bokeh.documents.splice(idx, 1);
+        });
+        this.heatmap_div_reset = true;
+    }
+};
+DatamatrixComponent.ctorParameters = () => [
+    { type: _globals__WEBPACK_IMPORTED_MODULE_4__["Globals"] },
+    { type: _datamatrix_service__WEBPACK_IMPORTED_MODULE_5__["DatamatrixService"] }
+];
+tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+    Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Object)
+], DatamatrixComponent.prototype, "projectName", void 0);
+tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+    Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Object)
+], DatamatrixComponent.prototype, "redraw", void 0);
+tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+    Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Object)
+], DatamatrixComponent.prototype, "workflow_scroll", void 0);
+tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+    Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["ViewChild"])(_angular_material_paginator__WEBPACK_IMPORTED_MODULE_2__["MatPaginator"], { static: true }),
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", _angular_material_paginator__WEBPACK_IMPORTED_MODULE_2__["MatPaginator"])
+], DatamatrixComponent.prototype, "paginator", void 0);
+tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+    Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["ViewChild"])(_angular_material_sort__WEBPACK_IMPORTED_MODULE_3__["MatSort"], { static: true }),
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", _angular_material_sort__WEBPACK_IMPORTED_MODULE_3__["MatSort"])
+], DatamatrixComponent.prototype, "sort", void 0);
+DatamatrixComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+    Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
+        selector: 'app-datamatrix',
+        template: __webpack_require__(/*! raw-loader!./datamatrix.component.html */ "./node_modules/raw-loader/index.js!./src/app/datamatrix/datamatrix.component.html"),
+        styles: [__webpack_require__(/*! ./datamatrix.component.css */ "./src/app/datamatrix/datamatrix.component.css")]
+    }),
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_globals__WEBPACK_IMPORTED_MODULE_4__["Globals"],
+        _datamatrix_service__WEBPACK_IMPORTED_MODULE_5__["DatamatrixService"]])
+], DatamatrixComponent);
+
+
+
+/***/ }),
+
+/***/ "./src/app/datamatrix/datamatrix.service.ts":
+/*!**************************************************!*\
+  !*** ./src/app/datamatrix/datamatrix.service.ts ***!
+  \**************************************************/
+/*! exports provided: DatamatrixService */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DatamatrixService", function() { return DatamatrixService; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm2015/core.js");
+/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm2015/http.js");
+/* harmony import */ var ngx_cookie_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ngx-cookie-service */ "./node_modules/ngx-cookie-service/ngx-cookie-service.js");
+/* harmony import */ var _environments_environment__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../environments/environment */ "./src/environments/environment.ts");
+/* harmony import */ var _globals__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../globals */ "./src/app/globals.ts");
+/* harmony import */ var _login_login_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../login/login.service */ "./src/app/login/login.service.ts");
+/* harmony import */ var _compound_compound_service__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../compound/compound.service */ "./src/app/compound/compound.service.ts");
+
+
+
+
+
+
+
+
+let DatamatrixService = class DatamatrixService {
+    constructor(http, cookieService, globals, loginService) {
+        this.http = http;
+        this.cookieService = cookieService;
+        this.globals = globals;
+        this.loginService = loginService;
+    }
+    getMatrixData(project, ra_type) {
+        const url = _environments_environment__WEBPACK_IMPORTED_MODULE_4__["environment"].baseUrl + 'project/' + project.toString() + '/compound/' +
+            _compound_compound_service__WEBPACK_IMPORTED_MODULE_7__["Compound"].ra_type_abbrev_to_value_dict[ra_type] + '/datamatrix/';
+        return this.http.get(url, { withCredentials: true });
+    }
+    getMatrixHeatmap(project) {
+        const url = _environments_environment__WEBPACK_IMPORTED_MODULE_4__["environment"].baseUrl + 'project/' + project.toString() + '/datamatrix/heatmap/json/';
+        return this.http.get(url, { withCredentials: true });
+    }
+};
+DatamatrixService.ctorParameters = () => [
+    { type: _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpClient"] },
+    { type: ngx_cookie_service__WEBPACK_IMPORTED_MODULE_3__["CookieService"] },
+    { type: _globals__WEBPACK_IMPORTED_MODULE_5__["Globals"] },
+    { type: _login_login_service__WEBPACK_IMPORTED_MODULE_6__["LoginService"] }
+];
+DatamatrixService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+    Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
+        providedIn: 'root'
+    }),
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpClient"],
+        ngx_cookie_service__WEBPACK_IMPORTED_MODULE_3__["CookieService"],
+        _globals__WEBPACK_IMPORTED_MODULE_5__["Globals"],
+        _login_login_service__WEBPACK_IMPORTED_MODULE_6__["LoginService"]])
+], DatamatrixService);
+
+
+
+/***/ }),
+
 /***/ "./src/app/each-workflow/each-workflow.component.css":
 /*!***********************************************************!*\
   !*** ./src/app/each-workflow/each-workflow.component.css ***!
@@ -1423,11 +1821,22 @@ let EachWorkflowComponent = class EachWorkflowComponent {
     ngOnChanges(changes) {
         if (this.visibleProject !== '') {
             if (this.projectName === this.visibleProject) {
-                if (changes.hasOwnProperty('visibleProject')) {
+                if (changes.hasOwnProperty('visibleProject') || changes.hasOwnProperty('redraw')) {
+                    this.drawConnections();
+                }
+                if (changes.hasOwnProperty('resize_redraw')) {
+                    this.removeConnections();
                     this.drawConnections();
                 }
                 if (changes.hasOwnProperty('change')) {
                     this.updateCheckedNodes();
+                }
+                if (changes.hasOwnProperty('workflow_resize_start')) {
+                    this.removeConnections(true, true);
+                }
+                if (changes.hasOwnProperty('workflow_resize_update')) {
+                    this.removeConnections(true, true);
+                    this.drawConnections(true);
                 }
             }
         }
@@ -1443,48 +1852,76 @@ let EachWorkflowComponent = class EachWorkflowComponent {
             });
         }, error => { subscription.unsubscribe(); }, () => { subscription.unsubscribe(); });
     }
-    drawConnections() {
-        $('.' + this.projectName).connections('remove');
-        $('#' + this.projectName + '_id_1, #' + this.projectName + '_id_2').connections({
-            class: 'fast'
-        });
-        $('#' + this.projectName + '_id_2, #' + this.projectName + '_id_3').connections({
-            class: 'fast'
-        });
-        $('#' + this.projectName + '_id_3, #' + this.projectName + '_id_4').connections({
-            class: 'fast'
-        });
-        $('#' + this.projectName + '_id_4, #' + this.projectName + '_id_5').connections({
-            class: 'fast'
-        });
-        $('#' + this.projectName + '_id_5, #' + this.projectName + '_id_6').connections({
-            class: 'fast'
-        });
-        $('#' + this.projectName + '_id_6, #' + this.projectName + '_id_7').connections({
-            class: 'fast'
-        });
-        $('#' + this.projectName + '_id_7, #' + this.projectName + '_id_8').connections({
-            class: 'fast'
-        });
-        $('#' + this.projectName + '_id_9').connections({
-            from: '#' + this.projectName + '_id_8',
-            class: 'fast'
-        });
-        $('#' + this.projectName + '_id_10').connections({
-            from: '#' + this.projectName + '_id_8',
-            class: 'fast'
-        });
-        $('#' + this.projectName + '_id_11').connections({
-            from: '#' + this.projectName + '_id_9',
-            class: 'fast'
-        });
-        $('#' + this.projectName + '_id_11').connections({
-            from: '#' + this.projectName + '_id_10',
-            class: 'fast'
-        });
-        $('#' + this.projectName + '_id_11, #' + this.projectName + '_id_12').connections({
-            class: 'fast'
-        });
+    removeConnections(resize_clone = false, hard = false) {
+        let jquery_selector_prefix = "body ";
+        if (resize_clone) {
+            jquery_selector_prefix = ":not(.resize-active) ";
+        }
+        $(jquery_selector_prefix).find('.' + this.projectName).connections('remove');
+        if (hard) {
+            $(jquery_selector_prefix).find('#' + this.projectName + '_workflow connection').remove();
+        }
+    }
+    drawConnections(resize_clone = false) {
+        let jquery_selector_prefix = "body ";
+        if (resize_clone) {
+            jquery_selector_prefix = ":not(.resize-active) ";
+        }
+        setTimeout(() => {
+            $(jquery_selector_prefix).find('.' + this.projectName).connections('remove');
+            $(jquery_selector_prefix).find('#' + this.projectName + '_id_1, #' + this.projectName + '_id_2').connections({
+                class: 'fast',
+                within: jquery_selector_prefix + '#' + this.projectName + '_workflow',
+            });
+            $(jquery_selector_prefix).find('#' + this.projectName + '_id_2, #' + this.projectName + '_id_3').connections({
+                class: 'fast',
+                within: jquery_selector_prefix + '#' + this.projectName + '_workflow',
+            });
+            $(jquery_selector_prefix).find('#' + this.projectName + '_id_3, #' + this.projectName + '_id_4').connections({
+                class: 'fast',
+                within: jquery_selector_prefix + '#' + this.projectName + '_workflow',
+            });
+            $(jquery_selector_prefix).find('#' + this.projectName + '_id_4, #' + this.projectName + '_id_5').connections({
+                class: 'fast',
+                within: jquery_selector_prefix + '#' + this.projectName + '_workflow',
+            });
+            $(jquery_selector_prefix).find('#' + this.projectName + '_id_5, #' + this.projectName + '_id_6').connections({
+                class: 'fast',
+                within: jquery_selector_prefix + '#' + this.projectName + '_workflow',
+            });
+            $(jquery_selector_prefix).find('#' + this.projectName + '_id_6, #' + this.projectName + '_id_7').connections({
+                class: 'fast',
+                within: jquery_selector_prefix + '#' + this.projectName + '_workflow',
+            });
+            $(jquery_selector_prefix).find('#' + this.projectName + '_id_7, #' + this.projectName + '_id_8').connections({
+                class: 'fast',
+                within: jquery_selector_prefix + '#' + this.projectName + '_workflow',
+            });
+            $(jquery_selector_prefix).find('#' + this.projectName + '_id_9').connections({
+                from: '#' + this.projectName + '_id_8',
+                class: 'fast',
+                within: jquery_selector_prefix + '#' + this.projectName + '_workflow',
+            });
+            $(jquery_selector_prefix).find('#' + this.projectName + '_id_10').connections({
+                from: '#' + this.projectName + '_id_8',
+                class: 'fast',
+                within: jquery_selector_prefix + '#' + this.projectName + '_workflow',
+            });
+            $(jquery_selector_prefix).find('#' + this.projectName + '_id_11').connections({
+                from: '#' + this.projectName + '_id_9',
+                class: 'fast',
+                within: jquery_selector_prefix + '#' + this.projectName + '_workflow',
+            });
+            $(jquery_selector_prefix).find('#' + this.projectName + '_id_11').connections({
+                from: '#' + this.projectName + '_id_10',
+                class: 'fast',
+                within: jquery_selector_prefix + '#' + this.projectName + '_workflow',
+            });
+            $(jquery_selector_prefix).find('#' + this.projectName + '_id_11, #' + this.projectName + '_id_12').connections({
+                class: 'fast',
+                within: jquery_selector_prefix + '#' + this.projectName + '_workflow',
+            });
+        }, 0);
     }
     ngAfterViewInit() {
         this.drawConnections();
@@ -1584,12 +2021,28 @@ tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
 ], EachWorkflowComponent.prototype, "projectName", void 0);
 tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
     Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Boolean)
+], EachWorkflowComponent.prototype, "redraw", void 0);
+tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+    Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
     tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", String)
 ], EachWorkflowComponent.prototype, "visibleProject", void 0);
 tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
     Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
     tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Boolean)
 ], EachWorkflowComponent.prototype, "change", void 0);
+tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+    Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Boolean)
+], EachWorkflowComponent.prototype, "resize_redraw", void 0);
+tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+    Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Boolean)
+], EachWorkflowComponent.prototype, "workflow_resize_update", void 0);
+tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+    Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Boolean)
+], EachWorkflowComponent.prototype, "workflow_resize_start", void 0);
 EachWorkflowComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
     Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
         selector: 'app-each-workflow',
@@ -1928,6 +2381,7 @@ let Globals = class Globals {
         this.current_main_project = '';
         this.operatorId = '';
         this.change = false; // Tricki no realize WF change
+        this.workflow_scroll = false;
         this.csrftoken_cookie_name = 'csrftoken';
         this.csrftoken_header_name = 'X-CSRFToken';
         this.csrftoken_form_input_name = 'csrfmiddlewaretoken';
@@ -2247,7 +2701,7 @@ let LoginService = class LoginService {
         return this.http.get(url, { withCredentials: true });
     }
     getPOSTHttpOptions() {
-        let HttpHeadersobj = {};
+        const HttpHeadersobj = {};
         HttpHeadersobj[this.globals.csrftoken_header_name] = this.getCSRFToken();
         const httpOptions = {
             withCredentials: true,
@@ -2299,7 +2753,7 @@ LoginService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "\n/* ---------------------------------------------------\n    SIDEBAR STYLE\n----------------------------------------------------- */\n\n#sidebar {\n    min-width: 250px;\n    max-width: 250px;\n    -webkit-transition: all 0.3s;\n    transition: all 0.3s;\n}\n\n#sidebar.active {\n    margin-left: -250px;\n}\n\n/* ---------------------------------------------------\n    CONTENT STYLE\n----------------------------------------------------- */\n\n/*#node-info {\n   \n    min-width:900px;\n    max-width: 900px;\n    transition: all 0.3s;\n}\n\n#node-info.active {\n    visibility:hidden;\n    overflow:hidden;\n    margin-left: -900px;\n    transition: all 0.1s;\n}*/\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvbWFpbi9tYWluLmNvbXBvbmVudC5jc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IjtBQUNBOzt1REFFdUQ7O0FBRXZEO0lBQ0ksZ0JBQWdCO0lBQ2hCLGdCQUFnQjtJQUNoQiw0QkFBb0I7SUFBcEIsb0JBQW9CO0FBQ3hCOztBQUVBO0lBQ0ksbUJBQW1CO0FBQ3ZCOztBQUNBOzt1REFFdUQ7O0FBRXZEOzs7Ozs7Ozs7Ozs7RUFZRSIsImZpbGUiOiJzcmMvYXBwL21haW4vbWFpbi5jb21wb25lbnQuY3NzIiwic291cmNlc0NvbnRlbnQiOlsiXG4vKiAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS1cbiAgICBTSURFQkFSIFNUWUxFXG4tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLSAqL1xuXG4jc2lkZWJhciB7XG4gICAgbWluLXdpZHRoOiAyNTBweDtcbiAgICBtYXgtd2lkdGg6IDI1MHB4O1xuICAgIHRyYW5zaXRpb246IGFsbCAwLjNzO1xufVxuXG4jc2lkZWJhci5hY3RpdmUge1xuICAgIG1hcmdpbi1sZWZ0OiAtMjUwcHg7XG59XG4vKiAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS1cbiAgICBDT05URU5UIFNUWUxFXG4tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLSAqL1xuXG4vKiNub2RlLWluZm8ge1xuICAgXG4gICAgbWluLXdpZHRoOjkwMHB4O1xuICAgIG1heC13aWR0aDogOTAwcHg7XG4gICAgdHJhbnNpdGlvbjogYWxsIDAuM3M7XG59XG5cbiNub2RlLWluZm8uYWN0aXZlIHtcbiAgICB2aXNpYmlsaXR5OmhpZGRlbjtcbiAgICBvdmVyZmxvdzpoaWRkZW47XG4gICAgbWFyZ2luLWxlZnQ6IC05MDBweDtcbiAgICB0cmFuc2l0aW9uOiBhbGwgMC4xcztcbn0qL1xuIl19 */"
+module.exports = "\n/* ---------------------------------------------------\n    SIDEBAR STYLE\n----------------------------------------------------- */\n\n#sidebar {\n    min-width: 250px;\n    max-width: 250px;\n    -webkit-transition: all 0.3s;\n    transition: all 0.3s;\n}\n\n#sidebar.active {\n    margin-left: -250px;\n}\n\n/* ---------------------------------------------------\n    CONTENT STYLE\n----------------------------------------------------- */\n\n/*#node-info {\n   \n    min-width:900px;\n    max-width: 900px;\n    transition: all 0.3s;\n}\n\n#node-info.active {\n    visibility:hidden;\n    overflow:hidden;\n    margin-left: -900px;\n    transition: all 0.1s;\n}*/\n\na:hover{\n    cursor: pointer;\n}\n\nmwlResizable {\n    box-sizing: border-box; /*required for the enableGhostResize option to work*/\n}\n\n.rectangle {\n    position: relative;\n    top: 200px;\n    display: -webkit-box;\n    display: flex;\n    -webkit-box-align: center;\n            align-items: center;\n    -webkit-box-pack: center;\n            justify-content: center;\n    width: 300px;\n    height: 150px;\n    background-color: #fd4140;\n    border: solid 1px #121621;\n    color: #121621;\n    margin: auto;\n}\n\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvbWFpbi9tYWluLmNvbXBvbmVudC5jc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IjtBQUNBOzt1REFFdUQ7O0FBRXZEO0lBQ0ksZ0JBQWdCO0lBQ2hCLGdCQUFnQjtJQUNoQiw0QkFBb0I7SUFBcEIsb0JBQW9CO0FBQ3hCOztBQUVBO0lBQ0ksbUJBQW1CO0FBQ3ZCOztBQUNBOzt1REFFdUQ7O0FBRXZEOzs7Ozs7Ozs7Ozs7RUFZRTs7QUFHRjtJQUNJLGVBQWU7QUFDbkI7O0FBRUE7SUFDSSxzQkFBc0IsRUFBRSxvREFBb0Q7QUFDaEY7O0FBRUE7SUFDSSxrQkFBa0I7SUFDbEIsVUFBVTtJQUNWLG9CQUFhO0lBQWIsYUFBYTtJQUNiLHlCQUFtQjtZQUFuQixtQkFBbUI7SUFDbkIsd0JBQXVCO1lBQXZCLHVCQUF1QjtJQUN2QixZQUFZO0lBQ1osYUFBYTtJQUNiLHlCQUF5QjtJQUN6Qix5QkFBeUI7SUFDekIsY0FBYztJQUNkLFlBQVk7QUFDaEIiLCJmaWxlIjoic3JjL2FwcC9tYWluL21haW4uY29tcG9uZW50LmNzcyIsInNvdXJjZXNDb250ZW50IjpbIlxuLyogLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tXG4gICAgU0lERUJBUiBTVFlMRVxuLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0gKi9cblxuI3NpZGViYXIge1xuICAgIG1pbi13aWR0aDogMjUwcHg7XG4gICAgbWF4LXdpZHRoOiAyNTBweDtcbiAgICB0cmFuc2l0aW9uOiBhbGwgMC4zcztcbn1cblxuI3NpZGViYXIuYWN0aXZlIHtcbiAgICBtYXJnaW4tbGVmdDogLTI1MHB4O1xufVxuLyogLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tXG4gICAgQ09OVEVOVCBTVFlMRVxuLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0gKi9cblxuLyojbm9kZS1pbmZvIHtcbiAgIFxuICAgIG1pbi13aWR0aDo5MDBweDtcbiAgICBtYXgtd2lkdGg6IDkwMHB4O1xuICAgIHRyYW5zaXRpb246IGFsbCAwLjNzO1xufVxuXG4jbm9kZS1pbmZvLmFjdGl2ZSB7XG4gICAgdmlzaWJpbGl0eTpoaWRkZW47XG4gICAgb3ZlcmZsb3c6aGlkZGVuO1xuICAgIG1hcmdpbi1sZWZ0OiAtOTAwcHg7XG4gICAgdHJhbnNpdGlvbjogYWxsIDAuMXM7XG59Ki9cblxuXG5hOmhvdmVye1xuICAgIGN1cnNvcjogcG9pbnRlcjtcbn1cblxubXdsUmVzaXphYmxlIHtcbiAgICBib3gtc2l6aW5nOiBib3JkZXItYm94OyAvKnJlcXVpcmVkIGZvciB0aGUgZW5hYmxlR2hvc3RSZXNpemUgb3B0aW9uIHRvIHdvcmsqL1xufVxuXG4ucmVjdGFuZ2xlIHtcbiAgICBwb3NpdGlvbjogcmVsYXRpdmU7XG4gICAgdG9wOiAyMDBweDtcbiAgICBkaXNwbGF5OiBmbGV4O1xuICAgIGFsaWduLWl0ZW1zOiBjZW50ZXI7XG4gICAganVzdGlmeS1jb250ZW50OiBjZW50ZXI7XG4gICAgd2lkdGg6IDMwMHB4O1xuICAgIGhlaWdodDogMTUwcHg7XG4gICAgYmFja2dyb3VuZC1jb2xvcjogI2ZkNDE0MDtcbiAgICBib3JkZXI6IHNvbGlkIDFweCAjMTIxNjIxO1xuICAgIGNvbG9yOiAjMTIxNjIxO1xuICAgIG1hcmdpbjogYXV0bztcbn1cblxuIl19 */"
 
 /***/ }),
 
@@ -2318,18 +2772,30 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm2015/router.js");
 /* harmony import */ var _globals__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../globals */ "./src/app/globals.ts");
 /* harmony import */ var _login_login_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../login/login.service */ "./src/app/login/login.service.ts");
+/* harmony import */ var _tabs_tabs_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../tabs/tabs.service */ "./src/app/tabs/tabs.service.ts");
+
 
 
 
 
 
 let MainComponent = class MainComponent {
-    constructor(globals, login, router) {
+    constructor(globals, login, router, tabs) {
         this.globals = globals;
         this.login = login;
         this.router = router;
+        this.tabs = tabs;
+        this.objectKeys = Object.keys;
+        this.style = {};
+        this.workflowStyleInit = { 'overflow-x': 'auto', 'max-width': '90%' };
+        this.workflowStyle = {};
+        this.workflowRedraw = false;
+        this.datamatrixRedraw = false;
+        this.workflow_resize_start = false;
+        this.workflow_resize_update = false;
     }
     ngOnInit() {
+        this.workflowStyle = this.workflowStyleInit;
         if (this.globals.current_user == undefined || this.globals.current_user.id == null) {
             this.getUserInfo();
         }
@@ -2367,6 +2833,33 @@ let MainComponent = class MainComponent {
             alert('Error getting user projects.');
         });
     }
+    swapProject(from_project, to_project) {
+        let main_from_project;
+        if (typeof from_project !== 'undefined' && from_project !== null && from_project !== '') {
+            main_from_project = from_project.replace(new RegExp(this.globals.subproject_suffix_separator + '.*$'), '');
+            if (main_from_project !== to_project) {
+                this.tabs.deleteProject(main_from_project);
+                const tk_project = main_from_project + this.globals.tk_project_suffix;
+                if (this.globals.active_projects.indexOf(tk_project, 0) > -1) {
+                    this.tabs.deleteProject(tk_project);
+                }
+                const td_project = main_from_project + this.globals.td_project_suffix;
+                if (this.globals.active_projects.indexOf(td_project, 0) > -1) {
+                    this.tabs.deleteProject(td_project);
+                }
+            }
+        }
+        if (typeof to_project !== 'undefined' && to_project !== null && to_project !== '') {
+            this.tabs.openProject(to_project);
+            if (main_from_project === to_project) {
+                const index = this.globals.active_projects.indexOf(main_from_project, 0);
+                if (index !== 0) {
+                    const last_active_project = this.globals.active_projects.splice(index, index)[0];
+                    this.globals.active_projects.splice(0, 0, last_active_project);
+                }
+            }
+        }
+    }
     ngOnDestroy() {
         if (typeof this.getuser_subscription != 'undefined') {
             this.getuser_subscription.unsubscribe();
@@ -2375,11 +2868,23 @@ let MainComponent = class MainComponent {
             this.getprojects_subscription.unsubscribe();
         }
     }
+    onResizeStart(event) {
+        this.workflow_resize_start = !this.workflow_resize_start;
+    }
+    onResizeEnd(event) {
+        this.workflowStyle['width'] = `${event.rectangle.width}px`;
+        this.datamatrixRedraw = !this.datamatrixRedraw;
+        this.workflowRedraw = !this.workflowRedraw;
+    }
+    onResizing(event) {
+        this.workflow_resize_update = !this.workflow_resize_update;
+    }
 };
 MainComponent.ctorParameters = () => [
     { type: _globals__WEBPACK_IMPORTED_MODULE_3__["Globals"] },
     { type: _login_login_service__WEBPACK_IMPORTED_MODULE_4__["LoginService"] },
-    { type: _angular_router__WEBPACK_IMPORTED_MODULE_2__["Router"] }
+    { type: _angular_router__WEBPACK_IMPORTED_MODULE_2__["Router"] },
+    { type: _tabs_tabs_service__WEBPACK_IMPORTED_MODULE_5__["TabsService"] }
 ];
 MainComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
     Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
@@ -2389,7 +2894,8 @@ MainComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
     }),
     tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_globals__WEBPACK_IMPORTED_MODULE_3__["Globals"],
         _login_login_service__WEBPACK_IMPORTED_MODULE_4__["LoginService"],
-        _angular_router__WEBPACK_IMPORTED_MODULE_2__["Router"]])
+        _angular_router__WEBPACK_IMPORTED_MODULE_2__["Router"],
+        _tabs_tabs_service__WEBPACK_IMPORTED_MODULE_5__["TabsService"]])
 ], MainComponent);
 
 
@@ -2965,6 +3471,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _globals__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../globals */ "./src/app/globals.ts");
 /* harmony import */ var _login_login_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../login/login.service */ "./src/app/login/login.service.ts");
 /* harmony import */ var _user__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../user */ "./src/app/user.ts");
+/* harmony import */ var _tabs_tabs_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../tabs/tabs.service */ "./src/app/tabs/tabs.service.ts");
+
 
 
 
@@ -2972,12 +3480,41 @@ __webpack_require__.r(__webpack_exports__);
 
 
 let NavbarComponent = class NavbarComponent {
-    constructor(globals, loginService, router) {
+    constructor(globals, loginService, router, tabs) {
         this.globals = globals;
         this.loginService = loginService;
         this.router = router;
+        this.tabs = tabs;
+        this.objectKeys = Object.keys;
     }
     ngOnInit() {
+    }
+    swapProject(from_project, to_project) {
+        let main_from_project;
+        if (typeof from_project !== 'undefined' && from_project !== null && from_project !== '') {
+            main_from_project = from_project.replace(new RegExp(this.globals.subproject_suffix_separator + '.*$'), '');
+            if (main_from_project !== to_project) {
+                this.tabs.deleteProject(main_from_project);
+                const tk_project = main_from_project + this.globals.tk_project_suffix;
+                if (this.globals.active_projects.indexOf(tk_project, 0) > -1) {
+                    this.tabs.deleteProject(tk_project);
+                }
+                const td_project = main_from_project + this.globals.td_project_suffix;
+                if (this.globals.active_projects.indexOf(td_project, 0) > -1) {
+                    this.tabs.deleteProject(td_project);
+                }
+            }
+        }
+        if (typeof to_project !== 'undefined' && to_project !== null && to_project !== '') {
+            this.tabs.openProject(to_project);
+            if (main_from_project === to_project) {
+                const index = this.globals.active_projects.indexOf(main_from_project, 0);
+                if (index !== 0) {
+                    const last_active_project = this.globals.active_projects.splice(index, index)[0];
+                    this.globals.active_projects.splice(0, 0, last_active_project);
+                }
+            }
+        }
     }
     logout() {
         this.loginService.getLogoutCSRFToken().subscribe(csrf => {
@@ -2996,7 +3533,8 @@ let NavbarComponent = class NavbarComponent {
 NavbarComponent.ctorParameters = () => [
     { type: _globals__WEBPACK_IMPORTED_MODULE_3__["Globals"] },
     { type: _login_login_service__WEBPACK_IMPORTED_MODULE_4__["LoginService"] },
-    { type: _angular_router__WEBPACK_IMPORTED_MODULE_2__["Router"] }
+    { type: _angular_router__WEBPACK_IMPORTED_MODULE_2__["Router"] },
+    { type: _tabs_tabs_service__WEBPACK_IMPORTED_MODULE_6__["TabsService"] }
 ];
 NavbarComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
     Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
@@ -3006,7 +3544,8 @@ NavbarComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
     }),
     tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_globals__WEBPACK_IMPORTED_MODULE_3__["Globals"],
         _login_login_service__WEBPACK_IMPORTED_MODULE_4__["LoginService"],
-        _angular_router__WEBPACK_IMPORTED_MODULE_2__["Router"]])
+        _angular_router__WEBPACK_IMPORTED_MODULE_2__["Router"],
+        _tabs_tabs_service__WEBPACK_IMPORTED_MODULE_6__["TabsService"]])
 ], NavbarComponent);
 
 
@@ -3538,6 +4077,42 @@ OverlayComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
 
 /***/ }),
 
+/***/ "./src/app/pipes/keep-html.pipe.ts":
+/*!*****************************************!*\
+  !*** ./src/app/pipes/keep-html.pipe.ts ***!
+  \*****************************************/
+/*! exports provided: EscapeHtmlPipe */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "EscapeHtmlPipe", function() { return EscapeHtmlPipe; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm2015/core.js");
+/* harmony import */ var _angular_platform_browser__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/platform-browser */ "./node_modules/@angular/platform-browser/fesm2015/platform-browser.js");
+
+
+
+let EscapeHtmlPipe = class EscapeHtmlPipe {
+    constructor(sanitizer) {
+        this.sanitizer = sanitizer;
+    }
+    transform(content) {
+        return this.sanitizer.bypassSecurityTrustHtml(content);
+    }
+};
+EscapeHtmlPipe.ctorParameters = () => [
+    { type: _angular_platform_browser__WEBPACK_IMPORTED_MODULE_2__["DomSanitizer"] }
+];
+EscapeHtmlPipe = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+    Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Pipe"])({ name: 'keepHtml', pure: false }),
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_platform_browser__WEBPACK_IMPORTED_MODULE_2__["DomSanitizer"]])
+], EscapeHtmlPipe);
+
+
+
+/***/ }),
+
 /***/ "./src/app/sidebar/sidebar.component.css":
 /*!***********************************************!*\
   !*** ./src/app/sidebar/sidebar.component.css ***!
@@ -3697,33 +4272,6 @@ let TabsComponent = class TabsComponent {
     openProject(project) {
         this.service.openProject(project);
     }
-    swapProject(from_project, to_project) {
-        let main_from_project;
-        if (typeof from_project !== 'undefined' && from_project !== null && from_project !== '') {
-            main_from_project = from_project.replace(new RegExp(this.globals.subproject_suffix_separator + '.*$'), '');
-            if (main_from_project !== to_project) {
-                this.deleteProject(main_from_project);
-                const tk_project = main_from_project + this.globals.tk_project_suffix;
-                if (this.globals.active_projects.indexOf(tk_project, 0) > -1) {
-                    this.deleteProject(tk_project);
-                }
-                const td_project = main_from_project + this.globals.td_project_suffix;
-                if (this.globals.active_projects.indexOf(td_project, 0) > -1) {
-                    this.deleteProject(td_project);
-                }
-            }
-        }
-        if (typeof to_project !== 'undefined' && to_project !== null && to_project != '') {
-            this.openProject(to_project);
-            if (main_from_project === to_project) {
-                const index = this.globals.active_projects.indexOf(main_from_project, 0);
-                if (index !== 0) {
-                    const last_active_project = this.globals.active_projects.splice(index, index)[0];
-                    this.globals.active_projects.splice(0, 0, last_active_project);
-                }
-            }
-        }
-    }
     visibleProject(project) {
         this.globals.previous_visible_project = this.globals.visible_project;
         this.globals.visible_project = project;
@@ -3771,6 +4319,27 @@ let TabsService = class TabsService {
         this.globals = globals;
         this.node = node;
     }
+    getMainProjectName(project) {
+        //remove final TD ot TK
+        let subproject_type = null;
+        let mainproject = project;
+        if (project === null || typeof project === 'undefined') {
+            return { project: mainproject, subproject_type: null };
+        }
+        const no_td_project = project.replace(new RegExp(this.globals.td_project_suffix + '$'), '');
+        if (project === no_td_project) {
+            const no_tk_project = project.replace(new RegExp(this.globals.tk_project_suffix + '$'), '');
+            if (no_tk_project !== project) {
+                subproject_type = 'TK';
+                mainproject = no_td_project;
+            }
+        }
+        else {
+            subproject_type = 'TD';
+            mainproject = no_td_project;
+        }
+        return { project: mainproject, subproject_type: subproject_type };
+    }
     deleteProject(project) {
         const index = this.globals.active_projects.indexOf(project, 0);
         if (index > -1) {
@@ -3780,20 +4349,9 @@ let TabsService = class TabsService {
         this.globals.previous_visible_project = this.globals.visible_project;
         this.globals.visible_project = this.globals.active_projects[0];
         this.updateConnections();
-        //remove final TD ot TK
-        let subproject_type = null;
-        const no_td_project = project.replace(new RegExp(this.globals.td_project_suffix + '$'), '');
-        if (project === no_td_project) {
-            const no_tk_project = project.replace(new RegExp(this.globals.tk_project_suffix + '$'), '');
-            if (no_tk_project !== project) {
-                subproject_type = 'TK';
-            }
-        }
-        else {
-            subproject_type = 'TD';
-            project = no_td_project;
-        }
-        this.node.freeBusyProject(this.globals.current_user.projects[project], subproject_type);
+        const obj = this.getMainProjectName(project);
+        this.node.freeBusyProject(this.globals.current_user.projects[obj.project], obj.subproject_type);
+        this.globals.current_main_project = this.getMainProjectName(this.globals.visible_project).project;
     }
     openProject(project) {
         if (this.globals.active_projects.indexOf(project, 0) === -1) {
@@ -3801,6 +4359,7 @@ let TabsService = class TabsService {
         }
         this.globals.previous_visible_project = this.globals.visible_project;
         this.globals.visible_project = project;
+        this.globals.current_main_project = this.getMainProjectName(this.globals.visible_project).project;
         this.updateConnections();
     }
     getClassName(project_name) {
@@ -4083,13 +4642,34 @@ let TdWorkflowComponent = class TdWorkflowComponent {
     ngOnChanges(changes) {
         if (this.visibleProject !== '') {
             if (this.projectName === this.visibleProject) {
-                if (changes.hasOwnProperty('visibleProject')) {
+                if (changes.hasOwnProperty('visibleProject') || changes.hasOwnProperty('redraw')) {
+                    this.drawConnections();
+                }
+                if (changes.hasOwnProperty('resize_redraw')) {
+                    this.removeConnections();
                     this.drawConnections();
                 }
                 if (changes.hasOwnProperty('change')) {
                     this.updateCheckedNodes();
                 }
+                if (changes.hasOwnProperty('workflow_resize_start')) {
+                    this.removeConnections(true, true);
+                }
+                if (changes.hasOwnProperty('workflow_resize_update')) {
+                    this.removeConnections(true, true);
+                    this.drawConnections(true);
+                }
             }
+        }
+    }
+    removeConnections(resize_clone = false, hard = false) {
+        let jquery_selector_prefix = "body ";
+        if (resize_clone) {
+            jquery_selector_prefix = ":not(.resize-active) ";
+        }
+        $(jquery_selector_prefix).find('.' + this.projectClass).connections('remove');
+        if (hard) {
+            $(jquery_selector_prefix).find('#' + this.projectClass + '_workflow connection').remove();
         }
     }
     ngOnDestroy() {
@@ -4103,35 +4683,50 @@ let TdWorkflowComponent = class TdWorkflowComponent {
             });
         }, error => { }, () => { subscription.unsubscribe(); });
     }
-    drawConnections() {
-        $('.' + this.projectClass).connections('remove');
-        $('#' + this.projectClass + '_id_13, #' + this.projectClass + '_id_16').connections({
-            class: 'fast'
-        });
-        $('#' + this.projectClass + '_id_14, #' + this.projectClass + '_id_17').connections({
-            class: 'fast'
-        });
-        $('#' + this.projectClass + '_id_15, #' + this.projectClass + '_id_18').connections({
-            class: 'fast'
-        });
-        $('#' + this.projectClass + '_id_16, #' + this.projectClass + '_id_19').connections({
-            class: 'fast'
-        });
-        $('#' + this.projectClass + '_id_17, #' + this.projectClass + '_id_19').connections({
-            class: 'fast'
-        });
-        $('#' + this.projectClass + '_id_18, #' + this.projectClass + '_id_20').connections({
-            class: 'fast'
-        });
-        $('#' + this.projectClass + '_id_20, #' + this.projectClass + '_id_21').connections({
-            class: 'fast'
-        });
-        /*$('#' + this.projectClass + '_id_20, #' + this.projectClass + '_id_13').connections({
-          class: 'fast'
-        });
-        $('#' + this.projectClass + '_id_20, #' + this.projectClass + '_id_14').connections({
-          class: 'fast'
-        });*/
+    drawConnections(resize_clone = false) {
+        let jquery_selector_prefix = "body ";
+        if (resize_clone) {
+            jquery_selector_prefix = ":not(.resize-active) ";
+        }
+        setTimeout(() => {
+            $(jquery_selector_prefix).find('.' + this.projectClass).connections('remove');
+            $(jquery_selector_prefix).find('#' + this.projectClass + '_id_13, #' + this.projectClass + '_id_16').connections({
+                class: 'fast',
+                within: jquery_selector_prefix + '#' + this.projectClass + '_workflow',
+            });
+            $(jquery_selector_prefix).find('#' + this.projectClass + '_id_14, #' + this.projectClass + '_id_17').connections({
+                class: 'fast',
+                within: jquery_selector_prefix + '#' + this.projectClass + '_workflow',
+            });
+            $(jquery_selector_prefix).find('#' + this.projectClass + '_id_15, #' + this.projectClass + '_id_18').connections({
+                class: 'fast',
+                within: jquery_selector_prefix + '#' + this.projectClass + '_workflow',
+            });
+            $(jquery_selector_prefix).find('#' + this.projectClass + '_id_16, #' + this.projectClass + '_id_19').connections({
+                class: 'fast',
+                within: jquery_selector_prefix + '#' + this.projectClass + '_workflow',
+            });
+            $(jquery_selector_prefix).find('#' + this.projectClass + '_id_17, #' + this.projectClass + '_id_19').connections({
+                class: 'fast',
+                within: jquery_selector_prefix + '#' + this.projectClass + '_workflow',
+            });
+            $(jquery_selector_prefix).find('#' + this.projectClass + '_id_18, #' + this.projectClass + '_id_20').connections({
+                class: 'fast',
+                within: jquery_selector_prefix + '#' + this.projectClass + '_workflow',
+            });
+            $(jquery_selector_prefix).find('#' + this.projectClass + '_id_20, #' + this.projectClass + '_id_21').connections({
+                class: 'fast',
+                within: jquery_selector_prefix + '#' + this.projectClass + '_workflow',
+            });
+            /*$(jquery_selector_prefix).find('#' + this.projectClass + '_id_20, #' + this.projectClass + '_id_13').connections({
+              class: 'fast',
+              within: jquery_selector_prefix + '#' + this.projectClass + '_workflow',
+            });
+            $(jquery_selector_prefix).find('#' + this.projectClass + '_id_20, #' + this.projectClass + '_id_14').connections({
+              class: 'fast',
+              within: jquery_selector_prefix + '#' + this.projectClass + '_workflow',
+            });*/
+        }, 0);
     }
     ngAfterViewInit() {
         this.updateCheckedNodes();
@@ -4209,12 +4804,24 @@ tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
 ], TdWorkflowComponent.prototype, "projectName", void 0);
 tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
     Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Boolean)
+], TdWorkflowComponent.prototype, "redraw", void 0);
+tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+    Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
     tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", String)
 ], TdWorkflowComponent.prototype, "visibleProject", void 0);
 tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
     Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
     tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Boolean)
 ], TdWorkflowComponent.prototype, "change", void 0);
+tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+    Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Boolean)
+], TdWorkflowComponent.prototype, "resize_redraw", void 0);
+tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+    Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Boolean)
+], TdWorkflowComponent.prototype, "workflow_resize_start", void 0);
 TdWorkflowComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
     Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
         selector: 'app-td-workflow',
@@ -4311,13 +4918,34 @@ let TkWorkflowComponent = class TkWorkflowComponent {
     ngOnChanges(changes) {
         if (this.visibleProject !== '') {
             if (this.projectName === this.visibleProject) {
-                if (changes.hasOwnProperty('visibleProject')) {
+                if (changes.hasOwnProperty('visibleProject') || changes.hasOwnProperty('redraw')) {
+                    this.drawConnections();
+                }
+                if (changes.hasOwnProperty('resize_redraw')) {
+                    this.removeConnections();
                     this.drawConnections();
                 }
                 if (changes.hasOwnProperty('change')) {
                     this.updateCheckedNodes();
                 }
+                if (changes.hasOwnProperty('workflow_resize_start')) {
+                    this.removeConnections(true, true);
+                }
+                if (changes.hasOwnProperty('workflow_resize_update')) {
+                    this.removeConnections(true, true);
+                    this.drawConnections(true);
+                }
             }
+        }
+    }
+    removeConnections(resize_clone = false, hard = false) {
+        let jquery_selector_prefix = "body ";
+        if (resize_clone) {
+            jquery_selector_prefix = ":not(.resize-active) ";
+        }
+        $(jquery_selector_prefix).find('.' + this.projectClass).connections('remove');
+        if (hard) {
+            $(jquery_selector_prefix).find('#' + this.projectClass + '_workflow connection').remove();
         }
     }
     ngOnDestroy() {
@@ -4331,59 +4959,82 @@ let TkWorkflowComponent = class TkWorkflowComponent {
             });
         }, error => { }, () => { subscription.unsubscribe(); });
     }
-    drawConnections() {
-        $('.' + this.projectClass).connections('remove');
-        $('#' + this.projectClass + '_id_23, #' + this.projectClass + '_node_23_no').connections({
-            class: 'fast'
-        });
-        $('#' + this.projectClass + '_node_23_no, #' + this.projectClass + '_id_24').connections({
-            class: 'fast'
-        });
-        $('#' + this.projectClass + '_id_24, #' + this.projectClass + '_node_24_no').connections({
-            class: 'fast'
-        });
-        $('#' + this.projectClass + '_node_24_no, #' + this.projectClass + '_id_26').connections({
-            class: 'fast'
-        });
-        $('#' + this.projectClass + '_id_24, #' + this.projectClass + '_node_24_yes').connections({
-            class: 'fast'
-        });
-        $('#' + this.projectClass + '_node_24_yes, #' + this.projectClass + '_id_25').connections({
-            class: 'fast'
-        });
-        $('#' + this.projectClass + '_id_25, #' + this.projectClass + '_id_27').connections({
-            class: 'fast'
-        });
-        $('#' + this.projectClass + '_id_27, #' + this.projectClass + '_id_28').connections({
-            class: 'fast'
-        });
-        $('#' + this.projectClass + '_id_28, #' + this.projectClass + '_id_29').connections({
-            class: 'fast'
-        });
-        $('#' + this.projectClass + '_id_29, #' + this.projectClass + '_id_31').connections({
-            class: 'fast'
-        });
-        $('#' + this.projectClass + '_id_31, #' + this.projectClass + '_id_30').connections({
-            class: 'fast'
-        });
-        $('#' + this.projectClass + '_id_30, #' + this.projectClass + '_id_32').connections({
-            class: 'fast'
-        });
-        $('#' + this.projectClass + '_id_23, #' + this.projectClass + '_node_23_yes').connections({
-            class: 'fast'
-        });
-        $('#' + this.projectClass + '_node_23_yes, #' + this.projectClass + '_id_27').connections({
-            class: 'fast'
-        });
-        /*$('#' + this.projectClass + '_id_24, #' + this.projectClass + '_id_27').connections({
-          class: 'fast'
-        });*/
-        $('#' + this.projectClass + '_id_22, #' + this.projectClass + '_id_30').connections({
-            class: 'fast'
-        });
-        $('#' + this.projectClass + '_id_26, #' + this.projectClass + '_id_27').connections({
-            class: 'fast'
-        });
+    drawConnections(resize_clone = false) {
+        let jquery_selector_prefix = "body ";
+        if (resize_clone) {
+            jquery_selector_prefix = ":not(.resize-active) ";
+        }
+        setTimeout(() => {
+            $(jquery_selector_prefix).find('.' + this.projectClass).connections('remove');
+            $(jquery_selector_prefix).find('#' + this.projectClass + '_id_23, #' + this.projectClass + '_node_23_no').connections({
+                class: 'fast',
+                within: jquery_selector_prefix + '#' + this.projectClass + '_workflow',
+            });
+            $(jquery_selector_prefix).find('#' + this.projectClass + '_node_23_no, #' + this.projectClass + '_id_24').connections({
+                class: 'fast',
+                within: jquery_selector_prefix + '#' + this.projectClass + '_workflow',
+            });
+            $(jquery_selector_prefix).find('#' + this.projectClass + '_id_24, #' + this.projectClass + '_node_24_no').connections({
+                class: 'fast',
+                within: jquery_selector_prefix + '#' + this.projectClass + '_workflow',
+            });
+            $(jquery_selector_prefix).find('#' + this.projectClass + '_node_24_no, #' + this.projectClass + '_id_26').connections({
+                class: 'fast',
+                within: jquery_selector_prefix + '#' + this.projectClass + '_workflow',
+            });
+            $(jquery_selector_prefix).find('#' + this.projectClass + '_id_24, #' + this.projectClass + '_node_24_yes').connections({
+                class: 'fast',
+                within: jquery_selector_prefix + '#' + this.projectClass + '_workflow',
+            });
+            $(jquery_selector_prefix).find('#' + this.projectClass + '_node_24_yes, #' + this.projectClass + '_id_25').connections({
+                class: 'fast',
+                within: jquery_selector_prefix + '#' + this.projectClass + '_workflow',
+            });
+            $(jquery_selector_prefix).find('#' + this.projectClass + '_id_25, #' + this.projectClass + '_id_27').connections({
+                class: 'fast',
+                within: jquery_selector_prefix + '#' + this.projectClass + '_workflow',
+            });
+            $(jquery_selector_prefix).find('#' + this.projectClass + '_id_27, #' + this.projectClass + '_id_28').connections({
+                class: 'fast',
+                within: jquery_selector_prefix + '#' + this.projectClass + '_workflow',
+            });
+            $(jquery_selector_prefix).find('#' + this.projectClass + '_id_28, #' + this.projectClass + '_id_29').connections({
+                class: 'fast',
+                within: jquery_selector_prefix + '#' + this.projectClass + '_workflow',
+            });
+            $(jquery_selector_prefix).find('#' + this.projectClass + '_id_29, #' + this.projectClass + '_id_31').connections({
+                class: 'fast',
+                within: jquery_selector_prefix + '#' + this.projectClass + '_workflow',
+            });
+            $(jquery_selector_prefix).find('#' + this.projectClass + '_id_31, #' + this.projectClass + '_id_30').connections({
+                class: 'fast',
+                within: jquery_selector_prefix + '#' + this.projectClass + '_workflow',
+            });
+            $(jquery_selector_prefix).find('#' + this.projectClass + '_id_30, #' + this.projectClass + '_id_32').connections({
+                class: 'fast',
+                within: jquery_selector_prefix + '#' + this.projectClass + '_workflow',
+            });
+            $(jquery_selector_prefix).find('#' + this.projectClass + '_id_23, #' + this.projectClass + '_node_23_yes').connections({
+                class: 'fast',
+                within: jquery_selector_prefix + '#' + this.projectClass + '_workflow',
+            });
+            $(jquery_selector_prefix).find('#' + this.projectClass + '_node_23_yes, #' + this.projectClass + '_id_27').connections({
+                class: 'fast',
+                within: jquery_selector_prefix + '#' + this.projectClass + '_workflow',
+            });
+            /*$(jquery_selector_prefix).find('#' + this.projectClass + '_id_24, #' + this.projectClass + '_id_27').connections({
+              class: 'fast',
+              within: jquery_selector_prefix + '#' + this.projectClass + '_workflow',
+            });*/
+            $(jquery_selector_prefix).find('#' + this.projectClass + '_id_22, #' + this.projectClass + '_id_30').connections({
+                class: 'fast',
+                within: jquery_selector_prefix + '#' + this.projectClass + '_workflow',
+            });
+            $(jquery_selector_prefix).find('#' + this.projectClass + '_id_26, #' + this.projectClass + '_id_27').connections({
+                class: 'fast',
+                within: jquery_selector_prefix + '#' + this.projectClass + '_workflow',
+            });
+        }, 0);
     }
     ngAfterViewInit() {
         this.drawConnections();
@@ -4460,12 +5111,24 @@ tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
 ], TkWorkflowComponent.prototype, "projectName", void 0);
 tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
     Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Boolean)
+], TkWorkflowComponent.prototype, "redraw", void 0);
+tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+    Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
     tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", String)
 ], TkWorkflowComponent.prototype, "visibleProject", void 0);
 tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
     Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
     tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Boolean)
 ], TkWorkflowComponent.prototype, "change", void 0);
+tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+    Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Boolean)
+], TkWorkflowComponent.prototype, "resize_redraw", void 0);
+tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+    Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Boolean)
+], TkWorkflowComponent.prototype, "workflow_resize_start", void 0);
 TkWorkflowComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
     Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
         selector: 'app-tk-workflow',
@@ -4632,14 +5295,37 @@ __webpack_require__.r(__webpack_exports__);
 let WorkflowsComponent = class WorkflowsComponent {
     constructor(globals) {
         this.globals = globals;
+        this.redraw_workflow = false;
+        this.resize_redraw = false;
     }
     ngOnInit() {
         this.subproject_suffix_separator_pattern = new RegExp('^.*' + RegExpEscape(this.globals.subproject_suffix_separator));
+    }
+    triggerWorkflowRedraw() {
+        this.redraw_workflow = !this.redraw_workflow;
+        this.globals.workflow_scroll = !this.globals.workflow_scroll;
+    }
+    ngOnChanges(changes) {
+        if (changes.hasOwnProperty('redraw')) {
+            this.resize_redraw = !this.resize_redraw;
+        }
     }
 };
 WorkflowsComponent.ctorParameters = () => [
     { type: _globals__WEBPACK_IMPORTED_MODULE_2__["Globals"] }
 ];
+tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+    Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Boolean)
+], WorkflowsComponent.prototype, "redraw", void 0);
+tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+    Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Boolean)
+], WorkflowsComponent.prototype, "workflow_resize_start", void 0);
+tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+    Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Boolean)
+], WorkflowsComponent.prototype, "workflow_resize_update", void 0);
 WorkflowsComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
     Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
         selector: 'app-workflows',
