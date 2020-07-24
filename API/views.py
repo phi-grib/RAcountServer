@@ -3,6 +3,8 @@ import base64
 import datetime
 import os
 import time
+import numbers
+
 import bokeh
 from bokeh.plotting import figure 
 from bokeh.embed import components
@@ -33,6 +35,7 @@ from django.db.models import F, Max
 from django.db import transaction
 from django.db import OperationalError
 from django.http import Http404
+from django.utils.html import escape
 
 from rest_framework.decorators import api_view
 from rest_framework import serializers, status
@@ -525,7 +528,9 @@ class ChemblDataMatrixView(APIView):
             'standard_value': 'std_value',
             'units': 'unit',
             'value': 'value',
-            'assay_chembl_id': 'assay_id'
+            'assay_chembl_id': 'assay_id',
+            'text_value': 'text_value',
+            
         }
         
         
@@ -543,7 +548,6 @@ class ChemblDataMatrixView(APIView):
         serializer = ChemblDataMatrixSerializer(data=request.data, many=True)
         serializer.is_valid(raise_exception=True)
         data = serializer.data
-        
         units_set = set()
         standard_units = {}
         for col in data:
@@ -629,7 +633,6 @@ class ChemblDataMatrixView(APIView):
         fields_to_keep = set()
         for field in chembl2data_matrix:
             fields_to_keep.add(chembl2data_matrix[field])
-        print('hola:', saved_units_symbol2id)
         for col in data:
             for old_field in chembl2data_matrix.keys():
                 new_field = chembl2data_matrix[old_field]
@@ -638,7 +641,16 @@ class ChemblDataMatrixView(APIView):
                         col[new_field] = saved_units_symbol2id[col[old_field]]
                     else:
                         col[new_field] = None
-                    col.pop(old_field)
+                    if old_field != new_field:
+                        col.pop(old_field)
+                elif new_field in {'text_value'}:
+                    if col[old_field] is None:
+                        col[new_field] = col['activity_comment']
+                        col.pop('activity_comment')
+                    else:
+                        col[new_field] = col[old_field]
+                    if old_field != new_field:
+                        col.pop(old_field)
                 elif new_field != old_field:
                     col[new_field] = col[old_field]
                     col.pop(old_field)
@@ -651,7 +663,7 @@ class ChemblDataMatrixView(APIView):
         data_matrix_fields_serializer = DataMatrixFieldsSerializer(data=data,many=True)
         data_matrix_fields_serializer.is_valid(raise_exception=True)
         data_matrix_fields_serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(data_matrix_fields_serializer.data, status=status.HTTP_201_CREATED)
         
 @method_decorator((csrf_protect,ensure_csrf_cookie), name='dispatch')
 class DataMatrixFieldsView(ListAPIView):
@@ -741,45 +753,86 @@ class DataMatrixHeatmapView(GenericAPIView, ListModelMixin):
         y_values = []
         values_dict_list = []
         values_unit_dict_list = []
-        colums_dict = {'Compound': [],'Assay_ID': [], 'value': [], 'value_unit': []}
+        description_dict_list = []
+        name_dict_list = []
+        colums_dict = {'Compound': [],'Assay_ID': [], 'value': [], 'value_unit': [], 'description':[],'name':[], 'alpha2': []}
         for compound in data:
-            comp = '#' + str(compound['int_id'])+': '+compound['name']
-            y_values.append(comp)
-            values_dict = {}
-            values_unit_dict = {}
-            for field in compound['data_matrix'][0]['data_matrix_fields']:
-                x_values_set.add(field['assay_id'])
-                values_dict[field['assay_id']] = field['std_value']
-                if field['std_value'] is None:
-                    values_unit_dict[field['assay_id']] = 'N/A'
-                else:
-                    if field['std_unit'] is None:
-                        unit_suffix = ''
+            if len(compound['data_matrix']) > 0:
+                comp = '#' + str(compound['int_id'])+': '+compound['name']
+                y_values.append(comp)
+                values_dict = {}
+                values_unit_dict = {}
+                description_dict = {}
+                name_dict = {} 
+                for field in compound['data_matrix'][0]['data_matrix_fields']:
+                    x_values_set.add(field['assay_id'])
+                    description_dict[field['assay_id']] = field['description']
+                    name_dict[field['assay_id']] = field['name']
+                    if (field['std_value'] is None):
+                        if field['value'] is None:
+                            value = None
+                            unit = None
+                        else:
+                            value = field['value']
+                            unit = field['unit']
                     else:
-                        unit_suffix = ' ' + field['std_unit']
-                    values_unit_dict[field['assay_id']] = str(field['std_value']) + unit_suffix
-            values_dict_list.append(values_dict)
-            values_unit_dict_list.append(values_unit_dict)
+                        value = field['std_value']
+                        unit = field['std_unit']
+                    
+                    if value is None:
+                        if field['text_value'] is None:
+                            values_dict[field['assay_id']] = 'N/A'
+                            values_unit_dict[field['assay_id']] = 'N/A'
+                        else:
+                            values_dict[field['assay_id']] = field['text_value']
+                            values_unit_dict[field['assay_id']] = field['text_value']
+                    else:
+                        if unit is None:
+                            unit_suffix = ''
+                        else:
+                            unit_suffix = ' ' + unit
+                        values_dict[field['assay_id']] = value
+                        values_unit_dict[field['assay_id']] = str(value) + unit_suffix
+                values_dict_list.append(values_dict)
+                values_unit_dict_list.append(values_unit_dict)
+                description_dict_list.append(description_dict)
+                name_dict_list.append(name_dict)
         x_values = sorted(list(x_values_set))     
 
-        for comp, values_dict, values_unit_dict in zip(y_values, values_dict_list, values_unit_dict_list):
+        for comp, values_dict, values_unit_dict, description_dict, name_dict in zip(y_values,
+                values_dict_list, values_unit_dict_list, description_dict_list, name_dict_list):
             for assay_id in x_values:
                 if assay_id in values_dict:
                     z_value = values_dict[assay_id]
                     z_value_unit = values_unit_dict[assay_id]
+                    description = escape(description_dict[assay_id])
+                    description = '<div style="word-warp: normal; max-width:20%;">'+escape(description_dict[assay_id])+'</div>'
+                    name = name_dict[assay_id]
                 else:
                     z_value = None
                 if z_value is None:
-                    z_value = 0
+                    z_value = 'N/A'
                     z_value_unit = 'N/A'
+                    description = 'N/A'
+                    name = 'N/A'
+                if isinstance(z_value, str) and z_value != 'N/A':
+                    alpha2 = 1.0
+                else:
+                    alpha2 = 0
                 colums_dict['Compound'].append(comp)
                 colums_dict['Assay_ID'].append(assay_id)
                 colums_dict['value'].append(z_value)
                 colums_dict['value_unit'].append(z_value_unit)
+                colums_dict['description'].append(description)
+                colums_dict['name'].append(name)
+                colums_dict['alpha2'].append(alpha2)
+                
         
+        if len(x_values) < 1 or len(y_values) < 1:
+            return Response({"item": None,'heatmap_div_id': None,'status': 'No data'})
         #Map colors
-        mapper = LinearColorMapper(palette=bokeh.palettes.RdYlBu[10], low = 0, high = max(colums_dict['value']))
-
+        mapper = LinearColorMapper(palette=bokeh.palettes.RdYlBu[10], low = 0,
+                         high = max([i for i in colums_dict['value'] if isinstance(i, numbers.Number) and not isinstance(i, bool)]))
         # Define a figure
 
         #pan=PanTool(dimensions="width")
@@ -805,7 +858,6 @@ class DataMatrixHeatmapView(GenericAPIView, ListModelMixin):
             toolbar_location="left",
             toolbar_sticky = False
             )
-
         # Create rectangle for heatmap
         mysource = ColumnDataSource(colums_dict)
         p.rect(
@@ -823,6 +875,27 @@ class DataMatrixHeatmapView(GenericAPIView, ListModelMixin):
             # set visual properties for non-selected glyphs
             nonselection_fill_alpha=1,
             nonselection_fill_color=transform('value', mapper),
+            nonselection_line_color=None
+
+            )
+        
+        p.rect(
+            y='Compound', 
+            x='Assay_ID', 
+            width=0.9, 
+            height=1, 
+            source=mysource,
+            line_color=None, 
+            fill_color='black',
+            fill_alpha='alpha2',
+            
+            # set visual properties for selected glyphs
+            selection_line_color="crimson",
+            selection_fill_color='black',
+            selection_fill_alpha='alpha2',
+            # set visual properties for non-selected glyphs
+            nonselection_fill_alpha='alpha2',
+            nonselection_fill_color='black',
             nonselection_line_color=None
 
             )
@@ -845,12 +918,35 @@ class DataMatrixHeatmapView(GenericAPIView, ListModelMixin):
         p.axis.major_label_standoff = 0
         p.xaxis.major_label_orientation = 1#"vertical"
         
+        TOOLTIPS = """
+            <div style="max-width:20%">
+            <div>
+                <span href="#" data-toggle="tooltip" title="Compound">@Compound</span>
+            </div>
+            <div>
+                <span href="#" data-toggle="tooltip" title="Assay ID">@Assay_ID</span>             
+            </div>
+            <div>
+                <span href="#" data-toggle="tooltip" title="Value">@value_unit</span>
+            </div><div>
+              <span href="#" data-toggle="tooltip" title="Description">@description</span>
+            </div><div>
+                <span href="#" data-toggle="tooltip" title="Assay type">@name</span>                
+            </div>
+            </div>
+        """
+        
+        
         #Hover tool:
         p.select_one(HoverTool).tooltips = [
          ('Compound', '@Compound'),
          ('Assay ID', '@Assay_ID'),
          ('Value', '@value_unit'),
-    ]
+         ('Description','@description{safe}'),
+         ('Assay type', '@name')
+        ]
+        
+        # p.select_one(HoverTool).tooltips = TOOLTIPS
     
         
         script, div = components(p)
@@ -868,4 +964,4 @@ class DataMatrixHeatmapView(GenericAPIView, ListModelMixin):
             scripts= []
             for tag in root.findall('script'):
                  scripts.append(tag.text)
-            return Response({"item": json_p,'heatmap_div_id': heatmap_div_id})
+            return Response({"item": json_p,'heatmap_div_id': heatmap_div_id,'status':'OK'})

@@ -137,3 +137,5 @@ class DataMatrixFields(models.Model):
     unit = models.ForeignKey(Unit, null=True, related_name='datamatrixunit', on_delete=models.DO_NOTHING)
     std_unit = models.ForeignKey(Unit, null=True, related_name='datamatrixstdunit', on_delete=models.DO_NOTHING)
     assay_id = models.TextField(null=False, blank=False)
+    text_value = models.TextField(null=True, blank=False, default=None)
+    
