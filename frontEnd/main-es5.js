@@ -716,7 +716,7 @@ var ChemblComponent = /** @class */ (function () {
         this.binded_multiselect_id = 'chembl_chembl_ids';
         this.activity = '';
         this.chembl_activity_fields = ['standard_type', 'standard_value', 'standard_units',
-            'assay_description', 'value', 'units', 'assay_chembl_id'];
+            'assay_description', 'value', 'units', 'assay_chembl_id', 'text_value', 'activity_comment', 'pchembl_value'];
         this.chembl_displayed_activity_fields = ['standard_type', 'standard_value', 'standard_units',
             'assay_description'];
         this.chembl_activity_rows = [];
