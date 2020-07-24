@@ -741,8 +741,10 @@ class DataMatrixHeatmapView(GenericAPIView, ListModelMixin):
         y_values = []
         values_dict_list = []
         values_unit_dict_list = []
+        colums_dict = {'Compound': [],'Assay_ID': [], 'value': [], 'value_unit': []}
         for compound in data:
-            y_values.append('#' + str(compound['int_id'])+': '+compound['name'])
+            comp = '#' + str(compound['int_id'])+': '+compound['name']
+            y_values.append(comp)
             values_dict = {}
             values_unit_dict = {}
             for field in compound['data_matrix'][0]['data_matrix_fields']:
@@ -758,11 +760,9 @@ class DataMatrixHeatmapView(GenericAPIView, ListModelMixin):
                     values_unit_dict[field['assay_id']] = str(field['std_value']) + unit_suffix
             values_dict_list.append(values_dict)
             values_unit_dict_list.append(values_unit_dict)
-        x_values = sorted(list(x_values_set))
-        
-        colums_dict = {'Compound': [],'Assay_ID': [], 'value': [], 'value_unit': []}
+        x_values = sorted(list(x_values_set))     
 
-        for comp, values_dict in zip(y_values, values_dict_list):
+        for comp, values_dict, values_unit_dict in zip(y_values, values_dict_list, values_unit_dict_list):
             for assay_id in x_values:
                 if assay_id in values_dict:
                     z_value = values_dict[assay_id]
@@ -771,6 +771,7 @@ class DataMatrixHeatmapView(GenericAPIView, ListModelMixin):
                     z_value = None
                 if z_value is None:
                     z_value = 0
+                    z_value_unit = 'N/A'
                 colums_dict['Compound'].append(comp)
                 colums_dict['Assay_ID'].append(assay_id)
                 colums_dict['value'].append(z_value)
