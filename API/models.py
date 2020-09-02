@@ -124,8 +124,8 @@ class UnitType(models.Model):
 class Unit(models.Model):
     type = models.ForeignKey(UnitType, on_delete=models.DO_NOTHING)
     equivalence = models.FloatField()
-    name = models.TextField(null=False, blank=False)
-    symbol= models.TextField(null=False, blank=False, unique=True)
+    name = models.TextField(null=True, blank=False)
+    symbol= models.TextField(null=True, blank=False, unique=True)
     
 
 class DataMatrixFields(models.Model):
