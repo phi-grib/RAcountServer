@@ -11,6 +11,7 @@ dependencies:
   - rdkit=2019.09.3
   - chembl_structure_pipeline=1.0.0
   - bokeh=2.1.1
+  - pandas=1.1.1
   - pip:
     - django-cors-headers==3.1.1
     - djangorestframework==3.11.0

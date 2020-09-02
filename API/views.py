@@ -5,6 +5,8 @@ import os
 import time
 import numbers
 
+import numpy as np
+import pandas as pd
 import bokeh
 from bokeh.plotting import figure 
 from bokeh.embed import components
@@ -559,7 +561,7 @@ class ChemblDataMatrixView(APIView):
             elif  unit is None and std_unit is None:
                 continue
             if unit not in standard_units:
-                if col['value'] is not None and col['standard_value'] is not None:
+                if (col['value'] is not None and col['standard_value'] is not None) and col['standard_value'] != 0:
                     equivalence = col['value'] / col['standard_value']
                 else:
                     equivalence = None
@@ -740,14 +742,16 @@ class DataMatrixHeatmapView(GenericAPIView, ListModelMixin):
     def get(self,request, project, json):
         queryset = self.filter_queryset(self.get_queryset())
 
-        page = self.paginate_queryset(queryset)
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
+        # page = self.paginate_queryset(queryset)
+        # if page is not None:
+        #     serializer = self.get_serializer(page, many=True)
+        #     return self.get_paginated_response(serializer.data)
 
         serializer = self.get_serializer(queryset, many=True)
-        
         data = serializer.data
+        
+        del queryset
+        del serializer
         
         x_values_set = set()
         y_values = []
@@ -755,6 +759,7 @@ class DataMatrixHeatmapView(GenericAPIView, ListModelMixin):
         values_unit_dict_list = []
         description_dict_list = []
         name_dict_list = []
+        
         colums_dict = {'Compound': [],'Assay_ID': [], 'value': [], 'value_unit': [], 'description':[],'name':[], 'alpha2': []}
         for compound in data:
             if len(compound['data_matrix']) > 0:
@@ -799,6 +804,8 @@ class DataMatrixHeatmapView(GenericAPIView, ListModelMixin):
                 name_dict_list.append(name_dict)
         x_values = sorted(list(x_values_set))     
 
+        del data
+        
         for comp, values_dict, values_unit_dict, description_dict, name_dict in zip(y_values,
                 values_dict_list, values_unit_dict_list, description_dict_list, name_dict_list):
             for assay_id in x_values:
@@ -806,7 +813,7 @@ class DataMatrixHeatmapView(GenericAPIView, ListModelMixin):
                     z_value = values_dict[assay_id]
                     z_value_unit = values_unit_dict[assay_id]
                     description = escape(description_dict[assay_id])
-                    description = '<div style="word-warp: normal; max-width:20%;">'+escape(description_dict[assay_id])+'</div>'
+                    description = escape(description_dict[assay_id])
                     name = name_dict[assay_id]
                 else:
                     z_value = None
@@ -826,13 +833,40 @@ class DataMatrixHeatmapView(GenericAPIView, ListModelMixin):
                 colums_dict['description'].append(description)
                 colums_dict['name'].append(name)
                 colums_dict['alpha2'].append(alpha2)
-                
         
+        del values_dict_list
+        del values_unit_dict_list
+        del description_dict_list
+        del name_dict_list
+                
+        dataframe = pd.DataFrame(colums_dict)
+        
+        del colums_dict
+        
+        dataframe['fscaled_value'] = None
+        for assay_id in x_values:
+            idxs = np.where(dataframe['Assay_ID'] == assay_id)[0]
+            if dataframe.loc[idxs,'alpha2'].any() != 0:
+                dataframe.loc[idxs,'fscaled_value'] = 'N/A'
+                continue
+            array = dataframe.loc[idxs,'value'].replace('N/A', np.nan).to_numpy(dtype=np.float32)
+
+            # array_min = np.nanmin(array)
+            array_min = 0
+            array_max = np.nanmax(array)
+            array_max_min = array_max - array_min
+
+            if array_max_min == 0:
+                dataframe.loc[idxs[dataframe.loc[idxs,'value'] != 'N/A'],'fscaled_value'] = 0.0
+            else:
+                array_fscaled = (array - array_min)*1/array_max_min
+                dataframe.loc[idxs,'fscaled_value'] = array_fscaled
+        dataframe['fscaled_value'] = dataframe['fscaled_value'].replace(np.nan,'N/A')
         if len(x_values) < 1 or len(y_values) < 1:
             return Response({"item": None,'heatmap_div_id': None,'status': 'No data'})
         #Map colors
         mapper = LinearColorMapper(palette=bokeh.palettes.RdYlBu[10], low = 0,
-                         high = max([i for i in colums_dict['value'] if isinstance(i, numbers.Number) and not isinstance(i, bool)]))
+                         high = max([i for i in dataframe['fscaled_value'].to_list() if isinstance(i, numbers.Number) and not isinstance(i, bool)]))
         # Define a figure
 
         #pan=PanTool(dimensions="width")
@@ -859,7 +893,8 @@ class DataMatrixHeatmapView(GenericAPIView, ListModelMixin):
             toolbar_sticky = False
             )
         # Create rectangle for heatmap
-        mysource = ColumnDataSource(colums_dict)
+        mysource = ColumnDataSource(dataframe)
+        del dataframe
         p.rect(
             y='Compound', 
             x='Assay_ID', 
@@ -867,14 +902,14 @@ class DataMatrixHeatmapView(GenericAPIView, ListModelMixin):
             height=1, 
             source=mysource,
             line_color=None, 
-            fill_color=transform('value', mapper),
+            fill_color=transform('fscaled_value', mapper),
 
             # set visual properties for selected glyphs
             selection_line_color="crimson",
-            selection_fill_color=transform('value', mapper),
+            selection_fill_color=transform('fscaled_value', mapper),
             # set visual properties for non-selected glyphs
             nonselection_fill_alpha=1,
-            nonselection_fill_color=transform('value', mapper),
+            nonselection_fill_color=transform('fscaled_value', mapper),
             nonselection_line_color=None
 
             )
@@ -903,7 +938,7 @@ class DataMatrixHeatmapView(GenericAPIView, ListModelMixin):
         # Add legend
 
         color_bar = ColorBar(color_mapper=mapper, ticker=BasicTicker(), 
-                             formatter=PrintfTickFormatter(format=r'%f'),
+                             formatter=PrintfTickFormatter(format=r'%.3f'),
                              orientation="vertical", label_standoff=12, location=(0,0),
                              major_label_text_font_size = "9pt",major_tick_line_color="black")
         
@@ -946,7 +981,7 @@ class DataMatrixHeatmapView(GenericAPIView, ListModelMixin):
          ('Assay type', '@name')
         ]
         
-        # p.select_one(HoverTool).tooltips = TOOLTIPS
+        #p.select_one(HoverTool).tooltips = TOOLTIPS
     
         
         script, div = components(p)
