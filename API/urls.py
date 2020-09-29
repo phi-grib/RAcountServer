@@ -17,8 +17,9 @@ Including another URLconf
 from django.conf import settings
 from django.urls import path, re_path
 from .views import ListProjects, ProjectStatus, ManageProject, ManageNodes, User, Resources, FileUploadView, DataMatrixHeatmapView
-from .views import ProblemDescriptionView, CompoundView, CompoundByIntIdView, ChemblDataMatrixView, DataMatrixFieldsView, DataMatrixView
-from .chembl import ChEMBLSmilesToInChIKeyView
+from .views import ProblemDescriptionView, CompoundView, CompoundCreateListView, CompoundByIntIdView, ChemblDataMatrixView, DataMatrixFieldsView, DataMatrixView
+from .chembl import ChEMBLSmilesView
+from .rdkit import SetFingerPrintSimilarityFromSmilesView, SimilarityFromSmilesView
 
 urlpatterns = [
     #path("RX", ListModels.as_view()),
@@ -28,6 +29,7 @@ urlpatterns = [
     path("RX/project/<int:project>/node/<int:node>/", ManageNodes.as_view()),
     re_path(r'^RX/project/(?P<project>\d+)/compound/(?P<ra_type>(?:tc)|(?:sc))/(?P<int_id>\d+)/$', CompoundByIntIdView.as_view()),
     re_path(r'^RX/project/(?P<project>\d+)/compound/(?P<ra_type>(?:tc)|(?:sc))/$', CompoundView.as_view()),
+    re_path(r'^RX/project/(?P<project>\d+)/compound/(?P<ra_type>(?:tc)|(?:sc))/multiple/$', CompoundCreateListView.as_view()),
     re_path(r'^RX/project/(?P<project>\d+)/compound/(?P<ra_type>(?:tc)|(?:sc))/(?P<int_id>\d+)/chembl_save/$', ChemblDataMatrixView.as_view()),
     re_path(r'^RX/project/(?P<project>\d+)/compound/(?P<ra_type>(?:tc)|(?:sc))/(?P<int_id>\d+)/datamatrix/$', DataMatrixFieldsView.as_view()),
     re_path(r'^RX/project/(?P<project>\d+)/compound/(?P<ra_type>(?:tc)|(?:sc))/datamatrix/$', DataMatrixView.as_view()),
@@ -36,7 +38,9 @@ urlpatterns = [
     path("RX/node/<int:node>/resources/", Resources.as_view()),
     path("RX/project/<int:project>/problem_description/",ProblemDescriptionView.as_view()),
     path("RX/upload/<int:project>/<int:node>/<int:part>/", FileUploadView.as_view()),
-    path("RX/chembl/smiles2inchikey/", ChEMBLSmilesToInChIKeyView.as_view())
+    path("RX/chembl/<str:command>/", ChEMBLSmilesView.as_view()),
+    path("RX/rdkit/similarity/set/", SetFingerPrintSimilarityFromSmilesView.as_view()),
+    path("RX/rdkit/similarity/<int:cutoff>/", SimilarityFromSmilesView.as_view())
 
 ]
 

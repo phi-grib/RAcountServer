@@ -40,19 +40,24 @@ def chembl_standarize_smiles_to_inchikey(smiles, parent=False, isomeric=True):
     inchi,code,msg,log,aux = rdinchi.MolBlockToInchi(std_molblock)
     return rdinchi.InchiToInchiKey(inchi)
 
-class ChEMBLSmilesToInChIKeySerializer(serializers.Serializer):
+class ChEMBLSmiles(serializers.Serializer):
     smiles = serializers.CharField(allow_blank=False, trim_whitespace=True)
 
 @method_decorator((csrf_exempt), name='dispatch')
-class ChEMBLSmilesToInChIKeyView(APIView):
+class ChEMBLSmilesView(APIView):
     authentication_classes = []
     permission_classes = []
-    def post(self, request):
-        parent=False
-        isomeric=True
+    def post(self, request, command):
+        output = 'inchikey'
+        parent = False
+        isomeric = True
         parent_key = 'parent'     #GET
         isomeric_key = 'isomeric' #GET
         
+        if command == 'smiles2inchikey':
+            output ='inchikey'
+        elif command == 'standarize_smiles':
+            output ='smiles'
         
         #Parse GET parameters
         if parent_key in request.GET:
@@ -71,10 +76,13 @@ class ChEMBLSmilesToInChIKeyView(APIView):
                     parent = False
             except Exception:
                 pass
-        serializer = ChEMBLSmilesToInChIKeySerializer(data=request.data)
+        serializer = ChEMBLSmiles(data=request.data)
         serializer.is_valid(raise_exception=True)
         data = serializer.data
         smiles = data['smiles']
-        inchikey = chembl_standarize_smiles_to_inchikey(smiles, parent=parent, isomeric=isomeric)
-        return Response({'inchikey' : inchikey})
-        
+        if output == 'inchikey':
+            inchikey = chembl_standarize_smiles_to_inchikey(smiles, parent=parent, isomeric=isomeric)
+            return Response({'inchikey' : inchikey})
+        elif output == 'smiles':
+            std_smiles = chembl_standarize_smiles(smiles, parent=parent, isomeric=isomeric)
+            return Response({'smiles' : std_smiles})

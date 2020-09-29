@@ -105,6 +105,7 @@ class Compound(models.Model):
     int_id = models.IntegerField(null=False, blank=False, validators=[MinValueValidator(1)])
     ra_type = models.IntegerField(null=False, blank=False, choices=RAType.choices)
     rdkit = models.TextField(null=True, blank=False, default=None)
+    chembl_id = models.TextField(null=True, blank=False, default=None)
     class Meta:
         constraints = [
             models.UniqueConstraint(fields=['project','smiles'], name='unique_project_smiles'),
@@ -115,6 +116,9 @@ class Compound(models.Model):
 class DataMatrix(models.Model):
     compound = models.ForeignKey(Compound, on_delete=models.CASCADE)
     project = models.ForeignKey(Projects, on_delete=models.CASCADE)
+    constraints = [
+            models.UniqueConstraint(fields=['project','compound'], name='unique_project_compound'),
+    ]
 
 class UnitType(models.Model):
     name = models.TextField(null=False, blank=False)

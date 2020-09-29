@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 from rest_framework import serializers
 from .models import Projects, Nodes, Resources, ProblemDescription, Compound
 from .models import DataMatrix, UnitType, Unit, DataMatrixFields
-from .validators import CASRNValidator
+from .validators import CASRNValidator, SMILESValidator
 
 class ProjectSerializer (serializers.ModelSerializer):
 
@@ -52,12 +52,19 @@ class ProblemDescriptionSerializerInput(serializers.Serializer):
     description = serializers.CharField(allow_blank=True, trim_whitespace=False)
     
 class CompoundSerializer(serializers.ModelSerializer):
-    name = serializers.CharField(allow_blank=False, trim_whitespace=True)
-    cas_rn = serializers.CharField(allow_blank=False, trim_whitespace=True)
+    name = serializers.CharField(allow_blank=False, allow_null=True, trim_whitespace=True)
+    cas_rn = serializers.CharField(allow_blank=False, allow_null=True, trim_whitespace=True)
     smiles = serializers.CharField(allow_blank=False, trim_whitespace=True)
+    chembl_id = serializers.CharField(allow_blank=False, allow_null=True, trim_whitespace=True)
     def validate_cas_rn(self, value):
+        if value is None:
+            return value
         cas_rn_validator = CASRNValidator()
         cas_rn_validator(value)
+        return value
+    def validate_smiles(self, value):
+        smiles_validator = SMILESValidator()
+        smiles_validator(value)
         return value
     class Meta:
         model = Compound

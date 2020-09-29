@@ -16,6 +16,7 @@ from bokeh.models import BasicTicker, ColorBar, ColumnDataSource, LinearColorMap
 from bokeh.transform import transform
 from bokeh.embed import json_item
 import xml.etree.ElementTree as ET
+from copy import deepcopy
 
 
 from .utils import order_queryset_list_by_values_list
@@ -402,6 +403,7 @@ class CSVFileToHTML(APIView):
 
 compound_ra_type_abbreviation = {'tc' : Compound.RAType.target,
                                  'sc': Compound.RAType.source}
+compound_ra_type_code = {v: k for k, v in compound_ra_type_abbreviation.items()}
 
 @method_decorator((csrf_protect,ensure_csrf_cookie), name='dispatch')
 class CompoundView(GenericAPIView, CreateModelMixin, ListModelMixin):
@@ -444,7 +446,56 @@ class CompoundView(GenericAPIView, CreateModelMixin, ListModelMixin):
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+@method_decorator((csrf_protect,ensure_csrf_cookie), name='dispatch')
+class CompoundCreateListView(GenericAPIView, CreateModelMixin, ListModelMixin):
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated,IsProjectOwner]
+    serializer_class = CompoundSerializer
+    lookup_field = 'project'
+    lookup_url_kwarg = 'project'
+    
+    def get_queryset(self):
+        # The first thing that get(), post(), put() and delete() methods 
+        # of a GenericView from Django REST framework is to call get_queryset()
+        # directly or indirectly (the first thing that get_objects() method does
+        # is calling get_queryset()). This way we are we are overwriting 
+        # self.kwargs before they are used.
+        if self.kwargs['ra_type'] in compound_ra_type_abbreviation:
+            self.kwargs['ra_type'] = compound_ra_type_abbreviation[self.kwargs['ra_type']]
+        elif self.kwargs['ra_type'] in compound_ra_type_abbreviation.values():
+            pass
+        else:
+            return server_error(self.request)
+        self.kwargs['project'] = int(self.kwargs['project'])
+        return Compound.objects.filter(project=int(self.kwargs['project']),
+                                        ra_type=self.kwargs['ra_type'])
+    
+    def get(self, request, project, ra_type):
+        return self.list(request)
+    def post(self, request, project, ra_type):
+        #debug
+        Compound.objects.filter(ra_type=1,project=project).delete()
         
+        with transaction.atomic():
+            last_int_id = self.get_queryset().aggregate(Max('int_id'))['int_id__max']
+            counter = 0
+            data = list(request.data)
+            print(data)
+            for row in data:        
+                if (last_int_id is None):
+                    row['int_id'] = 1 + counter
+                else:
+                    row['int_id'] = last_int_id + counter + 1
+                row['ra_type'] = compound_ra_type_abbreviation[ra_type]
+                counter += 1
+            
+            serializer = self.get_serializer(data=data, many=True)
+            serializer.is_valid(raise_exception=True)
+            print(serializer.data)
+            self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)        
 
 @method_decorator((csrf_protect,ensure_csrf_cookie), name='dispatch')    
 class CompoundByIntIdView(RetrieveUpdateDestroyAPIView):
@@ -737,7 +788,7 @@ class DataMatrixHeatmapView(GenericAPIView, ListModelMixin):
         # is calling get_queryset()). This way we are we are overwriting 
         # self.kwargs before they are used.
         self.kwargs['project'] = int(self.kwargs['project'])
-        return super().get_queryset().filter(project=self.kwargs['project']).order_by('ra_type','-int_id')
+        return super().get_queryset().filter(project=self.kwargs['project']).order_by('-ra_type','-int_id')
     
     def get(self,request, project, json):
         queryset = self.filter_queryset(self.get_queryset())
@@ -763,7 +814,11 @@ class DataMatrixHeatmapView(GenericAPIView, ListModelMixin):
         colums_dict = {'Compound': [],'Assay_ID': [], 'value': [], 'value_unit': [], 'description':[],'name':[], 'alpha2': []}
         for compound in data:
             if len(compound['data_matrix']) > 0:
-                comp = '#' + str(compound['int_id'])+': '+compound['name']
+                if compound['name'] is None:
+                    name = ''
+                else:
+                    name = compound['name']
+                comp = compound_ra_type_code[compound['ra_type']] + ':#' + str(compound['int_id'])+': '+name
                 y_values.append(comp)
                 values_dict = {}
                 values_unit_dict = {}
@@ -853,8 +908,8 @@ class DataMatrixHeatmapView(GenericAPIView, ListModelMixin):
 
             # array_min = np.nanmin(array)
             array_min = 0
-            array_max = np.nanmax(array)
-            array_max_min = array_max - array_min
+            array_max = np.nanmax(np.abs(array))
+            array_max_min = abs(array_max - array_min)
 
             if array_max_min == 0:
                 dataframe.loc[idxs[dataframe.loc[idxs,'value'] != 'N/A'],'fscaled_value'] = 0.0
@@ -883,6 +938,7 @@ class DataMatrixHeatmapView(GenericAPIView, ListModelMixin):
         p = figure(
             plot_width=18*len(x_values)+80,
             plot_height=80*len(y_values)+300,
+            min_border_right=100,
             #title="Example freq",
             y_range= y_values,
             x_range = x_values,

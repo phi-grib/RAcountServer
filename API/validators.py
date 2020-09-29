@@ -1,6 +1,9 @@
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 from django.core.validators import RegexValidator
+from rest_framework import serializers
+
+from rdkit import Chem
 
 class CASRNValidator(RegexValidator):
     def __init__(self):
@@ -23,3 +26,11 @@ class CASRNValidator(RegexValidator):
                 _('Invalid control digit in %(value)s'),
                 params={'value': value},
             )
+            
+class SMILESValidator:
+    def __init__(self):
+        pass
+    def __call__(self, value):
+        if not Chem.MolFromSmiles(value):
+            message = 'Invalid SMILES: %s .' % value
+            raise serializers.ValidationError(message)
