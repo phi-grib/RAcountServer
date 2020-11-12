@@ -934,11 +934,10 @@ class DataMatrixHeatmapView(GenericAPIView, ListModelMixin):
         #h=int(((w-cw)*len(df_t.index)/len(df_t.columns))+ch)
         w= 760
         h= 132
-
-        p = figure(
-            plot_width=18*len(x_values)+80,
-            plot_height=80*len(y_values)+300,
-            min_border_right=100,
+        if (len(y_values) < 6 or len(x_values) < 6):
+            min_border_right=100
+            p = figure(
+            min_border_right=min_border_right,
             #title="Example freq",
             y_range= y_values,
             x_range = x_values,
@@ -948,6 +947,23 @@ class DataMatrixHeatmapView(GenericAPIView, ListModelMixin):
             toolbar_location="left",
             toolbar_sticky = False
             )
+        else:
+            width = 18*len(x_values)
+            height = 80*len(y_values)
+            min_border_right=100
+            p = figure(
+                plot_width=width,
+                plot_height= height,
+                min_border_right=min_border_right,
+                #title="Example freq",
+                y_range= y_values,
+                x_range = x_values,
+                tools=mytools, 
+                x_axis_location="above",
+                active_drag=None,
+                toolbar_location="left",
+                toolbar_sticky = False
+                )
         # Create rectangle for heatmap
         mysource = ColumnDataSource(dataframe)
         del dataframe
