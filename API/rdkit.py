@@ -28,7 +28,7 @@ class FingerPrintFromSmilesSerializer(serializers.Serializer):
 class SetFingerPrintSimilarityFromSmilesView(APIView):
     authentication_classes = []
     permission_classes = []
-    def post(self, request):
+    def post(self, request, option):
         serializer = FingerPrintFromSmilesSerializer(data=request.data, many=False)
         serializer.is_valid(raise_exception=True)
         data = serializer.data
@@ -45,6 +45,7 @@ class SimilarityFromSmilesView(APIView):
     authentication_classes = []
     permission_classes = []
     def post(self, request, cutoff):
+        cutoff = float(cutoff)
         if not(cutoff >= 0 and cutoff <= 100):
             return Response(data={'detail':'cutoff must be an integer between 0 and 100.'}, status=status.HTTP_400_BAD_REQUEST)
         cutoff_1 = float(cutoff)/100 

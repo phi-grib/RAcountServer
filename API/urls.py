@@ -34,13 +34,13 @@ urlpatterns = [
     re_path(r'^RX/project/(?P<project>\d+)/compound/(?P<ra_type>(?:tc)|(?:sc))/(?P<int_id>\d+)/datamatrix/$', DataMatrixFieldsView.as_view()),
     re_path(r'^RX/project/(?P<project>\d+)/compound/(?P<ra_type>(?:tc)|(?:sc))/datamatrix/$', DataMatrixView.as_view()),
     re_path(r'^RX/project/(?P<project>\d+)/datamatrix/heatmap/(?P<json>json)?/?$', DataMatrixHeatmapView.as_view()),
-
+    re_path(r'^RX/rdkit/similarity/set(/(?P<option>chemblstd))?/$', SetFingerPrintSimilarityFromSmilesView.as_view()),
+    
     path("RX/node/<int:node>/resources/", Resources.as_view()),
     path("RX/project/<int:project>/problem_description/",ProblemDescriptionView.as_view()),
     path("RX/upload/<int:project>/<int:node>/<int:part>/", FileUploadView.as_view()),
     path("RX/chembl/<str:command>/", ChEMBLSmilesView.as_view()),
-    path("RX/rdkit/similarity/set/", SetFingerPrintSimilarityFromSmilesView.as_view()),
-    path("RX/rdkit/similarity/<int:cutoff>/", SimilarityFromSmilesView.as_view())
+    path("RX/rdkit/similarity/<str:cutoff>/", SimilarityFromSmilesView.as_view())
 
 ]
 
