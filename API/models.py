@@ -133,6 +133,10 @@ class Unit(models.Model):
     
 
 class DataMatrixFields(models.Model):
+    class AssayType(DjangoChoices):
+        calculated_pc = ChoiceItem(0, "Calculated physicochemical properties")
+        bioactivity = ChoiceItem(1, "Biological activity")
+        pc = ChoiceItem(2, "Physicochemical assay")
     name = models.TextField(null=False, blank=False)
     description = models.TextField(null=False, blank=False)
     value = models.FloatField(null=True)
@@ -142,4 +146,5 @@ class DataMatrixFields(models.Model):
     std_unit = models.ForeignKey(Unit, null=True, related_name='datamatrixstdunit', on_delete=models.DO_NOTHING)
     assay_id = models.TextField(null=False, blank=False)
     text_value = models.TextField(null=True, blank=False, default=None)
+    assay_type = models.IntegerField(null=False, blank=False, choices=AssayType.choices)
     

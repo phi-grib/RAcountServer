@@ -120,3 +120,4 @@ class ChemblDataMatrixSerializer(serializers.Serializer):
     assay_chembl_id = serializers.CharField(allow_blank=False, trim_whitespace=True)
     text_value = serializers.CharField(allow_blank=False,allow_null=True, trim_whitespace=True)
     activity_comment = serializers.CharField(allow_blank=False,allow_null=True, trim_whitespace=True)
+    assay_type = serializers.CharField(allow_blank=False,allow_null=False, trim_whitespace=True)

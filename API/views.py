@@ -8,6 +8,7 @@ import numbers
 import numpy as np
 import pandas as pd
 import bokeh
+#from bokeh.models import Title
 from bokeh.plotting import figure 
 from bokeh.embed import components
 #from bokeh.models.tools import HoverTool
@@ -583,7 +584,14 @@ class ChemblDataMatrixView(APIView):
             'value': 'value',
             'assay_chembl_id': 'assay_id',
             'text_value': 'text_value',
+            'assay_type': 'assay_type',
             
+        }
+        
+        chembl2data_matrix_assay_type = {
+            'calculated_pc': DataMatrixFields.AssayType.calculated_pc,
+            'A': DataMatrixFields.AssayType.bioactivity,
+            'P': DataMatrixFields.AssayType.pc,
         }
         
         
@@ -610,7 +618,7 @@ class ChemblDataMatrixView(APIView):
                 col['units'] = col['standard_units']
                 col['value'] = col['standard_value']
             elif  unit is None and std_unit is None:
-                continue
+                standard_units[None] = [None, None]
             if unit not in standard_units:
                 if (col['value'] is not None and col['standard_value'] is not None) and col['standard_value'] != 0:
                     equivalence = col['value'] / col['standard_value']
@@ -633,23 +641,37 @@ class ChemblDataMatrixView(APIView):
                         if standard_units[unit][0] not in defined_units:
                             undefined_std_units.add(standard_units[unit][0])
                         std_units.add(standard_units[unit][0])
-            
+                    else:
+                        std_units.add(None)
+                        if None not in defined_units:
+                            undefined_std_units.add(None)
             new_std_std_units_data = []
             new_std_units_data = []
             for unit in undefined_std_units:
-                new_std_std_units_data.append({'name': unit, 'std_unit':None, 'project': project})
-                new_std_units_data.append({'name': unit, 'type':None, 'equivalence': 1.0, 'symbol': unit})
+                name = unit
+                if unit is None:
+                    name = 'dimensionless'
+                new_std_std_units_data.append({'name': name, 'std_unit':None, 'project': project})
+                new_std_units_data.append({'name': name, 'type':None, 'equivalence': 1.0, 'symbol': unit})
             unit_type_serializer = UnitTypeSerializer(data=new_std_std_units_data, many=True)
             unit_type_serializer.is_valid(raise_exception=True)
             unit_type_serializer.save()
-            new_std_std_units = UnitType.objects.filter(name__in=list(undefined_std_units))
+            if None in undefined_std_units:
+                undefined_std_units_no_none = set(undefined_std_units)
+                undefined_std_units_no_none.remove(None)
+                undefined_std_units_no_none.add('dimensionless')
+            else:
+                undefined_std_units_no_none = undefined_std_units
+            
+            new_std_std_units = UnitType.objects.filter(name__in=list(undefined_std_units_no_none))
+
             unit_type_std_unit_name2id = { unit.name: unit.id for unit in new_std_std_units }
             for unit in new_std_units_data:
                 unit['type'] = unit_type_std_unit_name2id[unit['name']]
             unit_std_serializer = UnitSerializer(data = new_std_units_data, many=True)
             unit_std_serializer.is_valid(raise_exception=True)
             unit_std_serializer.save()
-            new_std_units = Unit.objects.filter(name__in=list(undefined_std_units))
+            new_std_units = Unit.objects.filter(name__in=list(undefined_std_units_no_none))
             std_unit_name2id = { unit.name: unit.id for unit in new_std_units }
             partial_new_std_std_units_data = []
             for unit in new_std_units_data:
@@ -664,7 +686,10 @@ class ChemblDataMatrixView(APIView):
             saved_std_units_symbol2id = {unit.symbol: unit.id for unit in saved_std_units}
             new_units_data = []
             for unit in non_std_undefined_units:
-                new_units_data.append({'name': unit, 'type':saved_std_units_symbol2id[standard_units[unit][0]],
+                name = unit
+                if unit is None:
+                    name = 'dimensionless'
+                new_units_data.append({'name': name, 'type':saved_std_units_symbol2id[standard_units[unit][0]],
                                         'equivalence': standard_units[unit][1], 'symbol': unit})
             
             unit_serializer = UnitSerializer(data = new_units_data, many=True)
@@ -704,13 +729,17 @@ class ChemblDataMatrixView(APIView):
                         col[new_field] = col[old_field]
                     if old_field != new_field:
                         col.pop(old_field)
+                elif old_field == 'assay_type':
+                    chembl_assay_type = col[old_field]
+                    col[new_field] = chembl2data_matrix_assay_type[chembl_assay_type]
                 elif new_field != old_field:
                     col[new_field] = col[old_field]
                     col.pop(old_field)
             for field in list(col.keys()):
                 if field not in fields_to_keep:
                     col.pop(field)
-            col['row'] = row_id   
+            col['row'] = row_id
+ 
     
       
         data_matrix_fields_serializer = DataMatrixFieldsSerializer(data=data,many=True)
@@ -790,7 +819,11 @@ class DataMatrixHeatmapView(GenericAPIView, ListModelMixin):
         self.kwargs['project'] = int(self.kwargs['project'])
         return super().get_queryset().filter(project=self.kwargs['project']).order_by('-ra_type','-int_id')
     
-    def get(self,request, project, json):
+    def get(self,request, project, json, assay_type='bioactivity'):
+        
+        assay_types = {'bioactivity': [DataMatrixFields.AssayType.bioactivity],
+                        'pc': [DataMatrixFields.AssayType.calculated_pc, DataMatrixFields.AssayType.pc]}
+        
         queryset = self.filter_queryset(self.get_queryset())
 
         # page = self.paginate_queryset(queryset)
@@ -823,8 +856,12 @@ class DataMatrixHeatmapView(GenericAPIView, ListModelMixin):
                 values_dict = {}
                 values_unit_dict = {}
                 description_dict = {}
-                name_dict = {} 
+                name_dict = {}
                 for field in compound['data_matrix'][0]['data_matrix_fields']:
+                    if field['assay_type'] not in assay_types[assay_type]:
+                        print('skip', compound['name'], field['assay_type'], assay_type)
+                        continue
+                    
                     x_values_set.add(field['assay_id'])
                     description_dict[field['assay_id']] = field['description']
                     name_dict[field['assay_id']] = field['name']
@@ -909,7 +946,7 @@ class DataMatrixHeatmapView(GenericAPIView, ListModelMixin):
             # array_min = np.nanmin(array)
             array_min = 0
             array_max = np.nanmax(np.abs(array))
-            array_max_min = abs(array_max - array_min)
+            array_max_min = array_max - array_min
 
             if array_max_min == 0:
                 dataframe.loc[idxs[dataframe.loc[idxs,'value'] != 'N/A'],'fscaled_value'] = 0.0
@@ -964,6 +1001,7 @@ class DataMatrixHeatmapView(GenericAPIView, ListModelMixin):
                 toolbar_location="left",
                 toolbar_sticky = False
                 )
+
         # Create rectangle for heatmap
         mysource = ColumnDataSource(dataframe)
         del dataframe
