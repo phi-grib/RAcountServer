@@ -4,11 +4,11 @@ channels:
   - conda-forge
   - chembl
 dependencies:
-  - pip=20.0.2
+  - pip
   - python=3.6.10
+  - rdkit=2019.09.3
   - django=2.2.5
   - cython=0.29.15
-  - rdkit=2019.09.3
   - chembl_structure_pipeline=1.0.0
   - bokeh=2.1.1
   - pandas=1.1.1
