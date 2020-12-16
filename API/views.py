@@ -8,7 +8,7 @@ import numbers
 import numpy as np
 import pandas as pd
 import bokeh
-#from bokeh.models import Title
+from bokeh.models import Title
 from bokeh.plotting import figure 
 from bokeh.embed import components
 #from bokeh.models.tools import HoverTool
@@ -1044,6 +1044,12 @@ class DataMatrixHeatmapView(GenericAPIView, ListModelMixin):
             nonselection_line_color=None
 
             )
+
+        p.title.text = " Min-max normalized activity"
+        p.title.align = "left"
+        p.title.text_font_size = "25px"
+        p.add_layout(Title(text="Compounds", align="right"), "left")
+        p.add_layout(Title(text="Assays", align="left"), "above")
 
         # Add legend
 
