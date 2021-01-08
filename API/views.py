@@ -300,7 +300,6 @@ class FileUploadView(APIView):
         filekey = 'file'
         if filekey not in request.FILES:
             return Response({"detail","%s file field is missing." % (filekey)},status=status.HTTP_400_BAD_REQUEST)
-        print(request.FILES.getlist(filekey))
         file_list = request.FILES.getlist(filekey)
         if len(file_list) > 1:
             return Response({"detail","Only one file in %s is acceptable." % (filekey)},status=status.HTTP_400_BAD_REQUEST)
@@ -317,7 +316,6 @@ class FileUploadView(APIView):
         # create a MD5 hash of filename+(micosecond current time fraction) and encode it to base32 removing
         # '=' padding for file names compatible with Windows.
         md5 = base64.b32encode(hashlib.md5((filename+str(micro)).encode()).digest()).decode().strip('=')
-        print(md5)
         newfilename = '_'.join((date.strftime('%d%m%Y'),str(project),str(node),str(part),str(md5)))
         folderpath = os.path.join('projects',str(project),'node_'+str(node))
         
@@ -383,7 +381,6 @@ class CSVFileToHTML(APIView):
         filekey = 'file'
         if filekey not in request.FILES:
             return Response({"detail","%s file field is missing." % (filekey)},status=status.HTTP_400_BAD_REQUEST)
-        print(request.FILES.getlist(filekey))
         file_list = request.FILES.getlist(filekey)
         if len(file_list) > 1:
             return Response({"detail","Only one file in %s is acceptable." % (filekey)},status=status.HTTP_400_BAD_REQUEST)
@@ -482,7 +479,6 @@ class CompoundCreateListView(GenericAPIView, CreateModelMixin, ListModelMixin):
             last_int_id = self.get_queryset().aggregate(Max('int_id'))['int_id__max']
             counter = 0
             data = list(request.data)
-            print(data)
             for row in data:        
                 if (last_int_id is None):
                     row['int_id'] = 1 + counter
@@ -493,7 +489,6 @@ class CompoundCreateListView(GenericAPIView, CreateModelMixin, ListModelMixin):
             
             serializer = self.get_serializer(data=data, many=True)
             serializer.is_valid(raise_exception=True)
-            print(serializer.data)
             self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)        
@@ -574,7 +569,7 @@ class ChemblDataMatrixView(APIView):
         respdata = {'msg': 'OK'}
         respdata['CSRF_TOKEN'] = get_token(request) 
         return JsonResponse(respdata, status=status.HTTP_200_OK)
-    def post(self, request, project, ra_type, int_id):
+    def post(self, request, project, ra_type, int_id=None):
         chembl2data_matrix = {
             'assay_description': 'description',
             'standard_type': 'name',
@@ -606,146 +601,172 @@ class ChemblDataMatrixView(APIView):
             pass
         else:
             return server_error(self.request)
-        serializer = ChemblDataMatrixSerializer(data=request.data, many=True)
-        serializer.is_valid(raise_exception=True)
-        data = serializer.data
-        units_set = set()
-        standard_units = {}
-        for col in data:
-            unit = col['units']
-            std_unit = col['standard_units']
-            if unit is None and std_unit is not None:
-                col['units'] = col['standard_units']
-                col['value'] = col['standard_value']
-            elif  unit is None and std_unit is None:
-                standard_units[None] = [None, None]
-            if unit not in standard_units:
-                if (col['value'] is not None and col['standard_value'] is not None) and col['standard_value'] != 0:
-                    equivalence = col['value'] / col['standard_value']
+        
+        if int_id is not None:
+            data_list = [{'int_id':int_id,'data':request.data}]
+        else:
+            data_list = request.data
+            
+        i = 0
+        for rdata in data_list:
+            current_int_id = rdata['int_id']
+            if rdata['data'] is None:
+                continue
+            serializer = ChemblDataMatrixSerializer(data=rdata['data'], many=True)
+            try:
+                serializer.is_valid(raise_exception=True)
+            except Exception as e:
+                print(rdata['data'])
+                raise e
+            data = serializer.data
+            units_set = set()
+            standard_units = {}
+            for col in data:
+                if col is None:
+                    continue
+                unit = col['units']
+                std_unit = col['standard_units']
+                if std_unit is None:
+                    std_unit = unit
+                if unit is None and std_unit is not None:
+                    col['units'] = col['standard_units']
+                    col['value'] = col['standard_value']
+                elif  unit is None and std_unit is None:
+                    standard_units[None] = [None, None]
+                if unit not in standard_units:
+                    if (col['value'] is not None and col['standard_value'] is not None) and col['standard_value'] != 0:
+                        equivalence = col['value'] / col['standard_value']
+                    else:
+                        equivalence = None
+                    standard_units[unit] = [std_unit, equivalence]
+                units_set.add(unit)
+                units_set.add(std_unit)
+                
+            with transaction.atomic():
+                units = Unit.objects.filter(symbol__in=list(units_set))
+                defined_units = set([unit.symbol for unit in units])
+                
+                undefined_units = units_set - defined_units
+                undefined_std_units = set()
+                std_units = set()
+                for unit in undefined_units:
+                    if unit in standard_units:
+                        if standard_units[unit][0] is not None: 
+                            if standard_units[unit][0] not in defined_units:
+                                undefined_std_units.add(standard_units[unit][0])
+                            std_units.add(standard_units[unit][0])
+                        else:
+                            std_units.add(None)
+                            if None not in defined_units:
+                                undefined_std_units.add(None)
+                new_std_std_units_data = []
+                new_std_units_data = []
+                for unit in undefined_std_units:
+                    name = unit
+                    if unit is None:
+                        name = 'dimensionless'
+                    new_std_std_units_data.append({'name': name, 'std_unit':None, 'project': project})
+                    new_std_units_data.append({'name': name, 'type':None, 'equivalence': 1.0, 'symbol': unit})
+                unit_type_serializer = UnitTypeSerializer(data=new_std_std_units_data, many=True)
+                unit_type_serializer.is_valid(raise_exception=True)
+                unit_type_serializer.save()
+                if None in undefined_std_units:
+                    undefined_std_units_no_none = set(undefined_std_units)
+                    undefined_std_units_no_none.remove(None)
+                    undefined_std_units_no_none.add('dimensionless')
                 else:
-                    equivalence = None
-                standard_units[unit] = [std_unit, equivalence]
-            units_set.add(unit)
-            units_set.add(std_unit)
-            
-        with transaction.atomic():
-            units = Unit.objects.filter(symbol__in=list(units_set))
-            defined_units = set([unit.symbol for unit in units])
-            
-            undefined_units = units_set - defined_units
-            undefined_std_units = set()
-            std_units = set()
-            for unit in undefined_units:
-                if unit in standard_units:
-                    if standard_units[unit][0] is not None: 
-                        if standard_units[unit][0] not in defined_units:
-                            undefined_std_units.add(standard_units[unit][0])
-                        std_units.add(standard_units[unit][0])
-                    else:
-                        std_units.add(None)
-                        if None not in defined_units:
-                            undefined_std_units.add(None)
-            new_std_std_units_data = []
-            new_std_units_data = []
-            for unit in undefined_std_units:
-                name = unit
-                if unit is None:
-                    name = 'dimensionless'
-                new_std_std_units_data.append({'name': name, 'std_unit':None, 'project': project})
-                new_std_units_data.append({'name': name, 'type':None, 'equivalence': 1.0, 'symbol': unit})
-            unit_type_serializer = UnitTypeSerializer(data=new_std_std_units_data, many=True)
-            unit_type_serializer.is_valid(raise_exception=True)
-            unit_type_serializer.save()
-            if None in undefined_std_units:
-                undefined_std_units_no_none = set(undefined_std_units)
-                undefined_std_units_no_none.remove(None)
-                undefined_std_units_no_none.add('dimensionless')
-            else:
-                undefined_std_units_no_none = undefined_std_units
-            
-            new_std_std_units = UnitType.objects.filter(name__in=list(undefined_std_units_no_none))
+                    undefined_std_units_no_none = undefined_std_units
+                
+                new_std_std_units = UnitType.objects.filter(name__in=list(undefined_std_units_no_none))
 
-            unit_type_std_unit_name2id = { unit.name: unit.id for unit in new_std_std_units }
-            for unit in new_std_units_data:
-                unit['type'] = unit_type_std_unit_name2id[unit['name']]
-            unit_std_serializer = UnitSerializer(data = new_std_units_data, many=True)
-            unit_std_serializer.is_valid(raise_exception=True)
-            unit_std_serializer.save()
-            new_std_units = Unit.objects.filter(name__in=list(undefined_std_units_no_none))
-            std_unit_name2id = { unit.name: unit.id for unit in new_std_units }
-            partial_new_std_std_units_data = []
-            for unit in new_std_units_data:
-                partial_new_std_std_units_data.append({'id': unit_type_std_unit_name2id[unit['name']],
-                                                       'std_unit': std_unit_name2id[unit['name']],
-                                                       'project': project})
-            partial_unit_type_serializer = UnitTypeSerializer(data=partial_new_std_std_units_data, many=True, partial=True)
-            partial_unit_type_serializer.is_valid(raise_exception=True)
-            partial_unit_type_serializer.save()
-            non_std_undefined_units = undefined_units - undefined_std_units
-            saved_std_units = Unit.objects.filter(symbol__in=list(std_units))
-            saved_std_units_symbol2id = {unit.symbol: unit.id for unit in saved_std_units}
-            new_units_data = []
-            for unit in non_std_undefined_units:
-                name = unit
-                if unit is None:
-                    name = 'dimensionless'
-                new_units_data.append({'name': name, 'type':saved_std_units_symbol2id[standard_units[unit][0]],
-                                        'equivalence': standard_units[unit][1], 'symbol': unit})
+                unit_type_std_unit_name2id = { unit.name: unit.id for unit in new_std_std_units }
+                for unit in new_std_units_data:
+                    unit['type'] = unit_type_std_unit_name2id[unit['name']]
+                unit_std_serializer = UnitSerializer(data = new_std_units_data, many=True)
+                unit_std_serializer.is_valid(raise_exception=True)
+                unit_std_serializer.save()
+                new_std_units = Unit.objects.filter(name__in=list(undefined_std_units_no_none))
+                std_unit_name2id = { unit.name: unit.id for unit in new_std_units }
+                partial_new_std_std_units_data = []
+                for unit in new_std_units_data:
+                    partial_new_std_std_units_data.append({'id': unit_type_std_unit_name2id[unit['name']],
+                                                        'std_unit': std_unit_name2id[unit['name']],
+                                                        'project': project})
+                partial_unit_type_serializer = UnitTypeSerializer(data=partial_new_std_std_units_data, many=True, partial=True)
+                partial_unit_type_serializer.is_valid(raise_exception=True)
+                partial_unit_type_serializer.save()
+                non_std_undefined_units = undefined_units - undefined_std_units
+                saved_std_units = Unit.objects.filter(symbol__in=list(std_units))
+                saved_std_units_symbol2id = {unit.symbol: unit.id for unit in saved_std_units}
+                new_units_data = []
+                for unit in non_std_undefined_units:
+                    name = unit
+                    if unit is None:
+                        name = 'dimensionless'
+                    new_units_data.append({'name': name, 'type':saved_std_units_symbol2id[standard_units[unit][0]],
+                                            'equivalence': standard_units[unit][1], 'symbol': unit})
+                
+                unit_serializer = UnitSerializer(data = new_units_data, many=True)
+                unit_serializer.is_valid(raise_exception=True)
+                unit_serializer.save()
+                saved_units = Unit.objects.filter(symbol__in=list(units_set))
+                saved_units_symbol2id = {unit.symbol: unit.id for unit in saved_units}
+                
+            compound_id = Compound.objects.get(project=project, ra_type=self.kwargs['ra_type'],
+                                                int_id=current_int_id).pk
             
-            unit_serializer = UnitSerializer(data = new_units_data, many=True)
-            unit_serializer.is_valid(raise_exception=True)
-            unit_serializer.save()
-        saved_units = Unit.objects.filter(symbol__in=list(units_set))
-        saved_units_symbol2id = {unit.symbol: unit.id for unit in saved_units}
-        
-        compound_id = Compound.objects.get(project=project, ra_type=self.kwargs['ra_type'],
-                                              int_id=int_id).pk
-        
-        new_data_matrix_data = {'compound': compound_id, 'project': project}
-        if not DataMatrix.objects.filter(**new_data_matrix_data).exists():
-            data_matrix_serializer = DataMatrixSerializer(data=new_data_matrix_data,many=False)
-            data_matrix_serializer.is_valid(raise_exception=True)
-            data_matrix_serializer.save()
-        row_id = DataMatrix.objects.get(**new_data_matrix_data).pk
-        data = data.copy()
-        fields_to_keep = set()
-        for field in chembl2data_matrix:
-            fields_to_keep.add(chembl2data_matrix[field])
-        for col in data:
-            for old_field in chembl2data_matrix.keys():
-                new_field = chembl2data_matrix[old_field]
-                if new_field in {'unit','std_unit'}:
-                    if col[old_field] is not None:
-                        col[new_field] = saved_units_symbol2id[col[old_field]]
-                    else:
-                        col[new_field] = None
-                    if old_field != new_field:
-                        col.pop(old_field)
-                elif new_field in {'text_value'}:
-                    if col[old_field] is None:
-                        col[new_field] = col['activity_comment']
-                        col.pop('activity_comment')
-                    else:
+            new_data_matrix_data = {'compound': compound_id, 'project': project}
+            if not DataMatrix.objects.filter(**new_data_matrix_data).exists():
+                data_matrix_serializer = DataMatrixSerializer(data=new_data_matrix_data,many=False)
+                data_matrix_serializer.is_valid(raise_exception=True)
+                data_matrix_serializer.save()
+            row_id = DataMatrix.objects.get(**new_data_matrix_data).pk
+            data = data.copy()
+            fields_to_keep = set()
+            for field in chembl2data_matrix:
+                fields_to_keep.add(chembl2data_matrix[field])
+            for col in data:
+                for old_field in chembl2data_matrix.keys():
+                    new_field = chembl2data_matrix[old_field]
+                    if new_field in {'unit','std_unit'}:
+                        if col[old_field] is not None:
+                            col[new_field] = saved_units_symbol2id[col[old_field]]
+                        else:
+                            col[new_field] = None
+                        if old_field != new_field:
+                            col.pop(old_field)
+                    elif new_field in {'text_value'}:
+                        if col[old_field] is None:
+                            col[new_field] = col['activity_comment']
+                            col.pop('activity_comment')
+                        else:
+                            col[new_field] = col[old_field]
+                        if old_field != new_field:
+                            col.pop(old_field)
+                    elif old_field == 'assay_type':
+                        chembl_assay_type = col[old_field]
+                        col[new_field] = chembl2data_matrix_assay_type[chembl_assay_type]
+                    elif new_field != old_field:
                         col[new_field] = col[old_field]
-                    if old_field != new_field:
                         col.pop(old_field)
-                elif old_field == 'assay_type':
-                    chembl_assay_type = col[old_field]
-                    col[new_field] = chembl2data_matrix_assay_type[chembl_assay_type]
-                elif new_field != old_field:
-                    col[new_field] = col[old_field]
-                    col.pop(old_field)
-            for field in list(col.keys()):
-                if field not in fields_to_keep:
-                    col.pop(field)
-            col['row'] = row_id
- 
-    
-      
-        data_matrix_fields_serializer = DataMatrixFieldsSerializer(data=data,many=True)
-        data_matrix_fields_serializer.is_valid(raise_exception=True)
-        data_matrix_fields_serializer.save()
-        return Response(data_matrix_fields_serializer.data, status=status.HTTP_201_CREATED)
+                for field in list(col.keys()):
+                    if field not in fields_to_keep:
+                        col.pop(field)
+                col['row'] = row_id
+            
+
+            try:
+
+                data_matrix_fields_serializer = DataMatrixFieldsSerializer(data=data,many=True)
+                data_matrix_fields_serializer.is_valid(raise_exception=True)
+            except Exception as e:
+                print(data)
+                raise e
+            data_matrix_fields_serializer.save()
+        if int_id is not None:
+            return Response(data_matrix_fields_serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response({'msg':'OK'}, status=status.HTTP_201_CREATED)
         
 @method_decorator((csrf_protect,ensure_csrf_cookie), name='dispatch')
 class DataMatrixFieldsView(ListAPIView):
@@ -821,8 +842,18 @@ class DataMatrixHeatmapView(GenericAPIView, ListModelMixin):
     
     def get(self,request, project, json, assay_type='bioactivity'):
         
-        assay_types = {'bioactivity': [DataMatrixFields.AssayType.bioactivity],
-                        'pc': [DataMatrixFields.AssayType.calculated_pc, DataMatrixFields.AssayType.pc]}
+        assay_types = {
+            'bioactivity': {
+                'value':[DataMatrixFields.AssayType.bioactivity],
+                'title':" Min-max normalized activity",
+            },
+            'pc': {
+                'value':[DataMatrixFields.AssayType.calculated_pc, DataMatrixFields.AssayType.pc],
+                'title':" Min-max normalized Physicochemical property",
+            }
+        }
+        
+        chembl_molecular_species = {'ACID':1.0, 'NEUTRAL':0.45, 'ZWITTERION':0.65, 'BASE':0.0,None:np.nan,'N/A':np.nan}
         
         queryset = self.filter_queryset(self.get_queryset())
 
@@ -858,8 +889,7 @@ class DataMatrixHeatmapView(GenericAPIView, ListModelMixin):
                 description_dict = {}
                 name_dict = {}
                 for field in compound['data_matrix'][0]['data_matrix_fields']:
-                    if field['assay_type'] not in assay_types[assay_type]:
-                        print('skip', compound['name'], field['assay_type'], assay_type)
+                    if field['assay_type'] not in assay_types[assay_type]['value']:
                         continue
                     
                     x_values_set.add(field['assay_id'])
@@ -872,6 +902,7 @@ class DataMatrixHeatmapView(GenericAPIView, ListModelMixin):
                         else:
                             value = field['value']
                             unit = field['unit']
+
                     else:
                         value = field['std_value']
                         unit = field['std_unit']
@@ -914,7 +945,8 @@ class DataMatrixHeatmapView(GenericAPIView, ListModelMixin):
                     z_value_unit = 'N/A'
                     description = 'N/A'
                     name = 'N/A'
-                if isinstance(z_value, str) and z_value != 'N/A':
+
+                if isinstance(z_value, str) and z_value != 'N/A' and assay_id != 'molecular_species':
                     alpha2 = 1.0
                 else:
                     alpha2 = 0
@@ -938,8 +970,17 @@ class DataMatrixHeatmapView(GenericAPIView, ListModelMixin):
         dataframe['fscaled_value'] = None
         for assay_id in x_values:
             idxs = np.where(dataframe['Assay_ID'] == assay_id)[0]
-            if dataframe.loc[idxs,'alpha2'].any() != 0:
+            if dataframe.loc[idxs,'alpha2'].any() != 0 or assay_id == 'molecular_species':
                 dataframe.loc[idxs,'fscaled_value'] = 'N/A'
+                if assay_id == 'molecular_species':
+                    array = dataframe.loc[idxs,'value']
+                    for species, value in chembl_molecular_species.items():
+                        if species is None:
+                            array.replace(to_replace='None',value=value,regex=False,inplace=True)
+                            array.fillna(value=value,inplace=True)
+                        else:
+                            array.replace(to_replace=species,value=value,regex=False,inplace=True)
+                    dataframe.loc[idxs,'fscaled_value'] = array
                 continue
             array = dataframe.loc[idxs,'value'].replace('N/A', np.nan).to_numpy(dtype=np.float32)
 
@@ -947,7 +988,6 @@ class DataMatrixHeatmapView(GenericAPIView, ListModelMixin):
             array_min = 0
             array_max = np.nanmax(np.abs(array))
             array_max_min = array_max - array_min
-
             if array_max_min == 0:
                 dataframe.loc[idxs[dataframe.loc[idxs,'value'] != 'N/A'],'fscaled_value'] = 0.0
             else:
@@ -959,6 +999,7 @@ class DataMatrixHeatmapView(GenericAPIView, ListModelMixin):
         #Map colors
         mapper = LinearColorMapper(palette=bokeh.palettes.RdYlBu[10], low = 0,
                          high = max([i for i in dataframe['fscaled_value'].to_list() if isinstance(i, numbers.Number) and not isinstance(i, bool)]))
+        
         # Define a figure
 
         #pan=PanTool(dimensions="width")
@@ -984,6 +1025,22 @@ class DataMatrixHeatmapView(GenericAPIView, ListModelMixin):
             toolbar_location="left",
             toolbar_sticky = False
             )
+        elif assay_type == 'pc':
+            width = 60*len(x_values)
+            height = 80*len(y_values)
+            min_border_right=150
+            p = figure(
+                plot_width=width,
+                plot_height= height,
+                min_border_right=min_border_right,
+                y_range= y_values,
+                x_range = x_values,
+                tools=mytools, 
+                x_axis_location="above",
+                active_drag=None,
+                toolbar_location="left",
+                toolbar_sticky = False
+                )
         else:
             width = 18*len(x_values)
             height = 80*len(y_values)
@@ -1045,7 +1102,7 @@ class DataMatrixHeatmapView(GenericAPIView, ListModelMixin):
 
             )
 
-        p.title.text = " Min-max normalized activity"
+        p.title.text = assay_types[assay_type]['title']
         p.title.align = "left"
         p.title.text_font_size = "25px"
         p.add_layout(Title(text="Compounds", align="right"), "left")
@@ -1101,7 +1158,7 @@ class DataMatrixHeatmapView(GenericAPIView, ListModelMixin):
     
         
         script, div = components(p)
-        heatmap_div_id = "heatmap_datamatrix_bio_activity_project_"+str(self.kwargs['project'])
+        heatmap_div_id = "heatmap_datamatrix_"+assay_type+"_project_"+str(self.kwargs['project'])
         json_p = json_item(p,heatmap_div_id)
         json_p['doc']['title'] = heatmap_div_id
         if json is None:
