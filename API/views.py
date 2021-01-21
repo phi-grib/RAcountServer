@@ -23,6 +23,7 @@ from copy import deepcopy
 from .utils import order_queryset_list_by_values_list
 
 from django.db import IntegrityError
+from django.core.exceptions import ObjectDoesNotExist
 from django.conf import settings
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
@@ -53,14 +54,14 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.parsers import MultiPartParser
 from rest_framework.exceptions import PermissionDenied, server_error
 
-from .models import Projects as ProjectsModel, ProblemDescription
+from .models import Projects as ProjectsModel, ProblemDescription, InitialRAxHypothesis
 from .models import Nodes as NodesModel
 from .models import Resources as ResourcesModel
 from .models import File, FileType
 from .models import Compound, DataMatrix, DataMatrixFields, UnitType, Unit
 
 from .serializer import ProjectSerializer, UserSerializer, NodeSerializer, FullNodeSerializer
-from .serializer import StatusSerializer, ResourcesSerializer, ProblemDescriptionSerializer, ProblemDescriptionSerializerInput
+from .serializer import StatusSerializer, ResourcesSerializer, ProblemDescriptionSerializer, InitialRAxHypothesisSerializer
 from .serializer import CompoundSerializer, DataMatrixSerializer, UnitTypeSerializer, UnitSerializer
 from .serializer import DataMatrixFieldsSerializer, DataMatrixFieldsReadSerializer, ChemblDataMatrixSerializer, CompoundDataMatrixSerializer
 
@@ -153,13 +154,13 @@ class ManageNodes(GenericAPIView,UpdateModelMixin):
             content = histi['content']
             #if content != "":
             #    content = "<b>Output:</b><br>"+histi['content']
-            if history[i]['node_seq'] == 1:
-                try:
-                    qproblem = ProblemDescription.objects.get(project=project)
-                    #histi['content'] = "<b>Problem description:</b><br>"+qproblem.description+content
-                    histi['content'] = qproblem.description
-                except ProblemDescription.DoesNotExist:
-                    histi['content'] = content
+            # if history[i]['node_seq'] == 1:
+            #     try:
+            #         qproblem = ProblemDescription.objects.get(project=project)
+            #         #histi['content'] = "<b>Problem description:</b><br>"+qproblem.description+content
+            #         histi['content'] = qproblem.description
+            #     except ProblemDescription.DoesNotExist:
+            #         histi['content'] = content
             #else:
             #    if histi['inputs_comments'] != "":
             #        histi['content'] = "<b>Input:</b><br>"+histi['inputs_comments']+content
@@ -202,25 +203,100 @@ class ProblemDescriptionView(GenericAPIView,CreateModelMixin,RetrieveModelMixin,
         for key in data:
             data[key] = data[key][0]
         data['project'] = project
-        serializer = ProblemDescriptionSerializerInput(data=data)
-        serializer.is_valid(raise_exception=True)
-        project_obj = ProjectsModel.objects.get(pk=serializer.data['project'])
         
+        # Perform the lookup filtering.
+        lookup_url_kwarg = self.lookup_url_kwarg or self.lookup_field
+
+        assert lookup_url_kwarg in self.kwargs, (
+            'Expected view %s to be called with a URL keyword argument '
+            'named "%s". Fix your URL conf, or set the `.lookup_field` '
+            'attribute on the view correctly.' %
+            (self.__class__.__name__, lookup_url_kwarg)
+        )
+        filter_kwargs = {self.lookup_field: self.kwargs[lookup_url_kwarg]}
+        try:
+            instance = self.get_queryset().get(**filter_kwargs)
+            serializer = self.get_serializer(instance, data=data, partial=True)
+        except ObjectDoesNotExist as e:
+            serializer = self.get_serializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        del data
+        data = dict(serializer.validated_data)
+        project_obj = data.pop('project')
         success = False
         while not success:
             try:
-                obj, created = self.get_queryset().update_or_create(project=project_obj, defaults={'description': serializer.data['description']})
+                obj, created = self.get_queryset().update_or_create(project=project_obj, defaults=data)
                 success = True
             except OperationalError as e:
                 if str(e) == "database is locked":
                     time.sleep(5)
                 else:
+                    print(e)
                     raise e
 
         if created:
             NodesModel.objects.filter(project=self.kwargs['project'], node_seq=1).update(executed=True)
         return Response({'Ok':'ok'}, status=status.HTTP_200_OK)
+    
+@method_decorator((csrf_protect,ensure_csrf_cookie), name='dispatch')
+class InitialRAxHypothesisView(GenericAPIView,CreateModelMixin,RetrieveModelMixin,UpdateModelMixin):
+    serializer_class = InitialRAxHypothesisSerializer
+    lookup_field = 'project'
+    lookup_url_kwarg = 'project'
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated,IsProjectOwner]
+    queryset = InitialRAxHypothesis.objects.all()
+    
+    def get(self, request, project):
+        try:
+            response = self.retrieve(request)
+        except Http404:
+            return Response({'description':'Not Found: '+request.path,'CSRF_TOKEN':get_token(request)}, status=status.HTTP_404_NOT_FOUND)
+        response.data['CSRF_TOKEN'] = get_token(request)
+        return response
 
+    def post(self, request, project):
+        data = dict(request.data)
+        for key in data:
+            data[key] = data[key][0]
+        data['project'] = project
+        
+        # Perform the lookup filtering.
+        lookup_url_kwarg = self.lookup_url_kwarg or self.lookup_field
+
+        assert lookup_url_kwarg in self.kwargs, (
+            'Expected view %s to be called with a URL keyword argument '
+            'named "%s". Fix your URL conf, or set the `.lookup_field` '
+            'attribute on the view correctly.' %
+            (self.__class__.__name__, lookup_url_kwarg)
+        )
+        filter_kwargs = {self.lookup_field: self.kwargs[lookup_url_kwarg]}
+        try:
+            instance = self.get_queryset().get(**filter_kwargs)
+            serializer = self.get_serializer(instance, data=data, partial=True)
+        except ObjectDoesNotExist as e:
+            serializer = self.get_serializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        del data
+        data = dict(serializer.validated_data)
+        project_obj = data.pop('project')
+        success = False
+        while not success:
+            try:
+                obj, created = self.get_queryset().update_or_create(project=project_obj, defaults=data)
+                success = True
+            except OperationalError as e:
+                if str(e) == "database is locked":
+                    time.sleep(5)
+                else:
+                    print(e)
+                    raise e
+
+        if created:
+            NodesModel.objects.filter(project=self.kwargs['project'], node_seq=1).update(executed=True)
+        return Response({'Ok':'ok'}, status=status.HTTP_200_OK)
+    
 @method_decorator((csrf_protect,ensure_csrf_cookie), name='dispatch')
 class User(APIView):
     # If the user is already logged in, it responds a JSON with user data and the CSRF token.
@@ -876,7 +952,10 @@ class DataMatrixHeatmapView(GenericAPIView, ListModelMixin):
         name_dict_list = []
         
         colums_dict = {'Compound': [],'Assay_ID': [], 'value': [], 'value_unit': [], 'description':[],'name':[], 'alpha2': []}
+        i = 0
         for compound in data:
+            if i > 30:
+                break
             if len(compound['data_matrix']) > 0:
                 if compound['name'] is None:
                     name = ''
@@ -925,6 +1004,7 @@ class DataMatrixHeatmapView(GenericAPIView, ListModelMixin):
                 values_unit_dict_list.append(values_unit_dict)
                 description_dict_list.append(description_dict)
                 name_dict_list.append(name_dict)
+            i += 1
         x_values = sorted(list(x_values_set))     
 
         del data

@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 
 from rest_framework import serializers
-from .models import Projects, Nodes, Resources, ProblemDescription, Compound
+from .models import Projects, Nodes, Resources, ProblemDescription, InitialRAxHypothesis, Compound
 from .models import DataMatrix, UnitType, Unit, DataMatrixFields
 from .validators import CASRNValidator, SMILESValidator
 
@@ -42,14 +42,22 @@ class StatusSerializer(serializers.Serializer):
     executed = serializers.URLField()
 
 class ProblemDescriptionSerializer(serializers.ModelSerializer):
-    
+    scope = serializers.CharField(allow_blank=True, trim_whitespace=False)
+    decision_context = serializers.CharField(allow_blank=True, trim_whitespace=False)
+    endpoints = serializers.CharField(allow_blank=True, trim_whitespace=False)
+    uncertainty = serializers.CharField(allow_blank=True, trim_whitespace=False)
     class Meta:
         model = ProblemDescription
         fields = "__all__"
-
-class ProblemDescriptionSerializerInput(serializers.Serializer):
-    project = serializers.IntegerField()
-    description = serializers.CharField(allow_blank=True, trim_whitespace=False)
+        
+class InitialRAxHypothesisSerializer(serializers.ModelSerializer):
+    ana_cat_approach  = serializers.CharField(allow_blank=True, trim_whitespace=False)
+    metabolism = serializers.CharField(allow_blank=True, trim_whitespace=False)
+    quantitative_var_approach = serializers.CharField(allow_blank=True, trim_whitespace=False)
+    class Meta:
+        model = InitialRAxHypothesis
+        fields = "__all__"
+    
     
 class CompoundSerializer(serializers.ModelSerializer):
     name = serializers.CharField(allow_blank=False, allow_null=True, trim_whitespace=True)

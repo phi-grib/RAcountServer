@@ -37,7 +37,16 @@ class Nodes(models.Model):
 
 class ProblemDescription(models.Model):
     project = models.ForeignKey(Projects,unique=True, null=False, on_delete=models.CASCADE)
-    description = models.TextField(blank=True,null=False,default='')
+    scope = models.TextField(blank=True,null=False,default='')
+    decision_context = models.TextField(blank=True,null=False,default='')
+    endpoints = models.TextField(blank=True,null=False,default='')
+    uncertainty = models.TextField(blank=True,null=False,default='')
+    
+class InitialRAxHypothesis(models.Model):
+    project = models.ForeignKey(Projects,unique=True, null=False, on_delete=models.CASCADE)
+    ana_cat_approach = models.TextField(blank=True,null=False,default='')
+    metabolism = models.TextField(blank=True,null=False,default='')
+    quantitative_var_approach = models.TextField(blank=True,null=False,default='')
 
 class Resources(models.Model):
 

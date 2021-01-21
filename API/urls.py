@@ -17,7 +17,7 @@ Including another URLconf
 from django.conf import settings
 from django.urls import path, re_path
 from .views import ListProjects, ProjectStatus, ManageProject, ManageNodes, User, Resources, FileUploadView, DataMatrixHeatmapView
-from .views import ProblemDescriptionView, CompoundView, CompoundCreateListView, CompoundByIntIdView, ChemblDataMatrixView, DataMatrixFieldsView, DataMatrixView
+from .views import ProblemDescriptionView, InitialRAxHypothesisView, CompoundView, CompoundCreateListView, CompoundByIntIdView, ChemblDataMatrixView, DataMatrixFieldsView, DataMatrixView
 from .chembl import ChEMBLSmilesView
 from .rdkit import SetFingerPrintSimilarityFromSmilesView, SimilarityFromSmilesView
 
@@ -39,6 +39,7 @@ urlpatterns = [
     
     path("RX/node/<int:node>/resources/", Resources.as_view()),
     path("RX/project/<int:project>/problem_description/",ProblemDescriptionView.as_view()),
+    path("RX/project/<int:project>/initial_rax_hypothesis/", InitialRAxHypothesisView.as_view()),
     path("RX/upload/<int:project>/<int:node>/<int:part>/", FileUploadView.as_view()),
     path("RX/chembl/<str:command>/", ChEMBLSmilesView.as_view()),
     path("RX/rdkit/similarity/<str:cutoff>/", SimilarityFromSmilesView.as_view())
