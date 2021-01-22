@@ -954,8 +954,8 @@ class DataMatrixHeatmapView(GenericAPIView, ListModelMixin):
         colums_dict = {'Compound': [],'Assay_ID': [], 'value': [], 'value_unit': [], 'description':[],'name':[], 'alpha2': []}
         i = 0
         for compound in data:
-            if i > 30:
-                break
+            # if i > 30 and compound_ra_type_code[compound['ra_type']] == 'sc':
+            #     continue
             if len(compound['data_matrix']) > 0:
                 if compound['name'] is None:
                     name = ''
