@@ -62,7 +62,7 @@ from .models import Compound, DataMatrix, DataMatrixFields, UnitType, Unit
 
 from .serializer import ProjectSerializer, UserSerializer, NodeSerializer, FullNodeSerializer
 from .serializer import StatusSerializer, ResourcesSerializer, ProblemDescriptionSerializer, InitialRAxHypothesisSerializer
-from .serializer import CompoundSerializer, DataMatrixSerializer, UnitTypeSerializer, UnitSerializer
+from .serializer import CompoundSerializer, DataMatrixSerializer, UnitTypeSerializer, UnitSerializer, CompoundCASRNSerializer
 from .serializer import DataMatrixFieldsSerializer, DataMatrixFieldsReadSerializer, ChemblDataMatrixSerializer, CompoundDataMatrixSerializer
 
 from .permissions import IsProjectOwner
@@ -684,41 +684,42 @@ class ChemblDataMatrixView(APIView):
             data_list = request.data
             
         i = 0
-        for rdata in data_list:
-            current_int_id = rdata['int_id']
-            if rdata['data'] is None:
-                continue
-            serializer = ChemblDataMatrixSerializer(data=rdata['data'], many=True)
-            try:
-                serializer.is_valid(raise_exception=True)
-            except Exception as e:
-                print(rdata['data'])
-                raise e
-            data = serializer.data
-            units_set = set()
-            standard_units = {}
-            for col in data:
-                if col is None:
+        with transaction.atomic():
+            for rdata in data_list:
+                current_int_id = rdata['int_id']
+                if rdata['data'] is None:
                     continue
-                unit = col['units']
-                std_unit = col['standard_units']
-                if std_unit is None:
-                    std_unit = unit
-                if unit is None and std_unit is not None:
-                    col['units'] = col['standard_units']
-                    col['value'] = col['standard_value']
-                elif  unit is None and std_unit is None:
-                    standard_units[None] = [None, None]
-                if unit not in standard_units:
-                    if (col['value'] is not None and col['standard_value'] is not None) and col['standard_value'] != 0:
-                        equivalence = col['value'] / col['standard_value']
-                    else:
-                        equivalence = None
-                    standard_units[unit] = [std_unit, equivalence]
-                units_set.add(unit)
-                units_set.add(std_unit)
-                
-            with transaction.atomic():
+                serializer = ChemblDataMatrixSerializer(data=rdata['data'], many=True)
+                try:
+                    serializer.is_valid(raise_exception=True)
+                except Exception as e:
+                    print(rdata['data'])
+                    raise e
+                data = serializer.data
+                units_set = set()
+                standard_units = {}
+                for col in data:
+                    if col is None:
+                        continue
+                    unit = col['units']
+                    std_unit = col['standard_units']
+                    if std_unit is None:
+                        std_unit = unit
+                    if unit is None and std_unit is not None:
+                        col['units'] = col['standard_units']
+                        col['value'] = col['standard_value']
+                    elif  unit is None and std_unit is None:
+                        standard_units[None] = [None, None]
+                    if unit not in standard_units:
+                        if (col['value'] is not None and col['standard_value'] is not None) and col['standard_value'] != 0:
+                            equivalence = col['value'] / col['standard_value']
+                        else:
+                            equivalence = None
+                        standard_units[unit] = [std_unit, equivalence]
+                    units_set.add(unit)
+                    units_set.add(std_unit)
+                    
+
                 units = Unit.objects.filter(symbol__in=list(units_set))
                 defined_units = set([unit.symbol for unit in units])
                 
@@ -787,58 +788,58 @@ class ChemblDataMatrixView(APIView):
                 unit_serializer.save()
                 saved_units = Unit.objects.filter(symbol__in=list(units_set))
                 saved_units_symbol2id = {unit.symbol: unit.id for unit in saved_units}
+                    
+                compound_id = Compound.objects.get(project=project, ra_type=self.kwargs['ra_type'],
+                                                    int_id=current_int_id).pk
                 
-            compound_id = Compound.objects.get(project=project, ra_type=self.kwargs['ra_type'],
-                                                int_id=current_int_id).pk
-            
-            new_data_matrix_data = {'compound': compound_id, 'project': project}
-            if not DataMatrix.objects.filter(**new_data_matrix_data).exists():
-                data_matrix_serializer = DataMatrixSerializer(data=new_data_matrix_data,many=False)
-                data_matrix_serializer.is_valid(raise_exception=True)
-                data_matrix_serializer.save()
-            row_id = DataMatrix.objects.get(**new_data_matrix_data).pk
-            data = data.copy()
-            fields_to_keep = set()
-            for field in chembl2data_matrix:
-                fields_to_keep.add(chembl2data_matrix[field])
-            for col in data:
-                for old_field in chembl2data_matrix.keys():
-                    new_field = chembl2data_matrix[old_field]
-                    if new_field in {'unit','std_unit'}:
-                        if col[old_field] is not None:
-                            col[new_field] = saved_units_symbol2id[col[old_field]]
-                        else:
-                            col[new_field] = None
-                        if old_field != new_field:
-                            col.pop(old_field)
-                    elif new_field in {'text_value'}:
-                        if col[old_field] is None:
-                            col[new_field] = col['activity_comment']
-                            col.pop('activity_comment')
-                        else:
+                new_data_matrix_data = {'compound': compound_id, 'project': project}
+                if not DataMatrix.objects.filter(**new_data_matrix_data).exists():
+                    data_matrix_serializer = DataMatrixSerializer(data=new_data_matrix_data,many=False)
+                    data_matrix_serializer.is_valid(raise_exception=True)
+                    data_matrix_serializer.save()
+                row_id = DataMatrix.objects.get(**new_data_matrix_data).pk
+                data = data.copy()
+                fields_to_keep = set()
+                for field in chembl2data_matrix:
+                    fields_to_keep.add(chembl2data_matrix[field])
+                for col in data:
+                    for old_field in chembl2data_matrix.keys():
+                        new_field = chembl2data_matrix[old_field]
+                        if new_field in {'unit','std_unit'}:
+                            if col[old_field] is not None:
+                                col[new_field] = saved_units_symbol2id[col[old_field]]
+                            else:
+                                col[new_field] = None
+                            if old_field != new_field:
+                                col.pop(old_field)
+                        elif new_field in {'text_value'}:
+                            if col[old_field] is None:
+                                col[new_field] = col['activity_comment']
+                                col.pop('activity_comment')
+                            else:
+                                col[new_field] = col[old_field]
+                            if old_field != new_field:
+                                col.pop(old_field)
+                        elif old_field == 'assay_type':
+                            chembl_assay_type = col[old_field]
+                            col[new_field] = chembl2data_matrix_assay_type[chembl_assay_type]
+                        elif new_field != old_field:
                             col[new_field] = col[old_field]
-                        if old_field != new_field:
                             col.pop(old_field)
-                    elif old_field == 'assay_type':
-                        chembl_assay_type = col[old_field]
-                        col[new_field] = chembl2data_matrix_assay_type[chembl_assay_type]
-                    elif new_field != old_field:
-                        col[new_field] = col[old_field]
-                        col.pop(old_field)
-                for field in list(col.keys()):
-                    if field not in fields_to_keep:
-                        col.pop(field)
-                col['row'] = row_id
-            
+                    for field in list(col.keys()):
+                        if field not in fields_to_keep:
+                            col.pop(field)
+                    col['row'] = row_id
+                
 
-            try:
+                try:
 
-                data_matrix_fields_serializer = DataMatrixFieldsSerializer(data=data,many=True)
-                data_matrix_fields_serializer.is_valid(raise_exception=True)
-            except Exception as e:
-                print(data)
-                raise e
-            data_matrix_fields_serializer.save()
+                    data_matrix_fields_serializer = DataMatrixFieldsSerializer(data=data,many=True)
+                    data_matrix_fields_serializer.is_valid(raise_exception=True)
+                except Exception as e:
+                    print(data)
+                    raise e
+                data_matrix_fields_serializer.save()
         if int_id is not None:
             return Response(data_matrix_fields_serializer.data, status=status.HTTP_201_CREATED)
         else:

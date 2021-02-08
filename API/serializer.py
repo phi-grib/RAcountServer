@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 
 from rest_framework import serializers
 from .models import Projects, Nodes, Resources, ProblemDescription, InitialRAxHypothesis, Compound
-from .models import DataMatrix, UnitType, Unit, DataMatrixFields
+from .models import DataMatrix, UnitType, Unit, DataMatrixFields, CompoundCASRN
 from .validators import CASRNValidator, SMILESValidator
 
 class ProjectSerializer (serializers.ModelSerializer):
@@ -76,6 +76,18 @@ class CompoundSerializer(serializers.ModelSerializer):
         return value
     class Meta:
         model = Compound
+        fields = "__all__"
+
+class CompoundCASRNSerializer(serializers.ModelSerializer):
+    cas_rn = serializers.CharField(allow_blank=False, allow_null=True, trim_whitespace=True)
+    def validate_cas_rn(self, value):
+        if value is None:
+            return value
+        cas_rn_validator = CASRNValidator()
+        cas_rn_validator(value)
+        return value
+    class Meta:
+        model = CompoundCASRN
         fields = "__all__"
 
 class DataMatrixSerializer(serializers.ModelSerializer):

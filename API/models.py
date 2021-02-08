@@ -121,6 +121,10 @@ class Compound(models.Model):
             models.UniqueConstraint(fields=['project','ra_type','int_id'], name='unique_project_ra_type_int_id'),
 
         ]
+class CompoundCASRN(models.Model):
+    compound = models.ForeignKey(Compound, on_delete=models.CASCADE)
+    cas_rn = models.CharField(null=True, blank=False, max_length=12, validators=[CASRNValidator()])
+
 
 class DataMatrix(models.Model):
     compound = models.ForeignKey(Compound, on_delete=models.CASCADE)
