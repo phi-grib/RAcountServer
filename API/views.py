@@ -58,12 +58,12 @@ from .models import Projects as ProjectsModel, ProblemDescription, InitialRAxHyp
 from .models import Nodes as NodesModel
 from .models import Resources as ResourcesModel
 from .models import File, FileType
-from .models import Compound, DataMatrix, DataMatrixFields, UnitType, Unit
+from .models import Compound, DataMatrix, DataMatrixFields, UnitType, Unit, CompoundCASRN
 
 from .serializer import ProjectSerializer, UserSerializer, NodeSerializer, FullNodeSerializer
-from .serializer import StatusSerializer, ResourcesSerializer, ProblemDescriptionSerializer, InitialRAxHypothesisSerializer
-from .serializer import CompoundSerializer, DataMatrixSerializer, UnitTypeSerializer, UnitSerializer, CompoundCASRNSerializer
-from .serializer import DataMatrixFieldsSerializer, DataMatrixFieldsReadSerializer, ChemblDataMatrixSerializer, CompoundDataMatrixSerializer
+from .serializer import StatusSerializer, ResourcesSerializer, ProblemDescriptionSerializer, InitialRAxHypothesisSerializer, SlugCompoundCASRNSSerializerNoValidation
+from .serializer import CompoundSerializer, DataMatrixSerializer, UnitTypeSerializer, UnitSerializer, CompoundCASRNSerializer, SlugCompoundCASRNSSerializer
+from .serializer import DataMatrixFieldsSerializer, DataMatrixFieldsReadSerializer, ChemblDataMatrixSerializer, CompoundDataMatrixSerializer, CompoundSerializer
 
 from .permissions import IsProjectOwner
 
@@ -483,7 +483,7 @@ compound_ra_type_code = {v: k for k, v in compound_ra_type_abbreviation.items()}
 class CompoundView(GenericAPIView, CreateModelMixin, ListModelMixin):
     authentication_classes = [SessionAuthentication]
     permission_classes = [IsAuthenticated,IsProjectOwner]
-    serializer_class = CompoundSerializer
+    serializer_class = SlugCompoundCASRNSSerializer
     lookup_field = 'project'
     lookup_url_kwarg = 'project'
     
@@ -506,26 +506,41 @@ class CompoundView(GenericAPIView, CreateModelMixin, ListModelMixin):
     def get(self, request, project, ra_type):
         return self.list(request)
     def post(self, request, project, ra_type):
+        db_ra_type = compound_ra_type_abbreviation[ra_type]
         data = dict(request.data)
-        for key in data:
-            data[key] = data[key][0]
-        last_int_id = self.get_queryset().aggregate(Max('int_id'))['int_id__max']
-        if (last_int_id is None):
-            data['int_id'] = 1
-        else:
-            data['int_id'] = last_int_id + 1
-        data['ra_type'] = compound_ra_type_abbreviation[ra_type]
-        serializer = self.get_serializer(data=data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        #for key in data:
+        #    data[key] = data[key][0]
+        with transaction.atomic():
+            last_int_id = self.get_queryset().aggregate(Max('int_id'))['int_id__max']
+            if (last_int_id is None):
+                new_int_id = 1
+            else:
+                new_int_id = last_int_id + 1
+            data['int_id'] = new_int_id
+            data['ra_type'] = db_ra_type
+            serializer = CompoundSerializer(data=data)
+            serializer.is_valid(raise_exception=True)
+            self.perform_create(serializer)
+
+            if data['cas_rn'] is None:
+                data['cas_rn'] = []
+            if len(data['cas_rn']) > 0:
+                qcompounds = Compound.objects.filter(ra_type=db_ra_type,project=project,int_id=new_int_id)
+                compound_id = qcompounds.values_list('id', flat=True)[0]
+                casrn_serializer = CompoundCASRNSerializer(many=True, data=[{"compound":compound_id, "cas_rn": casrn} for casrn in data['cas_rn']])
+                casrn_serializer.is_valid(raise_exception=True)
+                casrn_serializer.save()
+
+            sserializer = SlugCompoundCASRNSSerializerNoValidation(data=data)
+            sserializer.is_valid(raise_exception=True)
+        headers = self.get_success_headers(sserializer.data)
+        return Response(sserializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 @method_decorator((csrf_protect,ensure_csrf_cookie), name='dispatch')
 class CompoundCreateListView(GenericAPIView, CreateModelMixin, ListModelMixin):
     authentication_classes = [SessionAuthentication]
     permission_classes = [IsAuthenticated,IsProjectOwner]
-    serializer_class = CompoundSerializer
+    serializer_class = SlugCompoundCASRNSSerializer
     lookup_field = 'project'
     lookup_url_kwarg = 'project'
     
@@ -549,31 +564,50 @@ class CompoundCreateListView(GenericAPIView, CreateModelMixin, ListModelMixin):
         return self.list(request)
     def post(self, request, project, ra_type):
         #debug
-        Compound.objects.filter(ra_type=1,project=project).delete()
+        print(self.kwargs['ra_type'])
+        if ra_type == 'sc':
+            Compound.objects.filter(ra_type=1,project=project).delete()
         
+        db_ra_type = compound_ra_type_abbreviation[ra_type]
+
         with transaction.atomic():
             last_int_id = self.get_queryset().aggregate(Max('int_id'))['int_id__max']
             counter = 0
             data = list(request.data)
-            for row in data:        
+            int_id_list = []
+            for row in data:
                 if (last_int_id is None):
-                    row['int_id'] = 1 + counter
+                    new_int_id = 1 + counter
                 else:
-                    row['int_id'] = last_int_id + counter + 1
-                row['ra_type'] = compound_ra_type_abbreviation[ra_type]
+                    new_int_id = last_int_id + counter + 1
+                row['int_id'] = new_int_id
+                int_id_list.append(new_int_id)
+                row['ra_type'] = db_ra_type
+                if row['cas_rn'] is None:
+                    row['cas_rn'] = []
                 counter += 1
-            
-            serializer = self.get_serializer(data=data, many=True)
+            serializer = CompoundSerializer(data=data, many=True)
             serializer.is_valid(raise_exception=True)
             self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)        
+            qcompounds = Compound.objects.filter(ra_type=db_ra_type,project=project,int_id__in=int_id_list)
+            compound_ids = qcompounds.order_by('int_id').values_list('id', flat=True)
+            casrn_data = []
+            for compound_id, row in zip(compound_ids, data):
+                casrn_data += [{"compound":compound_id, "cas_rn": casrn} for casrn in row['cas_rn']]
+            if len(casrn_data) > 0:
+                casrn_serializer = CompoundCASRNSerializer(many=True, data=casrn_data)
+                casrn_serializer.is_valid(raise_exception=True)
+                casrn_serializer.save()
+        sserializer = SlugCompoundCASRNSSerializerNoValidation(many=True, data=data)
+        sserializer.is_valid(raise_exception=True)
+        headers = self.get_success_headers(sserializer.data)
+        return Response(sserializer.data, status=status.HTTP_201_CREATED, headers=headers)        
 
 @method_decorator((csrf_protect,ensure_csrf_cookie), name='dispatch')    
 class CompoundByIntIdView(RetrieveUpdateDestroyAPIView):
     authentication_classes = [SessionAuthentication]
     permission_classes = [IsAuthenticated,IsProjectOwner]
-    serializer_class = CompoundSerializer
+    serializer_class = SlugCompoundCASRNSSerializer
     lookup_field = 'int_id'
     lookup_url_kwarg = 'int_id'
     
@@ -600,9 +634,18 @@ class CompoundByIntIdView(RetrieveUpdateDestroyAPIView):
         instance = self.get_object()
         data = dict(request.data)
         data['ra_type'] = self.kwargs['ra_type']
-        serializer = self.get_serializer(instance, data=request.data, partial=partial)
-        serializer.is_valid(raise_exception=True)
-        self.perform_update(serializer)
+        compound_id = instance.pk
+        with transaction.atomic():
+            CompoundCASRN.objects.filter(compound=compound_id).delete()
+            if data['cas_rn'] is None:
+                data['cas_rn'] = []
+            if len(data['cas_rn']) > 0:
+                casrn_serializer = CompoundCASRNSerializer(many=True, data=[{"compound":compound_id, "cas_rn": casrn} for casrn in data['cas_rn']])
+                casrn_serializer.is_valid(raise_exception=True)
+                casrn_serializer.save()
+            serializer = self.get_serializer(instance, data=request.data, partial=partial)
+            serializer.is_valid(raise_exception=True)
+            self.perform_update(serializer)
 
         if getattr(instance, '_prefetched_objects_cache', None):
             # If 'prefetch_related' has been applied to a queryset, we need to
@@ -616,6 +659,8 @@ class CompoundByIntIdView(RetrieveUpdateDestroyAPIView):
             compounds = self.get_queryset().order_by('int_id')
             compounds_l = compounds.select_for_update(nowait=True)
             compounds_l = [q for q in compounds_l if q.int_id != self.kwargs['int_id']]
+            # instance = self.get_object()
+            # CompoundCASRN.objects.filter(compound=instance.id).delete()
             response = super().delete(request, project, ra_type, int_id)
             compounds_to_update = []
             for idx, q in enumerate(compounds_l):

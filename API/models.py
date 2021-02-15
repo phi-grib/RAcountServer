@@ -108,7 +108,7 @@ class Compound(models.Model):
         source = ChoiceItem(1, "Source compound")
 
     smiles = models.TextField(null=False, blank=False)
-    cas_rn = models.CharField(null=True, blank=False, max_length=12, validators=[CASRNValidator()])
+    #cas_rn = models.CharField(null=True, blank=False, max_length=12, validators=[CASRNValidator()])
     name = models.TextField(null=True, blank=False)
     project = models.ForeignKey(Projects, on_delete=models.CASCADE)
     int_id = models.IntegerField(null=False, blank=False, validators=[MinValueValidator(1)])
@@ -122,9 +122,12 @@ class Compound(models.Model):
 
         ]
 class CompoundCASRN(models.Model):
-    compound = models.ForeignKey(Compound, on_delete=models.CASCADE)
+    compound = models.ForeignKey(Compound, on_delete=models.CASCADE, related_name='cas_rn')
     cas_rn = models.CharField(null=True, blank=False, max_length=12, validators=[CASRNValidator()])
-
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['compound','cas_rn'], name='unique_compound_casrn'),
+        ]
 
 class DataMatrix(models.Model):
     compound = models.ForeignKey(Compound, on_delete=models.CASCADE)

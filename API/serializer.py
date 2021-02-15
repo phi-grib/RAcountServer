@@ -61,15 +61,8 @@ class InitialRAxHypothesisSerializer(serializers.ModelSerializer):
     
 class CompoundSerializer(serializers.ModelSerializer):
     name = serializers.CharField(allow_blank=False, allow_null=True, trim_whitespace=True)
-    cas_rn = serializers.CharField(allow_blank=False, allow_null=True, trim_whitespace=True)
     smiles = serializers.CharField(allow_blank=False, trim_whitespace=True)
     chembl_id = serializers.CharField(allow_blank=False, allow_null=True, trim_whitespace=True)
-    def validate_cas_rn(self, value):
-        if value is None:
-            return value
-        cas_rn_validator = CASRNValidator()
-        cas_rn_validator(value)
-        return value
     def validate_smiles(self, value):
         smiles_validator = SMILESValidator()
         smiles_validator(value)
@@ -80,6 +73,7 @@ class CompoundSerializer(serializers.ModelSerializer):
 
 class CompoundCASRNSerializer(serializers.ModelSerializer):
     cas_rn = serializers.CharField(allow_blank=False, allow_null=True, trim_whitespace=True)
+
     def validate_cas_rn(self, value):
         if value is None:
             return value
@@ -89,6 +83,24 @@ class CompoundCASRNSerializer(serializers.ModelSerializer):
     class Meta:
         model = CompoundCASRN
         fields = "__all__"
+
+
+class SlugCompoundCASRNSSerializer(CompoundSerializer):
+    cas_rn = serializers.SlugRelatedField(
+        many=True,
+        read_only=False,
+        slug_field='cas_rn',
+        allow_null=True,
+        queryset=CompoundCASRN.objects.all()
+    )
+    
+
+class SlugCompoundCASRNSSerializerNoValidation(SlugCompoundCASRNSSerializer):
+    def validate_cas_rn(self, value):
+        return value
+    def validate_smiles(self, value):
+        return value
+
 
 class DataMatrixSerializer(serializers.ModelSerializer):
     class Meta:
