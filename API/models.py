@@ -115,12 +115,17 @@ class Compound(models.Model):
     ra_type = models.IntegerField(null=False, blank=False, choices=RAType.choices)
     rdkit = models.TextField(null=True, blank=False, default=None)
     chembl_id = models.TextField(null=True, blank=False, default=None)
+
     class Meta:
         constraints = [
             models.UniqueConstraint(fields=['project','smiles'], name='unique_project_smiles'),
             models.UniqueConstraint(fields=['project','ra_type','int_id'], name='unique_project_ra_type_int_id'),
 
         ]
+class TCompound(models.Model):
+    compound = models.ForeignKey(Compound,null=False,blank=False, on_delete=models.CASCADE)
+    project = models.ForeignKey(Projects,null=False,blank=False, unique=True, on_delete=models.CASCADE)
+
 class CompoundCASRN(models.Model):
     compound = models.ForeignKey(Compound, on_delete=models.CASCADE, related_name='cas_rn')
     cas_rn = models.CharField(null=True, blank=False, max_length=12, validators=[CASRNValidator()])

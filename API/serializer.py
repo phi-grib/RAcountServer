@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 
 from rest_framework import serializers
 from .models import Projects, Nodes, Resources, ProblemDescription, InitialRAxHypothesis, Compound
-from .models import DataMatrix, UnitType, Unit, DataMatrixFields, CompoundCASRN
+from .models import DataMatrix, UnitType, Unit, DataMatrixFields, CompoundCASRN, TCompound
 from .validators import CASRNValidator, SMILESValidator
 
 class ProjectSerializer (serializers.ModelSerializer):
@@ -67,8 +67,34 @@ class CompoundSerializer(serializers.ModelSerializer):
         smiles_validator = SMILESValidator()
         smiles_validator(value)
         return value
+    def validate(self, attr):
+        if attr['ra_type'] == Compound.RAType.source:
+            return attr
+        try:
+            tcompound = TCompound.objects.get(project=attr['project'].id)
+        except TCompound.DoesNotExist as e:
+            return attr
+        except Exception as e:
+            raise e
+        print(tcompound)
+        prev_tcompound_id = tcompound.compound_id
+        if 'id' in attr:
+            new_tcompound_id = attr['id']
+        else:
+            new_tcompound_id = None
+        
+        if prev_tcompound_id == new_tcompound_id:
+            return attr
+        message = 'Only one TC is allowed, please delete the current TC before saving a new one'
+        raise serializers.ValidationError(message)
+
     class Meta:
         model = Compound
+        fields = "__all__"
+
+class TCompoundSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TCompound
         fields = "__all__"
 
 class CompoundCASRNSerializer(serializers.ModelSerializer):
@@ -100,6 +126,8 @@ class SlugCompoundCASRNSSerializerNoValidation(SlugCompoundCASRNSSerializer):
         return value
     def validate_smiles(self, value):
         return value
+    def validate(self, attr):
+        return attr
 
 
 class DataMatrixSerializer(serializers.ModelSerializer):

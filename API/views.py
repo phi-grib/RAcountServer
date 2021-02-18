@@ -58,12 +58,12 @@ from .models import Projects as ProjectsModel, ProblemDescription, InitialRAxHyp
 from .models import Nodes as NodesModel
 from .models import Resources as ResourcesModel
 from .models import File, FileType
-from .models import Compound, DataMatrix, DataMatrixFields, UnitType, Unit, CompoundCASRN
+from .models import Compound, DataMatrix, DataMatrixFields, UnitType, Unit, CompoundCASRN, TCompound
 
 from .serializer import ProjectSerializer, UserSerializer, NodeSerializer, FullNodeSerializer
 from .serializer import StatusSerializer, ResourcesSerializer, ProblemDescriptionSerializer, InitialRAxHypothesisSerializer, SlugCompoundCASRNSSerializerNoValidation
 from .serializer import CompoundSerializer, DataMatrixSerializer, UnitTypeSerializer, UnitSerializer, CompoundCASRNSerializer, SlugCompoundCASRNSSerializer
-from .serializer import DataMatrixFieldsSerializer, DataMatrixFieldsReadSerializer, ChemblDataMatrixSerializer, CompoundDataMatrixSerializer, CompoundSerializer
+from .serializer import DataMatrixFieldsSerializer, DataMatrixFieldsReadSerializer, ChemblDataMatrixSerializer, CompoundDataMatrixSerializer, CompoundSerializer, TCompoundSerializer
 
 from .permissions import IsProjectOwner
 
@@ -511,6 +511,7 @@ class CompoundView(GenericAPIView, CreateModelMixin, ListModelMixin):
         #for key in data:
         #    data[key] = data[key][0]
         with transaction.atomic():
+
             last_int_id = self.get_queryset().aggregate(Max('int_id'))['int_id__max']
             if (last_int_id is None):
                 new_int_id = 1
@@ -520,7 +521,19 @@ class CompoundView(GenericAPIView, CreateModelMixin, ListModelMixin):
             data['ra_type'] = db_ra_type
             serializer = CompoundSerializer(data=data)
             serializer.is_valid(raise_exception=True)
-            self.perform_create(serializer)
+            try:
+                self.perform_create(serializer)
+            except IntegrityError as e:
+                if str(e) == 'UNIQUE constraint failed: API_compound.project_id, API_compound.smiles':
+                    message = 'Structure (SMILES) conflicts with an already saved one.'
+                    raise serializers.ValidationError(message)
+                else:
+                    raise e
+            
+
+            tserializer= TCompoundSerializer(data={'project':project,'compound':compound_id})
+            tserializer.is_valid(raise_exception=True)
+            tserializer.save()
 
             if data['cas_rn'] is None:
                 data['cas_rn'] = []
@@ -530,7 +543,6 @@ class CompoundView(GenericAPIView, CreateModelMixin, ListModelMixin):
                 casrn_serializer = CompoundCASRNSerializer(many=True, data=[{"compound":compound_id, "cas_rn": casrn} for casrn in data['cas_rn']])
                 casrn_serializer.is_valid(raise_exception=True)
                 casrn_serializer.save()
-
             sserializer = SlugCompoundCASRNSSerializerNoValidation(data=data)
             sserializer.is_valid(raise_exception=True)
         headers = self.get_success_headers(sserializer.data)
@@ -588,12 +600,36 @@ class CompoundCreateListView(GenericAPIView, CreateModelMixin, ListModelMixin):
                 counter += 1
             serializer = CompoundSerializer(data=data, many=True)
             serializer.is_valid(raise_exception=True)
-            self.perform_create(serializer)
+            try:
+                self.perform_update(serializer)
+            except IntegrityError as e:
+                if str(e) == 'UNIQUE constraint failed: API_compound.project_id, API_compound.smiles':
+                    smiles_list = [compound['smiles'] for compound in serializer.validated_data]
+                    q_already_saves_compounds_smiles = Compound.objects.filter(project=project,smiles__in=smiles_list).values_list('smiles',flat=True)
+                    duplicated_indexes = [i for i,smiles in enumerate(smiles_list) if smiles in q_already_saves_compounds_smiles]
+                    del smiles_list
+                    for index in duplicated_indexes:
+                        serializer.validated_data.pop(index)
+                        data.pop(index)
+                    serializer = CompoundSerializer(data=serializer.validated_data, many=True)
+                    serializer.is_valid(raise_exception=True)
+                    self.perform_update(serializer)
+                else:
+                    raise e
             qcompounds = Compound.objects.filter(ra_type=db_ra_type,project=project,int_id__in=int_id_list)
             compound_ids = qcompounds.order_by('int_id').values_list('id', flat=True)
+            tc_data = []
             casrn_data = []
             for compound_id, row in zip(compound_ids, data):
                 casrn_data += [{"compound":compound_id, "cas_rn": casrn} for casrn in row['cas_rn']]
+                if row['ra_type'] == compound_ra_type_abbreviation['tc']:
+                    tc_data.append({'project':project,'compound':compound_id})
+            
+            if len(tc_data) > 0:
+                tserializer = TCompoundSerializer(many=True, data=tc_data)
+                tserializer.is_valid(raise_exception=True)
+                tserializer.save()
+            
             if len(casrn_data) > 0:
                 casrn_serializer = CompoundCASRNSerializer(many=True, data=casrn_data)
                 casrn_serializer.is_valid(raise_exception=True)
@@ -646,6 +682,23 @@ class CompoundByIntIdView(RetrieveUpdateDestroyAPIView):
             serializer = self.get_serializer(instance, data=request.data, partial=partial)
             serializer.is_valid(raise_exception=True)
             self.perform_update(serializer)
+            old_ra_type = instance.ra_type
+            new_ra_type = serializer.validated_data['ra_type']
+            if old_ra_type != new_ra_type:
+                if new_ra_type == compound_ra_type_abbreviation['tc']:
+                    tserializer= TCompoundSerializer(data={'project':project,'compound':compound_id})
+                    tserializer.is_valid(raise_exception=True)
+                    tserializer.save()
+                elif new_ra_type == compound_ra_type_abbreviation['sc']:
+                    TCompound.objects.filter(compound=compound_id).delete()
+            try:
+                self.perform_update(serializer)
+            except IntegrityError as e:
+                if str(e) == 'UNIQUE constraint failed: API_compound.project_id, API_compound.smiles':
+                    message = 'Structure (SMILES) conflicts with an already saved one.'
+                    raise serializers.ValidationError(message)
+                else:
+                    raise e
 
         if getattr(instance, '_prefetched_objects_cache', None):
             # If 'prefetch_related' has been applied to a queryset, we need to
