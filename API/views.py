@@ -530,7 +530,8 @@ class CompoundView(GenericAPIView, CreateModelMixin, ListModelMixin):
                 else:
                     raise e
             
-
+            qcompounds = Compound.objects.filter(ra_type=db_ra_type,project=project,int_id=new_int_id)
+            compound_id = qcompounds.values_list('id', flat=True)[0]
             tserializer= TCompoundSerializer(data={'project':project,'compound':compound_id})
             tserializer.is_valid(raise_exception=True)
             tserializer.save()
@@ -538,8 +539,7 @@ class CompoundView(GenericAPIView, CreateModelMixin, ListModelMixin):
             if data['cas_rn'] is None:
                 data['cas_rn'] = []
             if len(data['cas_rn']) > 0:
-                qcompounds = Compound.objects.filter(ra_type=db_ra_type,project=project,int_id=new_int_id)
-                compound_id = qcompounds.values_list('id', flat=True)[0]
+
                 casrn_serializer = CompoundCASRNSerializer(many=True, data=[{"compound":compound_id, "cas_rn": casrn} for casrn in data['cas_rn']])
                 casrn_serializer.is_valid(raise_exception=True)
                 casrn_serializer.save()
@@ -601,7 +601,7 @@ class CompoundCreateListView(GenericAPIView, CreateModelMixin, ListModelMixin):
             serializer = CompoundSerializer(data=data, many=True)
             serializer.is_valid(raise_exception=True)
             try:
-                self.perform_update(serializer)
+                self.perform_create(serializer)
             except IntegrityError as e:
                 if str(e) == 'UNIQUE constraint failed: API_compound.project_id, API_compound.smiles':
                     smiles_list = [compound['smiles'] for compound in serializer.validated_data]
@@ -613,7 +613,7 @@ class CompoundCreateListView(GenericAPIView, CreateModelMixin, ListModelMixin):
                         data.pop(index)
                     serializer = CompoundSerializer(data=serializer.validated_data, many=True)
                     serializer.is_valid(raise_exception=True)
-                    self.perform_update(serializer)
+                    self.perform_create(serializer)
                 else:
                     raise e
             qcompounds = Compound.objects.filter(ra_type=db_ra_type,project=project,int_id__in=int_id_list)
