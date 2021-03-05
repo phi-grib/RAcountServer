@@ -119,6 +119,7 @@ class Compound(models.Model):
     class Meta:
         constraints = [
             models.UniqueConstraint(fields=['project','smiles'], name='unique_project_smiles'),
+            models.UniqueConstraint(fields=['project','chembl_id'], name='unique_project_chembl_id'),
             models.UniqueConstraint(fields=['project','ra_type','int_id'], name='unique_project_ra_type_int_id'),
 
         ]

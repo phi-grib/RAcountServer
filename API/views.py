@@ -556,6 +556,39 @@ class CompoundCreateListView(GenericAPIView, CreateModelMixin, ListModelMixin):
     lookup_field = 'project'
     lookup_url_kwarg = 'project'
     
+
+    def _perform_create(self, serializer, data):
+            try:
+                self.perform_create(serializer)
+            except IntegrityError as e:
+                if str(e) == 'UNIQUE constraint failed: API_compound.project_id, API_compound.smiles':
+                    smiles_list = [compound['smiles'] for compound in serializer.validated_data]
+                    q_already_saves_compounds_smiles = Compound.objects.filter(project= self.kwargs['project'],smiles__in=smiles_list).values_list('smiles',flat=True)
+                    duplicated_indexes = [i for i,smiles in enumerate(smiles_list) if smiles in q_already_saves_compounds_smiles]
+                    del smiles_list
+                    for index in duplicated_indexes:
+                        serializer.validated_data.pop(index)
+                        data.pop(index)
+                    for row in serializer.validated_data:
+                        row['project'] = row['project'].pk
+                    serializer = CompoundSerializer(data=serializer.validated_data, many=True)
+                    serializer.is_valid(raise_exception=True)
+                    self._perform_create(serializer,data)
+                elif str(e) == 'UNIQUE constraint failed: API_compound.project_id, API_compound.chembl_id':
+                    chembl_id_list = [compound['chembl_id'] for compound in serializer.validated_data]
+                    q_already_saves_compounds_chembl_id = Compound.objects.filter(project= self.kwargs['project'],chembl_id__in=chembl_id_list).values_list('chembl_id',flat=True)
+                    duplicated_indexes = [i for i,chembl_id in enumerate(chembl_id_list) if chembl_id in q_already_saves_compounds_chembl_id]
+                    del chembl_id_list
+                    for index in duplicated_indexes:
+                        serializer.validated_data.pop(index)
+                        data.pop(index)
+                    for row in serializer.validated_data:
+                       row['project'] = row['project'].pk
+                    serializer = CompoundSerializer(data=serializer.validated_data, many=True)
+                    serializer.is_valid(raise_exception=True)
+                    self._perform_create(serializer,data)
+                else:
+                    raise e
     def get_queryset(self):
         # The first thing that get(), post(), put() and delete() methods 
         # of a GenericView from Django REST framework is to call get_queryset()
@@ -600,22 +633,8 @@ class CompoundCreateListView(GenericAPIView, CreateModelMixin, ListModelMixin):
                 counter += 1
             serializer = CompoundSerializer(data=data, many=True)
             serializer.is_valid(raise_exception=True)
-            try:
-                self.perform_create(serializer)
-            except IntegrityError as e:
-                if str(e) == 'UNIQUE constraint failed: API_compound.project_id, API_compound.smiles':
-                    smiles_list = [compound['smiles'] for compound in serializer.validated_data]
-                    q_already_saves_compounds_smiles = Compound.objects.filter(project=project,smiles__in=smiles_list).values_list('smiles',flat=True)
-                    duplicated_indexes = [i for i,smiles in enumerate(smiles_list) if smiles in q_already_saves_compounds_smiles]
-                    del smiles_list
-                    for index in duplicated_indexes:
-                        serializer.validated_data.pop(index)
-                        data.pop(index)
-                    serializer = CompoundSerializer(data=serializer.validated_data, many=True)
-                    serializer.is_valid(raise_exception=True)
-                    self.perform_create(serializer)
-                else:
-                    raise e
+        self._perform_create(serializer, data)
+        with transaction.atomic():
             qcompounds = Compound.objects.filter(ra_type=db_ra_type,project=project,int_id__in=int_id_list)
             compound_ids = qcompounds.order_by('int_id').values_list('id', flat=True)
             tc_data = []
@@ -624,7 +643,6 @@ class CompoundCreateListView(GenericAPIView, CreateModelMixin, ListModelMixin):
                 casrn_data += [{"compound":compound_id, "cas_rn": casrn} for casrn in row['cas_rn']]
                 if row['ra_type'] == compound_ra_type_abbreviation['tc']:
                     tc_data.append({'project':project,'compound':compound_id})
-            
             if len(tc_data) > 0:
                 tserializer = TCompoundSerializer(many=True, data=tc_data)
                 tserializer.is_valid(raise_exception=True)
@@ -776,10 +794,23 @@ class ChemblDataMatrixView(APIView):
         else:
             return server_error(self.request)
         
-        if int_id is not None:
-            data_list = [{'int_id':int_id,'data':request.data}]
+        if 'chembl_id' in request.data and int_id is not None:
+            if 'chembl_id' is not None:
+                with transaction.atomic():
+                    instance = Compound.objects.get(project=project,ra_type=self.kwargs['ra_type'],int_id=int(int_id))
+                    serializer = CompoundSerializer(instance, data={'chembl_id':request.data['chembl_id']}, partial=True)
+                    serializer.is_valid(raise_exception=True)
+                    serializer.save()
+
+
+        if 'data' in request.data:
+            request_data = request.data['data']
         else:
-            data_list = request.data
+            request_data = request.data
+        if int_id is not None:
+            data_list = [{'int_id':int_id,'data':request_data}]
+        else:
+            data_list = request_data
             
         i = 0
         with transaction.atomic():
