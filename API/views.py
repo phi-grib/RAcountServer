@@ -1104,38 +1104,43 @@ class DataMatrixHeatmapView(GenericAPIView, ListModelMixin):
                 description_dict_list.append(description_dict)
                 name_dict_list.append(name_dict)
             i += 1
-        x_values = sorted(list(x_values_set))     
-
+             
         del data
-        
+        x_values = sorted(list(x_values_set))
+        compound_with_data_y_values = []
         for comp, values_dict, values_unit_dict, description_dict, name_dict in zip(y_values,
                 values_dict_list, values_unit_dict_list, description_dict_list, name_dict_list):
-            for assay_id in x_values:
-                if assay_id in values_dict:
-                    z_value = values_dict[assay_id]
-                    z_value_unit = values_unit_dict[assay_id]
-                    description = escape(description_dict[assay_id])
-                    description = escape(description_dict[assay_id])
-                    name = name_dict[assay_id]
-                else:
-                    z_value = None
-                if z_value is None:
-                    z_value = 'N/A'
-                    z_value_unit = 'N/A'
-                    description = 'N/A'
-                    name = 'N/A'
+            colums_dict_comp = dict(colums_dict)
+            assay_counter = len(set(values_dict.keys()).intersection(x_values_set))
+            if assay_counter > 0:
+                for assay_id in x_values:
+                    if assay_id in values_dict:
+                        z_value = values_dict[assay_id]
+                        z_value_unit = values_unit_dict[assay_id]
+                        description = escape(description_dict[assay_id])
+                        description = escape(description_dict[assay_id])
+                        name = name_dict[assay_id]
+                        assay_counter += 1
+                    else:
+                        z_value = None
+                    if z_value is None:
+                        z_value = 'N/A'
+                        z_value_unit = 'N/A'
+                        description = 'N/A'
+                        name = 'N/A'
 
-                if isinstance(z_value, str) and z_value != 'N/A' and assay_id != 'molecular_species':
-                    alpha2 = 1.0
-                else:
-                    alpha2 = 0
-                colums_dict['Compound'].append(comp)
-                colums_dict['Assay_ID'].append(assay_id)
-                colums_dict['value'].append(z_value)
-                colums_dict['value_unit'].append(z_value_unit)
-                colums_dict['description'].append(description)
-                colums_dict['name'].append(name)
-                colums_dict['alpha2'].append(alpha2)
+                    if isinstance(z_value, str) and z_value != 'N/A' and assay_id != 'molecular_species':
+                        alpha2 = 1.0
+                    else:
+                        alpha2 = 0
+                    colums_dict['Compound'].append(comp)
+                    colums_dict['Assay_ID'].append(assay_id)
+                    colums_dict['value'].append(z_value)
+                    colums_dict['value_unit'].append(z_value_unit)
+                    colums_dict['description'].append(description)
+                    colums_dict['name'].append(name)
+                    colums_dict['alpha2'].append(alpha2)
+                compound_with_data_y_values.append(comp)
         
         del values_dict_list
         del values_unit_dict_list
@@ -1178,7 +1183,8 @@ class DataMatrixHeatmapView(GenericAPIView, ListModelMixin):
         #Map colors
         mapper = LinearColorMapper(palette=bokeh.palettes.RdYlBu[10], low = 0,
                          high = max([i for i in dataframe['fscaled_value'].to_list() if isinstance(i, numbers.Number) and not isinstance(i, bool)]))
-        
+    
+        y_values = compound_with_data_y_values
         # Define a figure
 
         #pan=PanTool(dimensions="width")
@@ -1196,7 +1202,7 @@ class DataMatrixHeatmapView(GenericAPIView, ListModelMixin):
             p = figure(
             min_border_right=min_border_right,
             #title="Example freq",
-            y_range= y_values,
+            y_range=y_values,
             x_range = x_values,
             tools=mytools, 
             x_axis_location="above",
