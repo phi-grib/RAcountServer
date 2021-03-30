@@ -25,7 +25,7 @@ from .utils import order_queryset_list_by_values_list
 from django.db import IntegrityError
 from django.core.exceptions import ObjectDoesNotExist
 from django.conf import settings
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, response
 from django.shortcuts import render
 from rest_framework import status
 from django.contrib.auth import get_user_model
@@ -55,7 +55,7 @@ from rest_framework.parsers import MultiPartParser
 from rest_framework.exceptions import PermissionDenied, server_error
 
 from .models import Projects as ProjectsModel, ProblemDescription, InitialRAxHypothesis
-from .models import Nodes as NodesModel
+from .models import Nodes as NodesModel, NodeType
 from .models import Resources as ResourcesModel
 from .models import File, FileType
 from .models import Compound, DataMatrix, DataMatrixFields, UnitType, Unit, CompoundCASRN, TCompound
@@ -114,7 +114,7 @@ class ListProjects(ListAPIView):
  
 
 @method_decorator((csrf_protect,ensure_csrf_cookie), name='dispatch')
-class ManageNodes(GenericAPIView,UpdateModelMixin):
+class ManageNodes(GenericAPIView,UpdateModelMixin,CreateModelMixin):
     serializer_class = NodeSerializer
     lookup_field = 'project'
     lookup_url_kwarg = 'project'
@@ -125,27 +125,39 @@ class ManageNodes(GenericAPIView,UpdateModelMixin):
         return NodesModel.objects.filter(project=self.kwargs['project'], node_seq=self.kwargs['node'])
 
     def get(self, request, project, node):
-
+        not_found = False
         newdict = {}
-
-        node_info = NodesModel.objects.annotate(name=F('node_seq__name'),description=F('node_seq__description'), history_node_list=F('node_seq__history_node_list')).get(project=project,node_seq=node)
-        newdict.update(FullNodeSerializer(node_info, many=False).data)
-
+        newdict['inputs'] = []
         resources = ResourcesModel.objects.filter(node=node)
         resources = ResourcesSerializer(resources, many=True).data
-
         newdict['resources'] = resources
+        try:
+            node_info = NodesModel.objects.annotate(name=F('node_seq__name'),description=F('node_seq__description'), history_node_list=F('node_seq__history_node_list')).get(project=project,node_seq=node)
+            node_info_history_node_list = node_info.history_node_list
+            newdict.update(FullNodeSerializer(node_info, many=False).data)
+        except NodesModel.DoesNotExist:
+            newdict['Reason'] = 'Node not found.'
+            node_info = list(NodeType.objects.filter(id=node).values('name','description','history_node_list'))
+            if len(node_info) == 0:
+                newdict['Reason'] = 'Node type not found.'
+                return Response(newdict, status.HTTP_404_NOT_FOUND)
+            node_info = node_info[0]
+            node_info['project'] = int(project)
+            node_info['node_seq'] = int(node)
+            node_info_history_node_list = node_info['history_node_list']
+            newdict.update(node_info)
+
         
         qhistory = NodesModel.objects.filter(project=project)
         qhistory = qhistory.annotate(content=F('outputs'),comment=F('outputs_comments'), name=F('node_seq__name')).values('name','content','comment','inputs_comments','node_seq')
 
-        if node_info.history_node_list is None:
+        if node_info_history_node_list is None:
             qhistory = qhistory.filter(node_seq__lt=node).order_by('node_seq')
             history = list(qhistory)
-        elif node_info.history_node_list == '':
+        elif node_info_history_node_list == '':
             history = []
         else:
-            history_node_list_as_list = list(map(int,node_info.history_node_list.split(',')))
+            history_node_list_as_list = list(map(int,node_info_history_node_list.split(',')))
             qhistory = qhistory.filter(node_seq__in=history_node_list_as_list)
             history = order_queryset_list_by_values_list(qhistory,'node_seq', history_node_list_as_list)
         
@@ -172,13 +184,30 @@ class ManageNodes(GenericAPIView,UpdateModelMixin):
 
         newdict['inputs'] = history
         newdict['CSRF_TOKEN'] = get_token(request)
-        return Response(newdict, status.HTTP_200_OK)
+        if not_found: 
+            return Response(newdict, status.HTTP_404_NOT_FOUND)
+        else:
+            return Response(newdict, status.HTTP_200_OK)
 
     def post(self, request, project, node):
+        try:
+            with transaction.atomic():
+                response = self.partial_update(request)
+                if response.status_code == status.HTTP_200_OK:
+                    self.get_queryset().update(executed=True)
+        except Http404 as e:
+            data = dict(request.data)
+            for key in data:
+                data[key] = data[key][0]
+            data['project'] = int(project)
+            data['node_seq'] = int(node)
+            data['executed'] = True 
+            serializer = self.get_serializer(data=data)
+            serializer.is_valid(raise_exception=True)
+            self.perform_create(serializer)
+            headers = self.get_success_headers(serializer.data)
+            #return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
-        response = self.partial_update(request)
-        if response.status_code == status.HTTP_200_OK:
-            self.get_queryset().update(executed=True)
         return JsonResponse({'Ok':'ok'}, status=status.HTTP_200_OK)
 
 @method_decorator((csrf_protect,ensure_csrf_cookie), name='dispatch')
@@ -1080,8 +1109,8 @@ class DataMatrixHeatmapView(GenericAPIView, ListModelMixin):
         values_unit_dict_list = []
         description_dict_list = []
         name_dict_list = []
-        
-        colums_dict = {'Compound': [],'Assay_ID': [], 'value': [], 'value_unit': [], 'description':[],'name':[], 'alpha2': []}
+        x_value_2_assay_id_dict = {}
+        colums_dict = {'x_value': [],'Compound': [],'Assay_ID': [], 'value': [], 'value_unit': [], 'description':[],'name':[], 'alpha2': []}
         i = 0
         for compound in data:
             # if i > 30 and compound_ra_type_code[compound['ra_type']] == 'sc':
@@ -1100,8 +1129,12 @@ class DataMatrixHeatmapView(GenericAPIView, ListModelMixin):
                 for field in compound['data_matrix'][0]['data_matrix_fields']:
                     if field['assay_type'] not in assay_types[assay_type]['value']:
                         continue
-                    
-                    x_values_set.add(field['assay_id'])
+                    if assay_type == 'pc':
+                        x_value = field['name']+' ('+field['assay_id']+')'
+                    else:
+                        x_value = field['assay_id']
+                    x_values_set.add(x_value)
+                    x_value_2_assay_id_dict[x_value] = field['assay_id']
                     description_dict[field['assay_id']] = field['description']
                     name_dict[field['assay_id']] = field['name']
                     if (field['std_value'] is None):
@@ -1142,9 +1175,10 @@ class DataMatrixHeatmapView(GenericAPIView, ListModelMixin):
         for comp, values_dict, values_unit_dict, description_dict, name_dict in zip(y_values,
                 values_dict_list, values_unit_dict_list, description_dict_list, name_dict_list):
             colums_dict_comp = dict(colums_dict)
-            assay_counter = len(set(values_dict.keys()).intersection(x_values_set))
+            assay_counter = len(set(values_dict.keys()).intersection(set([x_value_2_assay_id_dict[x_value] for x_value in x_values])))
             if assay_counter > 0:
-                for assay_id in x_values:
+                for x_value in x_values:
+                    assay_id = x_value_2_assay_id_dict[x_value]
                     if assay_id in values_dict:
                         z_value = values_dict[assay_id]
                         z_value_unit = values_unit_dict[assay_id]
@@ -1164,6 +1198,7 @@ class DataMatrixHeatmapView(GenericAPIView, ListModelMixin):
                         alpha2 = 1.0
                     else:
                         alpha2 = 0
+                    colums_dict['x_value'].append(x_value)
                     colums_dict['Compound'].append(comp)
                     colums_dict['Assay_ID'].append(assay_id)
                     colums_dict['value'].append(z_value)
@@ -1183,7 +1218,7 @@ class DataMatrixHeatmapView(GenericAPIView, ListModelMixin):
         del colums_dict
         
         dataframe['fscaled_value'] = None
-        for assay_id in x_values:
+        for assay_id in [x_value_2_assay_id_dict[x_value] for x_value in x_values]:
             idxs = np.where(dataframe['Assay_ID'] == assay_id)[0]
             if dataframe.loc[idxs,'alpha2'].any() != 0 or assay_id == 'molecular_species':
                 dataframe.loc[idxs,'fscaled_value'] = 'N/A'
@@ -1198,7 +1233,6 @@ class DataMatrixHeatmapView(GenericAPIView, ListModelMixin):
                     dataframe.loc[idxs,'fscaled_value'] = array
                 continue
             array = dataframe.loc[idxs,'value'].replace('N/A', np.nan).to_numpy(dtype=np.float32)
-
             # array_min = np.nanmin(array)
             array_min = 0
             array_max = np.nanmax(np.abs(array))
@@ -1280,7 +1314,7 @@ class DataMatrixHeatmapView(GenericAPIView, ListModelMixin):
         del dataframe
         p.rect(
             y='Compound', 
-            x='Assay_ID', 
+            x='x_value', 
             width=0.9, 
             height=1, 
             source=mysource,
@@ -1299,7 +1333,7 @@ class DataMatrixHeatmapView(GenericAPIView, ListModelMixin):
         
         p.rect(
             y='Compound', 
-            x='Assay_ID', 
+            x='x_value', 
             width=0.9, 
             height=1, 
             source=mysource,
