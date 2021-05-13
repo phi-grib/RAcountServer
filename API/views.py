@@ -1,13 +1,17 @@
 import hashlib
 import base64
+import re
 import datetime
 import os
 import time
 import numbers
-
+import json
+import tempfile
+import mimetypes
 import numpy as np
 import pandas as pd
 import bokeh
+from glob import glob
 from bokeh.models import Title
 from bokeh.plotting import figure 
 from bokeh.embed import components
@@ -18,6 +22,17 @@ from bokeh.transform import transform
 from bokeh.embed import json_item
 import xml.etree.ElementTree as ET
 from copy import deepcopy
+from html.parser import HTMLParser
+
+import urllib.request
+from urllib.parse import urlparse
+import docx
+from docx import Document
+from htmldocx import HtmlToDocx
+from docx.shared import Inches, Pt, Cm
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from docx.enum.section import WD_ORIENT
+
 
 
 from .utils import order_queryset_list_by_values_list
@@ -26,7 +41,7 @@ from django.db import IntegrityError
 from django.core.exceptions import ObjectDoesNotExist
 from django.conf import settings
 from django.http import HttpResponse, JsonResponse, response
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from rest_framework import status
 from django.contrib.auth import get_user_model
 from django.contrib.auth import authenticate, login, logout as auth_logout
@@ -64,13 +79,14 @@ from .serializer import ProjectSerializer, UserSerializer, NodeSerializer, FullN
 from .serializer import StatusSerializer, ResourcesSerializer, ProblemDescriptionSerializer, InitialRAxHypothesisSerializer, SlugCompoundCASRNSSerializerNoValidation
 from .serializer import CompoundSerializer, DataMatrixSerializer, UnitTypeSerializer, UnitSerializer, CompoundCASRNSerializer, SlugCompoundCASRNSSerializer
 from .serializer import DataMatrixFieldsSerializer, DataMatrixFieldsReadSerializer, ChemblDataMatrixSerializer, CompoundDataMatrixSerializer, CompoundSerializer, TCompoundSerializer
-
+from .serializer import CompoundImageImageSerializer
 from .permissions import IsProjectOwner
 
 
 from django.utils.decorators import available_attrs
 from functools import wraps
 
+base54re = re.compile(r'^data:(.*);base64,(.*)$')
 
 @method_decorator((csrf_protect,ensure_csrf_cookie), name='dispatch')
 class ManageProject(RetrieveUpdateDestroyAPIView):
@@ -424,7 +440,7 @@ class FileUploadView(APIView):
         newfilename = '_'.join((date.strftime('%d%m%Y'),str(project),str(node),str(part),str(md5)))
         folderpath = os.path.join('projects',str(project),'node_'+str(node))
         
-        fullfolderpath = os.path.join(settings.MEDIA_ROOT,settings.MEDIA_API_PREFIX,folderpath)
+        fullfolderpath = os.path.join(settings.MEDIA_ROOT_UPLOADS,folderpath)
         os.makedirs(fullfolderpath,mode=0o770,exist_ok=True)
 
         
@@ -441,7 +457,7 @@ class FileUploadView(APIView):
             try:
                 filepath = os.path.join(fullfolderpath,newfilename+fileext)
                 self._save_uploadedfile(filepath,uploadedfile)
-                url = os.path.join(settings.MEDIA_URL,settings.MEDIA_API_PREFIX,folderpath,newfilename+fileext)
+                url = os.path.join(settings.MEDIA_ROOT_UPLOADS,folderpath,newfilename+fileext)
                 new_obj, created = File.objects.get_or_create(user_filename=filename,node=node_obj,part=part,
                     defaults= {'filename':newfilename+fileext,'file_type':file_type_obj,
                     'filepath':filepath,'url':url})
@@ -1423,3 +1439,482 @@ class DataMatrixHeatmapView(GenericAPIView, ListModelMixin):
             for tag in root.findall('script'):
                  scripts.append(tag.text)
             return Response({"item": json_p,'heatmap_div_id': heatmap_div_id,'status':'OK'})
+
+def get_filename_from_url(url):
+    return os.path.basename(urlparse(url).path)
+
+def is_url(url):
+    """
+    Not to be used for actually validating a url, but in our use case we only 
+    care if it's a url or a file path, and they're pretty distinguishable
+    """
+    parts = urlparse(url)
+    return all([parts.scheme, parts.netloc, parts.path])
+
+def fetch_image(url):
+    """
+    Attempts to fetch an image from a url. 
+    If successful returns a bytes object, else returns None
+    :return:
+    """
+    try:
+        with urllib.request.urlopen(url) as response:
+            # security flaw?
+            return io.BytesIO(response.read())
+    except urllib.error.URLError:
+        return None
+
+
+@method_decorator((csrf_protect,ensure_csrf_cookie), name='dispatch')
+class GenerateReportDocx(APIView):
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated,IsProjectOwner]
+    class _CKEditorTableHTMLParser(HTMLParser):
+        html = ''
+        def __init__(self,*args,**kwargs):
+            self.html = ''
+            super().__init__(*args,convert_charrefs=False,**kwargs)
+        def handle_starttag(self, tag, attrs):
+            if tag != 'tbody':
+                self.html += '<'+tag+' '
+                for attr in attrs:
+                    self.html += attr[0]+'="'+attr[1]+'" '
+                self.html += '>'
+        def handle_endtag(self, tag):
+            if tag != 'tbody':
+                self.html += '</'+tag+'>'
+
+        def handle_data(self, data):
+            self.html += data
+        def get_parsed_html(self):
+            return self.html
+
+
+    class CustomHtmlToDocx(HtmlToDocx):
+        datas = []
+        skip_writting_data = False
+        word_style = None
+        heading_starting_level = 0
+
+        def __init__(self,*args,styles=None, heading_starting_level=0,**kwargs):
+            self.heading_starting_level = heading_starting_level
+            self.styles = styles
+            self.base54re = base54re
+            super().__init__(*args,**kwargs)
+
+        def _add_hyperlink(self, paragraph, url, text, color=None, underline=True):
+            """
+            A function that places a hyperlink within a paragraph object.
+
+            :param paragraph: The paragraph we are adding the hyperlink to.
+            :param url: A string containing the required url
+            :param text: The text displayed for the url
+            :return: The hyperlink object
+            """
+
+            # This gets access to the document.xml.rels file and gets a new relation id value
+            part = paragraph.part
+            r_id = part.relate_to(url, docx.opc.constants.RELATIONSHIP_TYPE.HYPERLINK, is_external=True)
+
+            # Create the w:hyperlink tag and add needed values
+            hyperlink = docx.oxml.shared.OxmlElement('w:hyperlink')
+            hyperlink.set(docx.oxml.shared.qn('r:id'), r_id, )
+
+            # Create a w:r element
+            new_run = docx.oxml.shared.OxmlElement('w:r')
+
+            # Create a new w:rPr element
+            rPr = docx.oxml.shared.OxmlElement('w:rPr')
+
+            # Add color if it is given
+            if not color is None:
+                c = docx.oxml.shared.OxmlElement('w:color')
+                c.set(docx.oxml.shared.qn('w:val'), color)
+                rPr.append(c)
+
+            # Remove underlining if it is requested
+            if not underline:
+                u = docx.oxml.shared.OxmlElement('w:u')
+                u.set(docx.oxml.shared.qn('w:val'), 'none')
+                rPr.append(u)
+
+            # Join all the xml elements together add add the required text to the w:r element
+            new_run.append(rPr)
+            new_run.text = text
+            hyperlink.append(new_run)
+
+            paragraph._p.append(hyperlink)
+            return hyperlink
+        def handle_img(self, current_attrs):
+            if not self.include_images:
+                self.skip = True
+                self.skip_tag = 'img'
+                return
+            src = current_attrs['src']
+            # fetch image
+            src_is_url = is_url(src)
+            if src_is_url:
+                try:
+                    image = fetch_image(src)
+                except urllib.error.URLError:
+                    image = None
+            else:
+                image = src
+            # add image to doc
+            if image:
+                try:
+                    if isinstance(self.doc, docx.document.Document):
+                        self.doc.add_picture(image)
+                    else:
+                        self.add_image_to_cell(self.doc, image)
+                except FileNotFoundError:
+                    image = None
+            if not image:
+                image = src
+                m = self.base54re.match(src)
+                if m:
+                    mimetype = m.group(1)
+                    base64_bytes = m.group(2)
+                    image_bytes = base64.b64decode(base64_bytes)
+                    f = tempfile.NamedTemporaryFile(mode='wb', suffix=mimetypes.guess_extension(mimetype))
+                    f.write(image_bytes)
+                    f.flush()
+                    try:
+                        if isinstance(self.doc, docx.document.Document):
+                            self.doc.add_picture(f.name)
+                        else:
+                            self.add_image_to_cell(self.doc, f.name)
+                    except FileNotFoundError:
+                        image = None
+                    except Exception as e:
+                        raise e
+                    f.close()
+
+                elif not image:
+                    if src_is_url:
+                        self.doc.add_paragraph("<image: %s>" % src)
+                    else:
+                        # avoid exposing filepaths in document
+                        self.doc.add_paragraph("<image: %s>" % get_filename_from_url(src))
+
+        def handle_starttag(self, tag, attrs):
+            tag_none = False
+            if self.skip:
+                return
+            if tag == 'a':
+                self.skip_writting_data = True
+            elif tag[0] == 'h' and len(tag) == 2:
+                if isinstance(self.doc, docx.document.Document):
+                    h_size = int(tag[1])+self.heading_starting_level
+                    self.paragraph = self.doc.add_heading(level=min(h_size, 9))
+                else:
+                    self.paragraph = self.doc.add_paragraph()
+                tag_none = True
+            elif tag == 'figcaption':
+                self.paragraph = self.doc.add_paragraph()
+                self.word_style='Caption'
+            elif tag == 'blockquote':
+                self.word_style='Quote'
+            if tag_none:
+                super().handle_starttag('¨', attrs)
+            else:
+                super().handle_starttag(tag, attrs)
+
+        def handle_endtag(self, tag):
+            
+            if self.skip:
+                if not tag == self.skip_tag:
+                    return
+                
+                if self.instances_to_skip > 0:
+                    self.instances_to_skip -= 1
+                    return
+                self.skip = False
+                self.skip_tag = None
+                self.paragraph = None
+            
+            if tag == 'a':
+                self.skip_writting_data = False
+                link = self.tags.pop(tag)
+                href = link['href']
+                if len(self.datas) > 0:
+                    text = self.datas.pop()
+                else:
+                    text = href
+                
+                self._add_hyperlink(self.paragraph,href,text)
+                return
+            elif tag == 'figcaption':
+                self.word_style = None
+            elif tag == 'blockquote':
+                self.word_style = None
+
+
+            if len(self.datas) > 0:
+                self.datas.pop()
+            super().handle_endtag(tag)
+        def handle_data(self, data):
+            if self.skip:
+                return
+            if not self.paragraph:
+                self.paragraph = self.doc.add_paragraph()
+            self.datas.append(data)
+            if self.skip_writting_data:
+                return
+            if self.word_style is not None:
+                self.paragraph.style = self.styles[self.word_style]
+            super().handle_data(data)
+
+
+    def _clean_ckeditor_html(self, html):
+        parser = self._CKEditorTableHTMLParser()
+        parser.feed(html)
+        return parser.get_parsed_html()
+    def _recursive_sections(self, document, sections_dict, data, heading=0):
+        for section in sections_dict:
+            if section['step'] is None:
+                section_title = section['name']
+            else:
+                section_title = str(section['step'])+'.'+section['name']
+            if section['type'] != "datatable":
+                document.add_heading(section_title, heading)
+            
+            if len(section['subsections']) > 0:
+                self._recursive_sections(document,section['subsections'],sections_dict, heading=heading+1)
+            if section['description'] is not None:
+                p = document.add_paragraph(section['description'])
+            if section['type'] == "free-text":
+                new_parser = self.CustomHtmlToDocx(heading_starting_level=heading-1,styles=document.styles)
+                new_parser.add_html_to_document(self._clean_ckeditor_html(data[section['field']]), document)
+            elif section['type'] == "compound":
+                table = document.add_table(rows=1, cols=4)
+                col0 = table.columns[0]
+                col0.width = Cm(1.5)
+                hdr_cells = table.rows[0].cells
+                hdr_cells[0].text = '#'
+                hdr_cells[1].text = 'CAS RN'
+                hdr_cells[2].text = 'ChEMBL ID'
+                hdr_cells[3].text = 'Structure'
+                for compound in data[section['field']]:
+                    srcs = glob(os.path.join(settings.MEDIA_ROOT_REPORTS,'images','compound_img_'+str(compound['id'])+'*'))
+                    row_cells = table.add_row().cells
+                    row_cells[0].text = str(compound['int_id'])
+                    row_cells[1].text = ', '.join(compound['cas_rn'])
+                    row_cells[2].text = compound['chembl_id']
+                    if len(srcs) > 0 :
+                        paragraph = row_cells[3].paragraphs[0]
+                        run = paragraph.add_run()
+                        run.add_picture(srcs[0],height=1200000,width=1200000)
+                    else:
+                        row_cells[3].text = ''
+            elif section['type'] == "datatable":
+                document.add_section()
+                section = document.sections[-1]
+                section.orientation = WD_ORIENT.LANDSCAPE
+                new_height = section.page_width
+                section.page_width = section.page_height
+                section.page_height = new_height
+                document.add_heading(section_title, heading)
+                nrows = len(data['pc']['Compound'])
+                ncols = len(data['pc'].keys())
+                assay_headers = set(data['pc'].keys())
+                assay_headers.remove('Compound')
+                headers = ['Compound'] + sorted(assay_headers)
+                table = document.add_table(rows=1, cols=ncols)
+                hdr_cells = table.rows[0].cells
+                for hdr_cell, hdr_name in zip(hdr_cells,headers):
+                    hdr_cell.text = hdr_name
+                for row in range(0,nrows):
+                    row_cells = table.add_row().cells
+                    row_cells[0].text = data['pc']['Compound'][row]
+                    for idx, hdr_name in enumerate(headers[1:]):
+                        row_cells[idx+1].text = data['pc'][hdr_name][row]
+                document.add_section()
+                section2 = document.sections[-1]
+                section2.orientation = WD_ORIENT.PORTRAIT
+                new_height = section2.page_width
+                section2.page_width = section2.page_height
+                section2.page_height = new_height
+    def get(self, request, project):
+        with open(settings.SECTIONS_FILE_PATH) as f:
+            sections_dict = json.load(f)
+        document = Document()
+        style = document.styles['Quote']
+        style.paragraph_format.left_indent = Pt(24)
+
+        document.add_heading('Read-Across report', 0)
+
+        data_matrix_serializer = CompoundDataMatrixSerializer(Compound.objects.filter(project=project), many=True)
+        data_matrix_data = data_matrix_serializer.data
+
+        assay_types = {
+            'bioactivity': {
+                'value':[DataMatrixFields.AssayType.bioactivity],
+                'title':" Min-max normalized activity",
+            },
+            'pc': {
+                'value':[DataMatrixFields.AssayType.calculated_pc],
+                'title':" Min-max normalized Physicochemical property",
+            }
+        } #, DataMatrixFields.AssayType.pc
+
+        step2node_seq = {1: 1, 2: 2, 3: 4, 4: 5, 5: 6}
+
+        for section in sections_dict['sections']:
+            if section['step'] is None:
+                section_title = section['name']
+            else:
+                section_title = str(section['step'])+'.'+section['name']
+                q_comments = NodesModel.objects.filter(project=project,node_seq=step2node_seq[section['step']]).values('outputs_comments')
+                node_comments = q_comments[0]['outputs_comments']
+            document.add_heading(section_title, 1)
+            if section['step'] == 1:
+                q = ProblemDescription.objects.filter(project=project).values()
+                data = {'node-comments': node_comments}
+                if len(q) > 0:
+                    data = q[0]
+                    data['node-comments'] = node_comments
+                else:
+                    continue
+            elif section['step'] == 2:
+                data = {'node-comments': node_comments,'compounds':[]}
+                q = Compound.objects.filter(project=project,ra_type=Compound.RAType.target)
+
+                if len(q) > 0:
+                    data['compounds'] = SlugCompoundCASRNSSerializer(q,many=True).data
+
+
+                else:
+                    continue
+            elif section['step'] == 3:
+                data = {'node-comments': node_comments}
+                q = InitialRAxHypothesis.objects.filter(project=project).values()
+                if len(q) > 0:
+                    data = q[0]
+                    data['node-comments'] = node_comments
+                else:
+                    continue
+            elif section['step'] == 4:
+                data = {'node-comments': node_comments,'compounds':[]}
+                q = Compound.objects.filter(project=project,ra_type=Compound.RAType.source)
+                if len(q) > 0:
+                    data['compounds'] = SlugCompoundCASRNSSerializer(q,many=True).data
+                    xvalues = set()
+                    data['pc'] = {'Compound':[]}
+                    i = 0
+                    for compound in data_matrix_data:
+                        if i > 10 and compound_ra_type_code[compound['ra_type']] == 'sc':
+                            continue
+                        for field in compound['data_matrix'][0]['data_matrix_fields']:
+                            if field['assay_type'] not in assay_types['pc']['value']:
+                                continue
+                            if field['assay_id'] not in {'cx_most_apka','cx_logd','cx_logp','mw_freebase','molecular_species','psa','qed_weighted'}:
+                                continue
+                            x_value = field['name']
+                            if x_value not in xvalues:
+                                data['pc'][x_value] = []
+                                xvalues.add(x_value)
+                        i +=1
+                    i = 0
+                    for compound in data_matrix_data:
+                        # if i > 10 and compound_ra_type_code[compound['ra_type']] == 'sc':
+                        #     continue
+                        if len(compound['data_matrix']) > 0:
+                            if compound['name'] is None:
+                                name = ''
+                            else:
+                                name = compound['name']
+                            comp = compound_ra_type_code[compound['ra_type']] + ':#' + str(compound['int_id'])+': '+name
+                            data['pc']['Compound'].append(comp)
+                            current_xvalues = set()
+                            for field in compound['data_matrix'][0]['data_matrix_fields']:
+                                print(field)
+                                if field['assay_type'] not in assay_types['pc']['value']:
+                                    continue
+                                if field['assay_id'] not in {'cx_most_apka','cx_logd','cx_logp','mw_freebase','molecular_species','psa','qed_weighted'}:
+                                    continue
+
+                                x_value = field['name']
+
+                                if field['std_unit'] is None:
+                                    unit = ''
+                                else:
+                                    unit = ' '+field['std_unit']
+                                if field['std_value'] is not None:
+                                    data['pc'][x_value].append(str(field['std_value'])+unit)
+                                else:
+                                    data['pc'][x_value].append('–')
+                                current_xvalues.add(x_value)
+                            for x_value in xvalues - current_xvalues:
+                                data['pc'][x_value].append('–')
+                            i += 1
+                    print(data['pc'])
+
+                else:
+                    continue
+            self._recursive_sections(document, section['subsections'], data, heading=2)
+
+
+        # p = document.add_paragraph('A plain paragraph having some ')
+        # p.add_run('bold').bold = True
+        # p.add_run(' and some ')
+        # p.add_run('italic.').italic = True
+
+        # document.add_heading('Heading, level 1', level=1)
+        # document.add_paragraph('Intense quote', style='Intense Quote')
+
+        # document.add_paragraph(
+        #     'first item in unordered list', style='List Bullet'
+        # )
+        # document.add_paragraph(
+        #     'first item in ordered list', style='List Number'
+        # )
+
+        # document.add_picture(os.path.join(settings.MEDIA_ROOT_REPORTS,'monty-truth.png'), width=Inches(1.25))
+
+        # records = (
+        #     (3, '101', 'Spam'),
+        #     (7, '422', 'Eggs'),
+        #     (4, '631', 'Spam, spam, eggs, and spam')
+        # )
+
+        # table = document.add_table(rows=1, cols=3)
+        # hdr_cells = table.rows[0].cells
+        # hdr_cells[0].text = 'Qty'
+        # hdr_cells[1].text = 'Id'
+        # hdr_cells[2].text = 'Desc'
+        # for qty, id, desc in records:
+        #     row_cells = table.add_row().cells
+        #     row_cells[0].text = str(qty)
+        #     row_cells[1].text = id
+        #     row_cells[2].text = desc
+
+        # document.add_page_break()
+
+        os.makedirs(settings.MEDIA_ROOT_REPORTS,mode=settings.DIRECTORY_DOWNLOAD_PERMISSIONS,exist_ok=True)
+        filename = 'report_'+str(project)+'.docx'
+        document.save(os.path.join(settings.MEDIA_ROOT_REPORTS,filename))
+        return redirect(os.path.join(settings.MEDIA_URL_REPORTS,filename))
+
+@method_decorator((csrf_protect,ensure_csrf_cookie), name='dispatch')
+class SaveReportCompoundImage(APIView):
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated,IsProjectOwner]
+    def post(self,request,project):
+        image_dir = os.path.join(settings.MEDIA_ROOT_REPORTS,'images')
+        os.makedirs(image_dir,exist_ok=True)
+        serializer = CompoundImageImageSerializer(data=request.data,many=False)
+        serializer.is_valid(raise_exception=True)
+        for compound, img in zip(request.data['compounds'],request.data['images']):
+            if compound['project'] != project:
+                continue
+            compound_id = compound['id']
+            m = base54re.match(img)
+            if m:
+                mimetype = m.group(1)
+                base64_bytes = m.group(2)
+                image_bytes = base64.b64decode(base64_bytes)
+                with open(os.path.join(image_dir,'compound_img_'+str(compound_id)+mimetypes.guess_extension(mimetype)),'bw') as f:
+                    f.write(image_bytes)
+                    f.flush()
+        return Response({'Result':'OK'})

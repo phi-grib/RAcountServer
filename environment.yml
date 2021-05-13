@@ -12,6 +12,8 @@ dependencies:
   - chembl_structure_pipeline=1.0.0
   - bokeh=2.1.1
   - pandas=1.1.1
+  - python-docx=0.8.10
+  - lxml=4.6.3
   - pip:
     - django-cors-headers==3.1.1
     - djangorestframework==3.11.0
@@ -20,3 +22,4 @@ dependencies:
     - pytablewriter
     - django-debug-toolbar==2.2
     - django-choices
+    - htmldocx

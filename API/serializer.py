@@ -95,6 +95,13 @@ class CompoundSerializer(serializers.ModelSerializer):
         model = Compound
         fields = "__all__"
 
+class CompoundImageSerializer(serializers.Serializer):
+    image = serializers.CharField(allow_blank=False, allow_null=True, trim_whitespace=False)
+
+class CompoundImageImageSerializer(serializers.Serializer):
+    compounds = CompoundSerializer(many=True,read_only=True)
+    images = CompoundImageSerializer(many=True,read_only=True)
+
 class TCompoundSerializer(serializers.ModelSerializer):
     class Meta:
         model = TCompound

@@ -27,7 +27,9 @@ if settings.DEBUG:
         url(r'^login$', static_serve, kwargs={'path': 'index.html'}),
         url(r'^main$', static_serve, kwargs={'path': 'index.html'}),
         url(r'^'+settings.MEDIA_URL[1:]+r'(?P<path>.*)$', debug_serve,
-         kwargs={'document_root': settings.MEDIA_ROOT})
+         kwargs={'document_root': settings.MEDIA_ROOT}),
+         url(r'^(?!/?static/)(?!/?media/)(?!/?'+settings.MEDIA_URL[1:]+r')(?P<path>.*\..*)$',
+          RedirectView.as_view(url='/static/%(path)s', permanent=False)),
     ]
     if settings.DEBUG_TOOLBAR:
         import debug_toolbar
@@ -38,6 +40,6 @@ else:
 
 urlpatterns += [
     url(r'^', include('API.urls')),
-    url(r'^(?!/?static/)(?!/?media/)(?!/?'+settings.MEDIA_URL[1:]+r')(?P<path>.*\..*)$', RedirectView.as_view(url='/static/%(path)s', permanent=False))
+    
 
 ]

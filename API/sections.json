@@ -1,0 +1,134 @@
+{"sections": 
+    [
+        {
+            "step":1,
+            "name":"Problem formulation",
+            "description": "Detailed description of the study objectives and expected outcomes, including expected used for decision making and acceptable uncertainty levels.",
+            "subsections": [
+                {"step": null,
+                "name":"Scope",
+                "description": "e.g. human allowable exposures in health risk assesment, prioritization, screening, classification and labelling. Indicate also which data gaps are to be filled by the RAx.",
+                "subsections": [],
+                "type": "free-text",
+                "field": "scope"
+                },
+                {"step": null,
+                    "name":"Decision context",
+                    "description": "Describe the regulatory context, data requirements and the testing strategy.",
+                    "subsections": [],
+                    "type": "free-text",
+                    "field": "decision_context"
+                },
+                {"step": null,
+                    "name":"Endpoints",
+                    "description": "Endpoints to study.",
+                    "subsections": [],
+                    "type": "free-text",
+                    "field": "endpoints"
+                },
+                {"step": null,
+                    "name":"Tolerable uncertainty threshold",
+                    "description": "Tolerable uncertainty threshold for Read-Across results a according to the regulatory context",
+                    "subsections": [],
+                    "type": "free-text",
+                    "field": "uncertainty"
+                },
+                {"step": null,
+                    "name":"Comments",
+                    "description": null,
+                    "subsections": [],
+                    "type": "free-text",
+                    "field": "node-comments"
+                }
+            
+            ]
+        },
+        {
+            "step":2,
+            "name":"TC Characterization",
+            "description": "Describe the Target Compound: TC structure (SMILES, InChiKey), IDs (CAS-RN, PubChemID, ChEMBL, ID) and gather any relevant biological information from bibliographic data sources or relevant in silico prediction models",
+            "subsections": [
+                {"step": null,
+                "name":"Target compounds",
+                "description": null,
+                "subsections": [],
+                "type": "compound",
+                "field": "compounds"
+                },
+                {"step": null,
+                    "name":"Comments",
+                    "description": null,
+                    "subsections": [],
+                    "type": "free-text",
+                    "field": "node-comments"
+                }
+            
+            ]
+        },
+        {
+            "step":3,
+            "name":"Initial RAX hypothesis",
+            "description": "Explain your initial RAX strategy.",
+            "subsections": [
+                {"step": null,
+                "name":"Analogue/Category approach",
+                "description": "Justify the analogue/category approach.",
+                "subsections": [],
+                "type": "free-text",
+                "field": "ana_cat_approach"
+                },
+                {"step": null,
+                    "name":"Metabolism role in Read-Across",
+                    "description": "Describe relevance of metabolism of the target compound (TC), its metabolites and similarities between TC and source compound metabolites.",
+                    "subsections": [],
+                    "type": "free-text",
+                    "field": "metabolism"
+                },
+                {"step": null,
+                    "name":"Approach justification",
+                    "description": "e.g. similarity, regular pattern or worst-case relationship between TC and analogues or categories. Justify the approach taken.",
+                    "subsections": [],
+                    "type": "free-text",
+                    "field": "quantitative_var_approach"
+                },
+                {"step": null,
+                    "name":"Comments",
+                    "description": null,
+                    "subsections": [],
+                    "type": "free-text",
+                    "field": "node-comments"
+                }
+            
+            ]
+        },
+        {
+            "step":4,
+            "name":"SC Identification",
+            "description": "SC identification by the initial RAX hypothesis.",
+            "subsections": [
+                {"step": null,
+                "name":"Source compounds",
+                "description": null,
+                "subsections": [],
+                "type": "compound",
+                "field": "compounds"
+                },
+                {"step": null,
+                    "name":"PhysicoChemical Properties",
+                    "description": null,
+                    "subsections": [],
+                    "type": "datatable",
+                    "field": "pc"
+                },
+                {"step": null,
+                    "name":"Comments",
+                    "description": null,
+                    "subsections": [],
+                    "type": "free-text",
+                    "field": "node-comments"
+                }
+            
+            ]
+        }
+    ]
+}

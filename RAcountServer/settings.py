@@ -168,11 +168,17 @@ USE_TZ = True
 # Media files
 
 MEDIA_URL = '/file/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'uploads')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'files')
 MEDIA_API_PREFIX = 'RX'
+MEDIA_ROOT_UPLOADS = os.path.join(MEDIA_ROOT, MEDIA_API_PREFIX, 'uploads')
+MEDIA_ROOT_REPORTS = os.path.join(MEDIA_ROOT, MEDIA_API_PREFIX, 'reports')
+MEDIA_URL_UPLOADS = os.path.join(MEDIA_URL, MEDIA_API_PREFIX, 'uploads')
+MEDIA_URL_REPORTS = os.path.join(MEDIA_URL, MEDIA_API_PREFIX, 'reports')
+SECTIONS_FILE_PATH=os.path.join(BASE_DIR, 'API/sections.json')
 MAX_UPLOAD_SIZE=50*1024**2
 DATA_UPLOAD_MAX_MEMORY_SIZE = 20971520
 FILE_UPLOAD_PERMISSIONS = 0o660
+DIRECTORY_DOWNLOAD_PERMISSIONS = 0o770
 #FILE_UPLOAD_TEMP_DIR = "/tmp"  # uncomment and setup for production
 
 # Static files (CSS, JavaScript, Images)
