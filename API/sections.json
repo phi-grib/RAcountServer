@@ -129,6 +129,21 @@
                 }
             
             ]
+        },
+        {
+            "step": null,
+            "name":"Appendix: TC Physicochemical, ADME and Toxicity data",
+            "description": "SC identification by the initial RAX hypothesis.",
+            "subsections": [
+                {"step": null,
+                "name":"Appendix: TC Physicochemical, ADME and Toxicity data",
+                "description": null,
+                "subsections": [],
+                "type": "datamatrix_single",
+                "field": "tc_data"
+                }
+            
+            ]
         }
     ]
 }

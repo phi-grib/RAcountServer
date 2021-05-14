@@ -786,7 +786,18 @@ class CompoundByIntIdView(RetrieveUpdateDestroyAPIView):
             Compound.objects.bulk_update(compounds_to_update,['int_id'])
 
             return response
-        
+chembl2data_matrix = {
+    'assay_description': 'description',
+    'standard_type': 'name',
+    'standard_units': 'std_unit',
+    'standard_value': 'std_value',
+    'units': 'unit',
+    'value': 'value',
+    'assay_chembl_id': 'assay_id',
+    'text_value': 'text_value',
+    'assay_type': 'assay_type',
+    
+}        
 @method_decorator((csrf_protect,ensure_csrf_cookie), name='dispatch')
 class ChemblDataMatrixView(APIView):
     authentication_classes = [SessionAuthentication]
@@ -1671,12 +1682,19 @@ class GenerateReportDocx(APIView):
         parser.feed(html)
         return parser.get_parsed_html()
     def _recursive_sections(self, document, sections_dict, data, heading=0):
+
+        data_matrix_assay_type2readable = {
+            DataMatrixFields.AssayType.calculated_pc: "Calculated PC",
+            DataMatrixFields.AssayType.bioactivity: "Bioactivity",
+            DataMatrixFields.AssayType.pc: "PC",
+        }
+
         for section in sections_dict:
             if section['step'] is None:
                 section_title = section['name']
             else:
                 section_title = str(section['step'])+'.'+section['name']
-            if section['type'] != "datatable":
+            if section['type'] not in {"datatable","datamatrix_single"}:
                 document.add_heading(section_title, heading)
             
             if len(section['subsections']) > 0:
@@ -1709,11 +1727,11 @@ class GenerateReportDocx(APIView):
                         row_cells[3].text = ''
             elif section['type'] == "datatable":
                 document.add_section()
-                section = document.sections[-1]
-                section.orientation = WD_ORIENT.LANDSCAPE
-                new_height = section.page_width
-                section.page_width = section.page_height
-                section.page_height = new_height
+                docx_section = document.sections[-1]
+                docx_section.orientation = WD_ORIENT.LANDSCAPE
+                new_height = docx_section.page_width
+                docx_section.page_width = docx_section.page_height
+                docx_section.page_height = new_height
                 document.add_heading(section_title, heading)
                 nrows = len(data['pc']['Compound'])
                 ncols = len(data['pc'].keys())
@@ -1730,11 +1748,47 @@ class GenerateReportDocx(APIView):
                     for idx, hdr_name in enumerate(headers[1:]):
                         row_cells[idx+1].text = data['pc'][hdr_name][row]
                 document.add_section()
-                section2 = document.sections[-1]
-                section2.orientation = WD_ORIENT.PORTRAIT
-                new_height = section2.page_width
-                section2.page_width = section2.page_height
-                section2.page_height = new_height
+                docx_section2 = document.sections[-1]
+                docx_section2.orientation = WD_ORIENT.PORTRAIT
+                new_height = docx_section2.page_width
+                docx_section2.page_width = docx_section2.page_height
+                docx_section2.page_height = new_height
+            elif section['type'] == "datamatrix_single":
+                document.add_section()
+                docx_section = document.sections[-1]
+                docx_section.orientation = WD_ORIENT.LANDSCAPE
+                new_height = docx_section.page_width
+                docx_section.page_width = docx_section.page_height
+                docx_section.page_height = new_height
+                document.add_heading(section_title, heading-1)
+                nrows = len(data[section['field']])
+                headers = ['Property','Value','Units','Description','Assay type','Assay ID']
+                fields = ['name', 'std_value', 'std_unit','description', 'assay_type','assay_id']
+
+                ncols = len(headers)
+                table = document.add_table(rows=1, cols=ncols)
+                hdr_cells = table.rows[0].cells
+                for hdr_cell, hdr_name in zip(hdr_cells,headers):
+                    hdr_cell.text = hdr_name
+                for row in range(0,nrows):
+                    row_cells = table.add_row().cells
+                    for idx, field in enumerate(fields):
+                        value = data[section['field']][row][field]
+                        if field == 'assay_type':
+                            row_cells[idx].text = data_matrix_assay_type2readable[value]
+                        elif field == 'assay_id' and value[0:6] == 'CHEMBL':
+                            row_cells[idx].text = ''
+                            paragraph = row_cells[idx].paragraphs[0]
+                            self.CustomHtmlToDocx._add_hyperlink(None,paragraph,"https://www.ebi.ac.uk/chembl/assay_report_card/"+value+"/",value)
+                        else:
+                            row_cells[idx].text = str(value)
+                document.add_section()
+                docx_section2 = document.sections[-1]
+                docx_section2.orientation = WD_ORIENT.PORTRAIT
+                new_height = docx_section2.page_width
+                docx_section2.page_width = docx_section2.page_height
+                docx_section2.page_height = new_height
+
     def get(self, request, project):
         with open(settings.SECTIONS_FILE_PATH) as f:
             sections_dict = json.load(f)
@@ -1767,7 +1821,8 @@ class GenerateReportDocx(APIView):
                 section_title = str(section['step'])+'.'+section['name']
                 q_comments = NodesModel.objects.filter(project=project,node_seq=step2node_seq[section['step']]).values('outputs_comments')
                 node_comments = q_comments[0]['outputs_comments']
-            document.add_heading(section_title, 1)
+            if section['name'] != "Appendix: TC Physicochemical, ADME and Toxicity data":
+                document.add_heading(section_title, 1)
             if section['step'] == 1:
                 q = ProblemDescription.objects.filter(project=project).values()
                 data = {'node-comments': node_comments}
@@ -1852,6 +1907,16 @@ class GenerateReportDocx(APIView):
 
                 else:
                     continue
+            elif section['step'] is None:
+                if section['name'] == "Appendix: TC Physicochemical, ADME and Toxicity data":
+                    tc_data_matrix_serializer = CompoundDataMatrixSerializer(Compound.objects.filter(project=project,ra_type=Compound.RAType.target), many=True)
+                    tc_data_matrix_data = tc_data_matrix_serializer.data
+                    tc_data = tc_data_matrix_data[0]['data_matrix'][0]['data_matrix_fields']
+                    tc_data.sort(key=lambda x: x['assay_id'])
+                    tc_data.sort(key=lambda x: x['name'])
+                    tc_data.sort(key=lambda x: x['assay_type'])
+                    data = {'tc_data': tc_data}
+
             self._recursive_sections(document, section['subsections'], data, heading=2)
 
 
