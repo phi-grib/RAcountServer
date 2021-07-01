@@ -282,6 +282,7 @@ class ProblemDescriptionView(GenericAPIView,CreateModelMixin,RetrieveModelMixin,
 
         if created:
             NodesModel.objects.filter(project=self.kwargs['project'], node_seq=1).update(executed=True)
+        
         return Response({'Ok':'ok'}, status=status.HTTP_200_OK)
     
 @method_decorator((csrf_protect,ensure_csrf_cookie), name='dispatch')
@@ -654,7 +655,6 @@ class CompoundCreateListView(GenericAPIView, CreateModelMixin, ListModelMixin):
         return self.list(request)
     def post(self, request, project, ra_type):
         #debug
-        print(self.kwargs['ra_type'])
         if ra_type == 'sc':
             Compound.objects.filter(ra_type=1,project=project).delete()
         
@@ -878,7 +878,6 @@ class ChemblDataMatrixView(APIView):
                 try:
                     serializer.is_valid(raise_exception=True)
                 except Exception as e:
-                    print(rdata['data'])
                     raise e
                 data = serializer.data
                 units_set = set()
@@ -1733,9 +1732,9 @@ class GenerateReportDocx(APIView):
                 docx_section.page_width = docx_section.page_height
                 docx_section.page_height = new_height
                 document.add_heading(section_title, heading)
-                nrows = len(data['pc']['Compound'])
-                ncols = len(data['pc'].keys())
-                assay_headers = set(data['pc'].keys())
+                nrows = len(data[section['field']]['Compound'])
+                ncols = len(data[section['field']].keys())
+                assay_headers = set(data[section['field']].keys())
                 assay_headers.remove('Compound')
                 headers = ['Compound'] + sorted(assay_headers)
                 table = document.add_table(rows=1, cols=ncols)
@@ -1744,9 +1743,9 @@ class GenerateReportDocx(APIView):
                     hdr_cell.text = hdr_name
                 for row in range(0,nrows):
                     row_cells = table.add_row().cells
-                    row_cells[0].text = data['pc']['Compound'][row]
+                    row_cells[0].text = data[section['field']]['Compound'][row]
                     for idx, hdr_name in enumerate(headers[1:]):
-                        row_cells[idx+1].text = data['pc'][hdr_name][row]
+                        row_cells[idx+1].text = data[section['field']][hdr_name][row]
                 document.add_section()
                 docx_section2 = document.sections[-1]
                 docx_section2.orientation = WD_ORIENT.PORTRAIT
@@ -1858,8 +1857,8 @@ class GenerateReportDocx(APIView):
                     data['pc'] = {'Compound':[]}
                     i = 0
                     for compound in data_matrix_data:
-                        if i > 10 and compound_ra_type_code[compound['ra_type']] == 'sc':
-                            continue
+                        # if i > 10 and compound_ra_type_code[compound['ra_type']] == 'sc':
+                        #     continue
                         for field in compound['data_matrix'][0]['data_matrix_fields']:
                             if field['assay_type'] not in assay_types['pc']['value']:
                                 continue
@@ -1883,7 +1882,6 @@ class GenerateReportDocx(APIView):
                             data['pc']['Compound'].append(comp)
                             current_xvalues = set()
                             for field in compound['data_matrix'][0]['data_matrix_fields']:
-                                print(field)
                                 if field['assay_type'] not in assay_types['pc']['value']:
                                     continue
                                 if field['assay_id'] not in {'cx_most_apka','cx_logd','cx_logp','mw_freebase','molecular_species','psa','qed_weighted'}:
@@ -1903,7 +1901,6 @@ class GenerateReportDocx(APIView):
                             for x_value in xvalues - current_xvalues:
                                 data['pc'][x_value].append('–')
                             i += 1
-                    print(data['pc'])
 
                 else:
                     continue
@@ -1983,3 +1980,293 @@ class SaveReportCompoundImage(APIView):
                     f.write(image_bytes)
                     f.flush()
         return Response({'Result':'OK'})
+
+@method_decorator((csrf_protect,ensure_csrf_cookie), name='dispatch')
+class GenerateReportJson(APIView):
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated,IsProjectOwner]
+    
+    def _recursive_sections(self, sections_dict, heading=0):
+
+        data_matrix_assay_type2readable = {
+            DataMatrixFields.AssayType.calculated_pc: "Calculated PC",
+            DataMatrixFields.AssayType.bioactivity: "Bioactivity",
+            DataMatrixFields.AssayType.pc: "PC",
+        }
+
+        for section in sections_dict:
+            if section['step'] is None:
+                section_title = section['name']
+            else:
+                section_title = str(section['step'])+'.'+section['name']
+            # if section['type'] not in {"datatable","datamatrix_single"}:
+            #     document.add_heading(section_title, heading)
+            section['section_title'] = section_title
+            if len(section['subsections']) > 0:
+                self._recursive_sections(section['subsections'], heading=heading+1)
+            # if section['description'] is not None:
+            #     p = document.add_paragraph(section['description'])
+            # if section['type'] == "free-text":
+            #     new_parser = self.CustomHtmlToDocx(heading_starting_level=heading-1,styles=document.styles)
+            #     new_parser.add_html_to_document(self._clean_ckeditor_html(data[section['field']]), document)
+            # elif section['type'] == "compound":
+            #     table = document.add_table(rows=1, cols=4)
+            #     col0 = table.columns[0]
+            #     col0.width = Cm(1.5)
+            #     hdr_cells = table.rows[0].cells
+            #     hdr_cells[0].text = '#'
+            #     hdr_cells[1].text = 'CAS RN'
+            #     hdr_cells[2].text = 'ChEMBL ID'
+            #     hdr_cells[3].text = 'Structure'
+            #     for compound in data[section['field']]:
+            #         srcs = glob(os.path.join(settings.MEDIA_ROOT_REPORTS,'images','compound_img_'+str(compound['id'])+'*'))
+            #         row_cells = table.add_row().cells
+            #         row_cells[0].text = str(compound['int_id'])
+            #         row_cells[1].text = ', '.join(compound['cas_rn'])
+            #         row_cells[2].text = compound['chembl_id']
+            #         if len(srcs) > 0 :
+            #             paragraph = row_cells[3].paragraphs[0]
+            #             run = paragraph.add_run()
+            #             run.add_picture(srcs[0],height=1200000,width=1200000)
+            #         else:
+            #             row_cells[3].text = ''
+            # elif section['type'] == "datatable":
+            #     document.add_section()
+            #     docx_section = document.sections[-1]
+            #     docx_section.orientation = WD_ORIENT.LANDSCAPE
+            #     new_height = docx_section.page_width
+            #     docx_section.page_width = docx_section.page_height
+            #     docx_section.page_height = new_height
+            #     document.add_heading(section_title, heading)
+            #     nrows = len(data['pc']['Compound'])
+            #     ncols = len(data['pc'].keys())
+            #     assay_headers = set(data['pc'].keys())
+            #     assay_headers.remove('Compound')
+            #     headers = ['Compound'] + sorted(assay_headers)
+            #     table = document.add_table(rows=1, cols=ncols)
+            #     hdr_cells = table.rows[0].cells
+            #     for hdr_cell, hdr_name in zip(hdr_cells,headers):
+            #         hdr_cell.text = hdr_name
+            #     for row in range(0,nrows):
+            #         row_cells = table.add_row().cells
+            #         row_cells[0].text = data['pc']['Compound'][row]
+            #         for idx, hdr_name in enumerate(headers[1:]):
+            #             row_cells[idx+1].text = data['pc'][hdr_name][row]
+            #     document.add_section()
+            #     docx_section2 = document.sections[-1]
+            #     docx_section2.orientation = WD_ORIENT.PORTRAIT
+            #     new_height = docx_section2.page_width
+            #     docx_section2.page_width = docx_section2.page_height
+            #     docx_section2.page_height = new_height
+            # elif section['type'] == "datamatrix_single":
+            #     document.add_section()
+            #     docx_section = document.sections[-1]
+            #     docx_section.orientation = WD_ORIENT.LANDSCAPE
+            #     new_height = docx_section.page_width
+            #     docx_section.page_width = docx_section.page_height
+            #     docx_section.page_height = new_height
+            #     document.add_heading(section_title, heading-1)
+            #     nrows = len(data[section['field']])
+            #     headers = ['Property','Value','Units','Description','Assay type','Assay ID']
+            #     fields = ['name', 'std_value', 'std_unit','description', 'assay_type','assay_id']
+
+            #     ncols = len(headers)
+            #     table = document.add_table(rows=1, cols=ncols)
+            #     hdr_cells = table.rows[0].cells
+            #     for hdr_cell, hdr_name in zip(hdr_cells,headers):
+            #         hdr_cell.text = hdr_name
+            #     for row in range(0,nrows):
+            #         row_cells = table.add_row().cells
+            #         for idx, field in enumerate(fields):
+            #             value = data[section['field']][row][field]
+            #             if field == 'assay_type':
+            #                 row_cells[idx].text = data_matrix_assay_type2readable[value]
+            #             elif field == 'assay_id' and value[0:6] == 'CHEMBL':
+            #                 row_cells[idx].text = ''
+            #                 paragraph = row_cells[idx].paragraphs[0]
+            #                 self.CustomHtmlToDocx._add_hyperlink(None,paragraph,"https://www.ebi.ac.uk/chembl/assay_report_card/"+value+"/",value)
+            #             else:
+            #                 row_cells[idx].text = str(value)
+            #     document.add_section()
+            #     docx_section2 = document.sections[-1]
+            #     docx_section2.orientation = WD_ORIENT.PORTRAIT
+            #     new_height = docx_section2.page_width
+            #     docx_section2.page_width = docx_section2.page_height
+            #     docx_section2.page_height = new_height
+
+    def get(self, request, project):
+        with open(settings.SECTIONS_FILE_PATH) as f:
+            sections_dict = json.load(f)
+        output_dict = {'sections':[]}
+        data_matrix_serializer = CompoundDataMatrixSerializer(Compound.objects.filter(project=project), many=True)
+        data_matrix_data = data_matrix_serializer.data
+
+        data_matrix_assay_type2readable = {
+            DataMatrixFields.AssayType.calculated_pc: "Calculated PC",
+            DataMatrixFields.AssayType.bioactivity: "Bioactivity",
+            DataMatrixFields.AssayType.pc: "PC",
+        }
+        assay_types = {
+            'bioactivity': {
+                'value':[DataMatrixFields.AssayType.bioactivity],
+                'title':" Min-max normalized activity",
+            },
+            'pc': {
+                'value':[DataMatrixFields.AssayType.calculated_pc],
+                'title':" Min-max normalized Physicochemical property",
+            }
+        } #, DataMatrixFields.AssayType.pc
+
+        step2node_seq = {1: 1, 2: 2, 3: 4, 4: 5, 5: 6}
+
+        for section in sections_dict['sections']:
+            output_section = section.copy()
+            if section['step'] is None:
+                section_title = section['name']
+            else:
+                section_title = str(section['step'])+'.'+section['name']
+                q_comments = NodesModel.objects.filter(project=project,node_seq=step2node_seq[section['step']]).values('outputs_comments')
+                node_comments = q_comments[0]['outputs_comments']
+            # if section['name'] != "Appendix: TC Physicochemical, ADME and Toxicity data":
+            #     document.add_heading(section_title, 1)
+            output_section['section_title'] = section_title
+            if section['step'] == 1:
+                q = ProblemDescription.objects.filter(project=project).values()
+                data = {'node-comments': node_comments}
+                if len(q) > 0:
+                    data = q[0]
+                    data['node-comments'] = node_comments
+                else:
+                    continue
+            elif section['step'] == 2:
+                data = {'node-comments': node_comments,'compounds':[]}
+                q = Compound.objects.filter(project=project,ra_type=Compound.RAType.target)
+
+                if len(q) > 0:
+                    data['compounds'] = SlugCompoundCASRNSSerializer(q,many=True).data
+
+
+                else:
+                    continue
+            elif section['step'] == 3:
+                data = {'node-comments': node_comments}
+                q = InitialRAxHypothesis.objects.filter(project=project).values()
+                if len(q) > 0:
+                    data = q[0]
+                    data['node-comments'] = node_comments
+                else:
+                    continue
+            elif section['step'] == 4:
+                data = {'node-comments': node_comments,'compounds':[]}
+                q = Compound.objects.filter(project=project,ra_type=Compound.RAType.source)
+                if len(q) > 0:
+                    data['compounds'] = SlugCompoundCASRNSSerializer(q,many=True).data
+                    xvalues = set()
+                    data['pc'] = {'Compound':[]}
+                    i = 0
+                    for compound in data_matrix_data:
+                        # if i > 10 and compound_ra_type_code[compound['ra_type']] == 'sc':
+                        #     continue
+                        for field in compound['data_matrix'][0]['data_matrix_fields']:
+                            if field['assay_type'] not in assay_types['pc']['value']:
+                                continue
+                            if field['assay_id'] not in {'cx_most_apka','cx_logd','cx_logp','mw_freebase','molecular_species','psa','qed_weighted'}:
+                                continue
+                            x_value = field['name']
+                            if x_value not in xvalues:
+                                data['pc'][x_value] = []
+                                xvalues.add(x_value)
+                        i +=1
+                    i = 0
+                    for compound in data_matrix_data:
+                        # if i > 10 and compound_ra_type_code[compound['ra_type']] == 'sc':
+                        #     continue
+                        if len(compound['data_matrix']) > 0:
+                            if compound['name'] is None:
+                                name = ''
+                            else:
+                                name = compound['name']
+                            comp = compound_ra_type_code[compound['ra_type']] + ':#' + str(compound['int_id'])+': '+name
+                            data['pc']['Compound'].append(comp)
+                            current_xvalues = set()
+                            for field in compound['data_matrix'][0]['data_matrix_fields']:
+                                if field['assay_type'] not in assay_types['pc']['value']:
+                                    continue
+                                if field['assay_id'] not in {'cx_most_apka','cx_logd','cx_logp','mw_freebase','molecular_species','psa','qed_weighted'}:
+                                    continue
+
+                                x_value = field['name']
+
+                                if field['std_unit'] is None:
+                                    unit = ''
+                                else:
+                                    unit = ' '+field['std_unit']
+                                if field['std_value'] is not None:
+                                    data['pc'][x_value].append(str(field['std_value'])+unit)
+                                else:
+                                    data['pc'][x_value].append('–')
+                                current_xvalues.add(x_value)
+                            for x_value in xvalues - current_xvalues:
+                                data['pc'][x_value].append('–')
+                            i += 1
+
+                else:
+                    continue
+            elif section['step'] is None:
+                if section['name'] == "Appendix: TC Physicochemical, ADME and Toxicity data":
+                    tc_data_matrix_serializer = CompoundDataMatrixSerializer(Compound.objects.filter(project=project,ra_type=Compound.RAType.target), many=True)
+                    tc_data_matrix_data = tc_data_matrix_serializer.data
+                    tc_data = tc_data_matrix_data[0]['data_matrix'][0]['data_matrix_fields']
+                    tc_data.sort(key=lambda x: x['assay_id'])
+                    tc_data.sort(key=lambda x: x['name'])
+                    tc_data.sort(key=lambda x: x['assay_type'])
+                    for row in tc_data:
+                        row['assay_type'] = data_matrix_assay_type2readable[row['assay_type']]
+                    data = {'tc_data': tc_data}
+            output_section['data'] = data
+            self._recursive_sections(output_section['subsections'], heading=2)
+            output_dict['sections'].append(output_section)
+            
+        return Response(output_dict, status.HTTP_200_OK)
+
+
+        # p = document.add_paragraph('A plain paragraph having some ')
+        # p.add_run('bold').bold = True
+        # p.add_run(' and some ')
+        # p.add_run('italic.').italic = True
+
+        # document.add_heading('Heading, level 1', level=1)
+        # document.add_paragraph('Intense quote', style='Intense Quote')
+
+        # document.add_paragraph(
+        #     'first item in unordered list', style='List Bullet'
+        # )
+        # document.add_paragraph(
+        #     'first item in ordered list', style='List Number'
+        # )
+
+        # document.add_picture(os.path.join(settings.MEDIA_ROOT_REPORTS,'monty-truth.png'), width=Inches(1.25))
+
+        # records = (
+        #     (3, '101', 'Spam'),
+        #     (7, '422', 'Eggs'),
+        #     (4, '631', 'Spam, spam, eggs, and spam')
+        # )
+
+        # table = document.add_table(rows=1, cols=3)
+        # hdr_cells = table.rows[0].cells
+        # hdr_cells[0].text = 'Qty'
+        # hdr_cells[1].text = 'Id'
+        # hdr_cells[2].text = 'Desc'
+        # for qty, id, desc in records:
+        #     row_cells = table.add_row().cells
+        #     row_cells[0].text = str(qty)
+        #     row_cells[1].text = id
+        #     row_cells[2].text = desc
+
+        # document.add_page_break()
+
+        os.makedirs(settings.MEDIA_ROOT_REPORTS,mode=settings.DIRECTORY_DOWNLOAD_PERMISSIONS,exist_ok=True)
+        filename = 'report_'+str(project)+'.docx'
+        document.save(os.path.join(settings.MEDIA_ROOT_REPORTS,filename))
+        return redirect(os.path.join(settings.MEDIA_URL_REPORTS,filename))
