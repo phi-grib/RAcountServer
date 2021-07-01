@@ -2,28 +2,48 @@
 
 ## Download
 
-- Download zip file 
+- Download zip file
 
 or 
 
 - `git clone https://github.com/phi-grib/RAcountServer.git`
 
+or for SSH-key access,
+
+- `git clone git@github.com:phi-grib/RAcountServer.git`
+
 
 ## Install
 
-Install and activate the enviroment
+Change to the project working directory
 
 `cd RAcountServer`
 
+For the last stable working demo tag use
+
+`git checkout vreport0.1`
+
+Install and activate the enviroment
+
 `conda env create -f environment.yml`
+
+
 
 In Linux, activate the environment using:
 
 `source activate RAcount`
 
+or
+
+`conda activate RAcount`
+
 In Windows, use:
 
 `activate RAcount`
+
+or
+
+`conda activate RAcount`
 
 ## Run
 At the root folder execute:
@@ -35,5 +55,5 @@ and then navigate to <http://localhost:8000>
 
 ## Login
 Example accounts are:
-- User: manuel.pastor@upf.edu  Password: Manuel
-- User: ***REMOVED*** Password: Ignacio
+- Example case study, User: manuel.pastor@upf.edu  Password: Manuel
+- Empty user, User: ***REMOVED*** Password: Ignacio
