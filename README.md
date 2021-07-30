@@ -21,7 +21,7 @@ Change to the project working directory
 
 For the last stable working demo tag use
 
-`git checkout vreport0.2`
+`git checkout vreport0.3`
 
 Install and activate the enviroment
 
