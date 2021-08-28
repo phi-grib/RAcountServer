@@ -1114,6 +1114,17 @@ class DataMatrixHeatmapView(GenericAPIView, ListModelMixin):
             }
         }
         
+        # assay_types = {
+        #     'bioactivity': {
+        #         'value':[DataMatrixFields.AssayType.bioactivity],
+        #         'title': None,
+        #     },
+        #     'pc': {
+        #         'value':[DataMatrixFields.AssayType.calculated_pc, DataMatrixFields.AssayType.pc],
+        #         'title': None,
+        #     }
+        # }
+        
         chembl_molecular_species = {'ACID':1.0, 'NEUTRAL':0.45, 'ZWITTERION':0.65, 'BASE':0.0,None:np.nan,'N/A':np.nan}
         
         queryset = self.filter_queryset(self.get_queryset())
@@ -1138,6 +1149,7 @@ class DataMatrixHeatmapView(GenericAPIView, ListModelMixin):
         x_value_2_assay_id_dict = {}
         colums_dict = {'x_value': [],'Compound': [],'Assay_ID': [], 'value': [], 'value_unit': [], 'description':[],'name':[], 'alpha2': []}
         i = 0
+        y_value_max_size = 0
         for compound in data:
             # if i > 30 and compound_ra_type_code[compound['ra_type']] == 'sc':
             #     continue
@@ -1148,6 +1160,9 @@ class DataMatrixHeatmapView(GenericAPIView, ListModelMixin):
                     name = compound['name']
                 comp = compound_ra_type_code[compound['ra_type']] + ':#' + str(compound['int_id'])+': '+name
                 y_values.append(comp)
+                comp_len = len(comp)
+                if y_value_max_size < comp_len:
+                    y_value_max_size = comp_len
                 values_dict = {}
                 values_unit_dict = {}
                 description_dict = {}
@@ -1291,6 +1306,7 @@ class DataMatrixHeatmapView(GenericAPIView, ListModelMixin):
         if (len(y_values) < 6 or len(x_values) < 6):
             min_border_right=100
             p = figure(
+            plot_width=w,
             min_border_right=min_border_right,
             #title="Example freq",
             y_range=y_values,
@@ -1303,6 +1319,8 @@ class DataMatrixHeatmapView(GenericAPIView, ListModelMixin):
             )
         elif assay_type == 'pc':
             width = 60*len(x_values)
+            if width < w:
+                width = w
             height = 80*len(y_values)
             min_border_right=150
             p = figure(
@@ -1319,6 +1337,8 @@ class DataMatrixHeatmapView(GenericAPIView, ListModelMixin):
                 )
         else:
             width = 18*len(x_values)
+            if width < w:
+                width = w
             height = 80*len(y_values)
             min_border_right=100
             p = figure(
@@ -1338,6 +1358,25 @@ class DataMatrixHeatmapView(GenericAPIView, ListModelMixin):
         # Create rectangle for heatmap
         mysource = ColumnDataSource(dataframe)
         del dataframe
+        dummysource = ColumnDataSource({'Column':[0],'Row':[0]})
+        p.rect(
+            y='Column', 
+            x='Row', 
+            width=w, 
+            height=1, 
+            source=dummysource,
+            line_color=None, 
+            fill_color=None,
+
+            # set visual properties for selected glyphs
+            selection_line_color=None,
+            selection_fill_color=None,
+            # set visual properties for non-selected glyphs
+            nonselection_fill_alpha=0,
+            nonselection_fill_color=None,
+            nonselection_line_color=None
+
+        )
         p.rect(
             y='Compound', 
             x='x_value', 
