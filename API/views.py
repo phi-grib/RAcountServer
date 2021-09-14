@@ -1167,47 +1167,48 @@ class DataMatrixHeatmapView(GenericAPIView, ListModelMixin):
                 values_unit_dict = {}
                 description_dict = {}
                 name_dict = {}
-                for field in compound['data_matrix'][0]['data_matrix_fields']:
-                    if field['assay_type'] not in assay_types[assay_type]['value']:
-                        continue
-                    if assay_type == 'pc':
-                        x_value = field['name']+' ('+field['assay_id']+')'
-                    else:
-                        x_value = field['assay_id']
-                    x_values_set.add(x_value)
-                    x_value_2_assay_id_dict[x_value] = field['assay_id']
-                    description_dict[field['assay_id']] = field['description']
-                    name_dict[field['assay_id']] = field['name']
-                    if (field['std_value'] is None):
-                        if field['value'] is None:
-                            value = None
-                            unit = None
+                if len(compound['data_matrix']) > 0:
+                    for field in compound['data_matrix'][0]['data_matrix_fields']:
+                        if field['assay_type'] not in assay_types[assay_type]['value']:
+                            continue
+                        if assay_type == 'pc':
+                            x_value = field['name']+' ('+field['assay_id']+')'
                         else:
-                            value = field['value']
-                            unit = field['unit']
+                            x_value = field['assay_id']
+                        x_values_set.add(x_value)
+                        x_value_2_assay_id_dict[x_value] = field['assay_id']
+                        description_dict[field['assay_id']] = field['description']
+                        name_dict[field['assay_id']] = field['name']
+                        if (field['std_value'] is None):
+                            if field['value'] is None:
+                                value = None
+                                unit = None
+                            else:
+                                value = field['value']
+                                unit = field['unit']
 
-                    else:
-                        value = field['std_value']
-                        unit = field['std_unit']
-                    
-                    if value is None:
-                        if field['text_value'] is None:
-                            values_dict[field['assay_id']] = 'N/A'
-                            values_unit_dict[field['assay_id']] = 'N/A'
                         else:
-                            values_dict[field['assay_id']] = field['text_value']
-                            values_unit_dict[field['assay_id']] = field['text_value']
-                    else:
-                        if unit is None:
-                            unit_suffix = ''
+                            value = field['std_value']
+                            unit = field['std_unit']
+                        
+                        if value is None:
+                            if field['text_value'] is None:
+                                values_dict[field['assay_id']] = 'N/A'
+                                values_unit_dict[field['assay_id']] = 'N/A'
+                            else:
+                                values_dict[field['assay_id']] = field['text_value']
+                                values_unit_dict[field['assay_id']] = field['text_value']
                         else:
-                            unit_suffix = ' ' + unit
-                        values_dict[field['assay_id']] = value
-                        values_unit_dict[field['assay_id']] = str(value) + unit_suffix
-                values_dict_list.append(values_dict)
-                values_unit_dict_list.append(values_unit_dict)
-                description_dict_list.append(description_dict)
-                name_dict_list.append(name_dict)
+                            if unit is None:
+                                unit_suffix = ''
+                            else:
+                                unit_suffix = ' ' + unit
+                            values_dict[field['assay_id']] = value
+                            values_unit_dict[field['assay_id']] = str(value) + unit_suffix
+                    values_dict_list.append(values_dict)
+                    values_unit_dict_list.append(values_unit_dict)
+                    description_dict_list.append(description_dict)
+                    name_dict_list.append(name_dict)
             i += 1
              
         del data
@@ -1898,16 +1899,17 @@ class GenerateReportDocx(APIView):
                     for compound in data_matrix_data:
                         # if i > 10 and compound_ra_type_code[compound['ra_type']] == 'sc':
                         #     continue
-                        for field in compound['data_matrix'][0]['data_matrix_fields']:
-                            if field['assay_type'] not in assay_types['pc']['value']:
-                                continue
-                            if field['assay_id'] not in {'cx_most_apka','cx_logd','cx_logp','mw_freebase','molecular_species','psa','qed_weighted'}:
-                                continue
-                            x_value = field['name']
-                            if x_value not in xvalues:
-                                data['pc'][x_value] = []
-                                xvalues.add(x_value)
-                        i +=1
+                        if len(compound['data_matrix']) > 0:
+                            for field in compound['data_matrix'][0]['data_matrix_fields']:
+                                if field['assay_type'] not in assay_types['pc']['value']:
+                                    continue
+                                if field['assay_id'] not in {'cx_most_apka','cx_logd','cx_logp','mw_freebase','molecular_species','psa','qed_weighted'}:
+                                    continue
+                                x_value = field['name']
+                                if x_value not in xvalues:
+                                    data['pc'][x_value] = []
+                                    xvalues.add(x_value)
+                            i +=1
                     i = 0
                     for compound in data_matrix_data:
                         # if i > 10 and compound_ra_type_code[compound['ra_type']] == 'sc':
@@ -1920,26 +1922,27 @@ class GenerateReportDocx(APIView):
                             comp = compound_ra_type_code[compound['ra_type']] + ':#' + str(compound['int_id'])+': '+name
                             data['pc']['Compound'].append(comp)
                             current_xvalues = set()
-                            for field in compound['data_matrix'][0]['data_matrix_fields']:
-                                if field['assay_type'] not in assay_types['pc']['value']:
-                                    continue
-                                if field['assay_id'] not in {'cx_most_apka','cx_logd','cx_logp','mw_freebase','molecular_species','psa','qed_weighted'}:
-                                    continue
+                            if len(compound['data_matrix']) > 0:
+                                for field in compound['data_matrix'][0]['data_matrix_fields']:
+                                    if field['assay_type'] not in assay_types['pc']['value']:
+                                        continue
+                                    if field['assay_id'] not in {'cx_most_apka','cx_logd','cx_logp','mw_freebase','molecular_species','psa','qed_weighted'}:
+                                        continue
 
-                                x_value = field['name']
+                                    x_value = field['name']
 
-                                if field['std_unit'] is None:
-                                    unit = ''
-                                else:
-                                    unit = ' '+field['std_unit']
-                                if field['std_value'] is not None:
-                                    data['pc'][x_value].append(str(field['std_value'])+unit)
-                                else:
+                                    if field['std_unit'] is None:
+                                        unit = ''
+                                    else:
+                                        unit = ' '+field['std_unit']
+                                    if field['std_value'] is not None:
+                                        data['pc'][x_value].append(str(field['std_value'])+unit)
+                                    else:
+                                        data['pc'][x_value].append('–')
+                                    current_xvalues.add(x_value)
+                                for x_value in xvalues - current_xvalues:
                                     data['pc'][x_value].append('–')
-                                current_xvalues.add(x_value)
-                            for x_value in xvalues - current_xvalues:
-                                data['pc'][x_value].append('–')
-                            i += 1
+                                i += 1
 
                 else:
                     continue
@@ -2206,16 +2209,17 @@ class GenerateReportJson(APIView):
                     for compound in data_matrix_data:
                         # if i > 10 and compound_ra_type_code[compound['ra_type']] == 'sc':
                         #     continue
-                        for field in compound['data_matrix'][0]['data_matrix_fields']:
-                            if field['assay_type'] not in assay_types['pc']['value']:
-                                continue
-                            if field['assay_id'] not in {'cx_most_apka','cx_logd','cx_logp','mw_freebase','molecular_species','psa','qed_weighted'}:
-                                continue
-                            x_value = field['name']
-                            if x_value not in xvalues:
-                                data['pc'][x_value] = []
-                                xvalues.add(x_value)
-                        i +=1
+                        if len(compound['data_matrix']) > 0:
+                            for field in compound['data_matrix'][0]['data_matrix_fields']:
+                                if field['assay_type'] not in assay_types['pc']['value']:
+                                    continue
+                                if field['assay_id'] not in {'cx_most_apka','cx_logd','cx_logp','mw_freebase','molecular_species','psa','qed_weighted'}:
+                                    continue
+                                x_value = field['name']
+                                if x_value not in xvalues:
+                                    data['pc'][x_value] = []
+                                    xvalues.add(x_value)
+                            i +=1
                     i = 0
                     for compound in data_matrix_data:
                         # if i > 10 and compound_ra_type_code[compound['ra_type']] == 'sc':
@@ -2228,26 +2232,27 @@ class GenerateReportJson(APIView):
                             comp = compound_ra_type_code[compound['ra_type']] + ':#' + str(compound['int_id'])+': '+name
                             data['pc']['Compound'].append(comp)
                             current_xvalues = set()
-                            for field in compound['data_matrix'][0]['data_matrix_fields']:
-                                if field['assay_type'] not in assay_types['pc']['value']:
-                                    continue
-                                if field['assay_id'] not in {'cx_most_apka','cx_logd','cx_logp','mw_freebase','molecular_species','psa','qed_weighted'}:
-                                    continue
+                            if len(compound['data_matrix']) > 0:
+                                for field in compound['data_matrix'][0]['data_matrix_fields']:
+                                    if field['assay_type'] not in assay_types['pc']['value']:
+                                        continue
+                                    if field['assay_id'] not in {'cx_most_apka','cx_logd','cx_logp','mw_freebase','molecular_species','psa','qed_weighted'}:
+                                        continue
 
-                                x_value = field['name']
+                                    x_value = field['name']
 
-                                if field['std_unit'] is None:
-                                    unit = ''
-                                else:
-                                    unit = ' '+field['std_unit']
-                                if field['std_value'] is not None:
-                                    data['pc'][x_value].append(str(field['std_value'])+unit)
-                                else:
+                                    if field['std_unit'] is None:
+                                        unit = ''
+                                    else:
+                                        unit = ' '+field['std_unit']
+                                    if field['std_value'] is not None:
+                                        data['pc'][x_value].append(str(field['std_value'])+unit)
+                                    else:
+                                        data['pc'][x_value].append('–')
+                                    current_xvalues.add(x_value)
+                                for x_value in xvalues - current_xvalues:
                                     data['pc'][x_value].append('–')
-                                current_xvalues.add(x_value)
-                            for x_value in xvalues - current_xvalues:
-                                data['pc'][x_value].append('–')
-                            i += 1
+                                i += 1
 
                 else:
                     continue
