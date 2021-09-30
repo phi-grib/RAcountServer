@@ -7,7 +7,7 @@
             "subsections": [
                 {"step": null,
                 "name":"Scope",
-                "description": "e.g. human allowable exposures in health risk assesment, prioritization, screening, classification and labelling. Indicate also which data gaps are to be filled by the RAx.",
+                "description": "e.g. human allowable exposures in health risk assessment, prioritization, screening, classification and labelling. Indicate also which data gaps are to be filled by the RAx.",
                 "subsections": [],
                 "type": "free-text",
                 "field": "scope"
