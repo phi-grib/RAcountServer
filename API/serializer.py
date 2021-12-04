@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.db.models import Prefetch
 
 from rest_framework import serializers
 from .models import Projects, Nodes, Resources, ProblemDescription, InitialRAxHypothesis, Compound
@@ -191,3 +192,66 @@ class ChemblDataMatrixSerializer(serializers.Serializer):
     text_value = serializers.CharField(allow_blank=False,allow_null=True, trim_whitespace=True)
     activity_comment = serializers.CharField(allow_blank=False,allow_null=True, trim_whitespace=True)
     assay_type = serializers.CharField(allow_blank=False,allow_null=False, trim_whitespace=True)
+
+
+class DataMatrixFieldsReadCountSerializer(serializers.ModelSerializer):
+    #
+    #calculated_pc_count = serializers.IntegerField(source='get_calculated_pc_count',read_only=True)
+    #pc_count = serializers.SerializerMethodField
+    #bioactivity_count = serializers.SerializerMethodField()
+
+    def get_calculated_pc_count():
+        serializer = serializers.IntegerField(source='datamatrixfields_set',read_only=True)
+        count = 0
+        for row in serializer.data:
+            if row['assay_type'] == DataMatrixFields.AssayType.calculated_pc:
+                count += 1
+        return count
+
+
+    class Meta:
+        model = DataMatrixFields
+        fields = ("id", "calculated_pc_count")    
+
+# Need to be optimized: now is doing one query per compound
+class NestedDataMatrixFiledsCountSerializer(serializers.ModelSerializer):
+    id_count = serializers.IntegerField(source='datamatrixfields_set.count',read_only=True)
+    #data_matrix_fields = DataMatrixFieldsReadSerializer(many=True, read_only=True, source='datamatrixfields_set')
+    calculated_pc_count = serializers.SerializerMethodField()
+    pc_count = serializers.SerializerMethodField()
+    bioactivity_count = serializers.SerializerMethodField()
+
+    def get_calculated_pc_count(self, data_matrix):
+        serializer = DataMatrixFieldsReadSerializer(data_matrix.datamatrixfields_set,many=True, read_only=True)
+        count = 0
+        for row in serializer.data:
+            if row['assay_type'] == DataMatrixFields.AssayType.calculated_pc:
+                count += 1
+        return {"calculated_pc_count":count}
+    
+    def get_pc_count(self, data_matrix):
+        serializer = DataMatrixFieldsReadSerializer(data_matrix.datamatrixfields_set,many=True, read_only=True)
+        count = 0
+        for row in serializer.data:
+            if row['assay_type'] == DataMatrixFields.AssayType.pc:
+                count += 1
+        return {"pc_count":count}
+
+    def get_bioactivity_count(self, data_matrix):
+        serializer = DataMatrixFieldsReadSerializer(data_matrix.datamatrixfields_set,many=True, read_only=True)
+        count = 0
+        for row in serializer.data:
+            if row['assay_type'] == DataMatrixFields.AssayType.bioactivity:
+                count += 1
+        return {"bioactivity_count":count}
+
+    class Meta:
+        model = DataMatrix
+        fields = ("id_count","calculated_pc_count","pc_count","bioactivity_count")
+
+
+class CompoundDataMatrixCountSerializer(serializers.ModelSerializer):
+    data_matrix = NestedDataMatrixFiledsCountSerializer(many=True, read_only=True, source='datamatrix_set')
+    class Meta:
+        model = Compound
+        fields = ("__all__")

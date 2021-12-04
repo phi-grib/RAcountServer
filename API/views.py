@@ -79,7 +79,7 @@ from .serializer import ProjectSerializer, UserSerializer, NodeSerializer, FullN
 from .serializer import StatusSerializer, ResourcesSerializer, ProblemDescriptionSerializer, InitialRAxHypothesisSerializer, SlugCompoundCASRNSSerializerNoValidation
 from .serializer import CompoundSerializer, DataMatrixSerializer, UnitTypeSerializer, UnitSerializer, CompoundCASRNSerializer, SlugCompoundCASRNSSerializer
 from .serializer import DataMatrixFieldsSerializer, DataMatrixFieldsReadSerializer, ChemblDataMatrixSerializer, CompoundDataMatrixSerializer, CompoundSerializer, TCompoundSerializer
-from .serializer import CompoundImageImageSerializer
+from .serializer import CompoundImageImageSerializer, CompoundDataMatrixCountSerializer
 from .permissions import IsProjectOwner
 
 
@@ -1359,11 +1359,16 @@ class DataMatrixHeatmapView(GenericAPIView, ListModelMixin):
         # Create rectangle for heatmap
         mysource = ColumnDataSource(dataframe)
         del dataframe
+
+        if assay_type == 'pc':
+            dummyw = 1024
+        else:
+            dummyw = w
         dummysource = ColumnDataSource({'Column':[0],'Row':[0]})
         p.rect(
             y='Column', 
             x='Row', 
-            width=w, 
+            width=dummyw, 
             height=1, 
             source=dummysource,
             line_color=None, 
@@ -2314,3 +2319,18 @@ class GenerateReportJson(APIView):
         filename = 'report_'+str(project)+'.docx'
         document.save(os.path.join(settings.MEDIA_ROOT_REPORTS,filename))
         return redirect(os.path.join(settings.MEDIA_URL_REPORTS,filename))
+
+
+
+@method_decorator((csrf_protect,ensure_csrf_cookie), name='dispatch')
+class Overview(ListAPIView):
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated,IsProjectOwner]
+    serializer_class = CompoundDataMatrixCountSerializer
+    lookup_field = 'project'
+    lookup_url_kwarg = 'project'
+    queryset = Compound.objects.all()
+
+    def get_queryset(self):
+        q = self.queryset.filter(**{self.lookup_field:self.kwargs[self.lookup_url_kwarg]})
+        return q.order_by('ra_type').order_by('int_id')
