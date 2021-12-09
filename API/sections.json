@@ -3,7 +3,7 @@
         {
             "step":1,
             "name":"Problem formulation",
-            "description": "Detailed description of the study objectives and expected outcomes, including expected used for decision making and acceptable uncertainty levels.",
+            "description": "Detailed description of the study, objectives and expected outcomes, including expected, used for decision making and acceptable uncertainty levels.",
             "subsections": [
                 {"step": null,
                 "name":"Scope",
