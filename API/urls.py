@@ -35,7 +35,7 @@ urlpatterns = [
     re_path(r'^RX/project/(?P<project>\d+)/compound/(?P<ra_type>(?:tc)|(?:sc))/(?P<int_id>\d+)/chembl_save/$', ChemblDataMatrixView.as_view()),
     re_path(r'^RX/project/(?P<project>\d+)/compound/(?P<ra_type>(?:tc)|(?:sc))/(?P<int_id>\d+)/datamatrix/$', DataMatrixFieldsView.as_view()),
     re_path(r'^RX/project/(?P<project>\d+)/compound/(?P<ra_type>(?:tc)|(?:sc))/datamatrix/(?P<assay_type>(bioactivity)|(pc))?$', DataMatrixView.as_view()),
-    re_path(r'^RX/project/(?P<project>\d+)/datamatrix/heatmap/(?P<json>json)?/?(?P<assay_type>(bioactivity)|(pc))?/?$', DataMatrixHeatmapView.as_view()),
+    re_path(r'^RX/project/(?P<project>\d+)/datamatrix/heatmap/(?P<json>json)?/?(?P<assay_type>(bioactivity)|(pc)|(similarity))?/?$', DataMatrixHeatmapView.as_view()),
     re_path(r'^RX/rdkit/similarity/set(/(?P<option>chemblstd))?/$', SetFingerPrintSimilarityFromSmilesView.as_view()),
     
     path("RX/node/<int:node>/resources/", Resources.as_view()),

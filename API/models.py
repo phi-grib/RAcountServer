@@ -110,11 +110,12 @@ class Compound(models.Model):
     smiles = models.TextField(null=False, blank=False)
     #cas_rn = models.CharField(null=True, blank=False, max_length=12, validators=[CASRNValidator()])
     name = models.TextField(null=True, blank=False)
-    project = models.ForeignKey(Projects, on_delete=models.CASCADE)
+    project = models.ForeignKey(Projects,null=False, on_delete=models.CASCADE)
     int_id = models.IntegerField(null=False, blank=False, validators=[MinValueValidator(1)])
     ra_type = models.IntegerField(null=False, blank=False, choices=RAType.choices)
     rdkit = models.TextField(null=True, blank=False, default=None)
     chembl_id = models.TextField(null=True, blank=False, default=None)
+    tanimoto = models.FloatField(null=False, default=1.0)
 
     class Meta:
         constraints = [

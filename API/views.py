@@ -33,7 +33,7 @@ from docx.shared import Inches, Pt, Cm
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.enum.section import WD_ORIENT
 
-
+from .rdkit import TCFingerPrint
 
 from .utils import order_queryset_list_by_values_list
 
@@ -525,6 +525,8 @@ compound_ra_type_abbreviation = {'tc' : Compound.RAType.target,
                                  'sc': Compound.RAType.source}
 compound_ra_type_code = {v: k for k, v in compound_ra_type_abbreviation.items()}
 
+
+
 @method_decorator((csrf_protect,ensure_csrf_cookie), name='dispatch')
 class CompoundView(GenericAPIView, CreateModelMixin, ListModelMixin):
     authentication_classes = [SessionAuthentication]
@@ -556,6 +558,8 @@ class CompoundView(GenericAPIView, CreateModelMixin, ListModelMixin):
         data = dict(request.data)
         #for key in data:
         #    data[key] = data[key][0]
+
+
         with transaction.atomic():
 
             last_int_id = self.get_queryset().aggregate(Max('int_id'))['int_id__max']
@@ -565,6 +569,8 @@ class CompoundView(GenericAPIView, CreateModelMixin, ListModelMixin):
                 new_int_id = last_int_id + 1
             data['int_id'] = new_int_id
             data['ra_type'] = db_ra_type
+            if ra_type == 'tc':
+                data['tanimoto'] = 1.0
             serializer = CompoundSerializer(data=data)
             serializer.is_valid(raise_exception=True)
             try:
@@ -575,12 +581,16 @@ class CompoundView(GenericAPIView, CreateModelMixin, ListModelMixin):
                     raise serializers.ValidationError(message)
                 else:
                     raise e
-            
-            qcompounds = Compound.objects.filter(ra_type=db_ra_type,project=project,int_id=new_int_id)
-            compound_id = qcompounds.values_list('id', flat=True)[0]
-            tserializer= TCompoundSerializer(data={'project':project,'compound':compound_id})
-            tserializer.is_valid(raise_exception=True)
-            tserializer.save()
+            if ra_type == 'tc':
+                qcompounds = Compound.objects.filter(ra_type=db_ra_type,project=project,int_id=new_int_id)
+                compound_id = qcompounds.values_list('id', flat=True)[0]
+                tserializer= TCompoundSerializer(data={'project':project,'compound':compound_id})
+                tserializer.is_valid(raise_exception=True)
+                tserializer.save()
+            else:
+                #compute tanimoto here
+
+                pass
 
             if data['cas_rn'] is None:
                 data['cas_rn'] = []
@@ -603,7 +613,25 @@ class CompoundCreateListView(GenericAPIView, CreateModelMixin, ListModelMixin):
     lookup_url_kwarg = 'project'
     
 
-    def _perform_create(self, serializer, data):
+    def _perform_create(self, serializer, data, request, project):
+            #compute tanimoto here (change serializer.validated_data and data)
+            projects = set([compound['project'] for compound in serializer.validated_data])
+            projects.add(project)
+            tc_fingerprint = TCFingerPrint()
+            TCs = Compound.objects.filter(project__in=projects,ra_type=compound_ra_type_abbreviation['tc'],int_id=1)
+            TCs = TCs.values('project','smiles')
+            for tc in TCs:
+                p = tc['project']
+                if tc_fingerprint.get(request, p) is None:
+                    tc_fingerprint.set(request,p,tc['smiles'])
+            for compound, compoundd in zip(serializer.validated_data, data):
+                tanimoto = tc_fingerprint.similarity_from_smiles(request, compound['project'].id, compound['smiles'])
+                compound['tanimoto'] = tanimoto
+                compoundd['tanimoto'] = tanimoto
+            for row in serializer.validated_data:
+                row['project'] = row['project'].pk
+            serializer = CompoundSerializer(data=serializer.validated_data, many=True)
+            serializer.is_valid(raise_exception=True)
             try:
                 self.perform_create(serializer)
             except IntegrityError as e:
@@ -619,7 +647,7 @@ class CompoundCreateListView(GenericAPIView, CreateModelMixin, ListModelMixin):
                         row['project'] = row['project'].pk
                     serializer = CompoundSerializer(data=serializer.validated_data, many=True)
                     serializer.is_valid(raise_exception=True)
-                    self._perform_create(serializer,data)
+                    self._perform_create(serializer, data, request, project)
                 elif str(e) == 'UNIQUE constraint failed: API_compound.project_id, API_compound.chembl_id':
                     chembl_id_list = [compound['chembl_id'] for compound in serializer.validated_data]
                     q_already_saves_compounds_chembl_id = Compound.objects.filter(project= self.kwargs['project'],chembl_id__in=chembl_id_list).values_list('chembl_id',flat=True)
@@ -632,7 +660,7 @@ class CompoundCreateListView(GenericAPIView, CreateModelMixin, ListModelMixin):
                        row['project'] = row['project'].pk
                     serializer = CompoundSerializer(data=serializer.validated_data, many=True)
                     serializer.is_valid(raise_exception=True)
-                    self._perform_create(serializer,data)
+                    self._perform_create(serializer, data, request, project)
                 else:
                     raise e
     def get_queryset(self):
@@ -678,7 +706,7 @@ class CompoundCreateListView(GenericAPIView, CreateModelMixin, ListModelMixin):
                 counter += 1
             serializer = CompoundSerializer(data=data, many=True)
             serializer.is_valid(raise_exception=True)
-        self._perform_create(serializer, data)
+        self._perform_create(serializer, data, request, project)
         with transaction.atomic():
             qcompounds = Compound.objects.filter(ra_type=db_ra_type,project=project,int_id__in=int_id_list)
             compound_ids = qcompounds.order_by('int_id').values_list('id', flat=True)
@@ -732,7 +760,19 @@ class CompoundByIntIdView(RetrieveUpdateDestroyAPIView):
         partial = kwargs.pop('partial', False)
         instance = self.get_object()
         data = dict(request.data)
-        data['ra_type'] = self.kwargs['ra_type']
+        ra_type = self.kwargs['ra_type']
+        data['ra_type'] = ra_type
+        project = self.kwargs['project']
+        data['project'] = project
+        data['int_id'] = self.kwargs['int_id']
+        if data['ra_type'] == compound_ra_type_abbreviation['tc']:
+            data['tanimoto'] = 1.0
+        else:
+            tc_fingerprint = TCFingerPrint()
+            tc = Compound.objects.get(project=project,ra_type=compound_ra_type_abbreviation['tc'],int_id=1)
+            if tc_fingerprint.get(request, project) is None:
+                tc_fingerprint.set(request,project,tc.smiles)
+            data['tanimoto'] = tc_fingerprint.similarity_from_smiles(request, project, tc.smiles)
         compound_id = instance.pk
         with transaction.atomic():
             CompoundCASRN.objects.filter(compound=compound_id).delete()
@@ -742,7 +782,7 @@ class CompoundByIntIdView(RetrieveUpdateDestroyAPIView):
                 casrn_serializer = CompoundCASRNSerializer(many=True, data=[{"compound":compound_id, "cas_rn": casrn} for casrn in data['cas_rn']])
                 casrn_serializer.is_valid(raise_exception=True)
                 casrn_serializer.save()
-            serializer = self.get_serializer(instance, data=request.data, partial=partial)
+            serializer = self.get_serializer(instance, data=data, partial=partial)
             serializer.is_valid(raise_exception=True)
             self.perform_update(serializer)
             old_ra_type = instance.ra_type
@@ -1091,6 +1131,18 @@ class DataMatrixHeatmapView(GenericAPIView, ListModelMixin):
     lookup_field = 'project'
     lookup_url_kwarg = 'project'
     queryset = Compound.objects.all()
+
+    def get_serializer_class(self):
+        assert self.serializer_class is not None, (
+            "'%s' should either include a `serializer_class` attribute, "
+            "or override the `get_serializer_class()` method."
+            % self.__class__.__name__
+        )
+        if 'assay_type' in self.kwargs:
+            if self.kwargs['assay_type'] == 'similarity':
+                return CompoundSerializer
+
+        return self.serializer_class
     
     def get_queryset(self):
         # The first thing that get(), post(), put() and delete() methods 
@@ -1101,6 +1153,19 @@ class DataMatrixHeatmapView(GenericAPIView, ListModelMixin):
         self.kwargs['project'] = int(self.kwargs['project'])
         return super().get_queryset().filter(project=self.kwargs['project']).order_by('-ra_type','-int_id')
     
+    def _setup_y_values(self, compound, y_values, y_value_max_size):
+        if compound['name'] is None:
+            name = ''
+        else:
+            name = compound['name']
+        comp = compound_ra_type_code[compound['ra_type']] + ':#' + str(compound['int_id'])+': '+name
+        y_values.append(comp)
+        comp_len = len(comp)
+        if y_value_max_size < comp_len:
+            y_value_max_size = comp_len
+        return y_value_max_size
+
+
     def get(self,request, project, json, assay_type='bioactivity'):
         
         assay_types = {
@@ -1111,6 +1176,9 @@ class DataMatrixHeatmapView(GenericAPIView, ListModelMixin):
             'pc': {
                 'value':[DataMatrixFields.AssayType.calculated_pc, DataMatrixFields.AssayType.pc],
                 'title':" Min-max normalized Physicochemical property",
+            },
+            'similarity': {
+                'title':"Tanimoto similarity (Morgan fingerprints)",
             }
         }
         
@@ -1147,109 +1215,118 @@ class DataMatrixHeatmapView(GenericAPIView, ListModelMixin):
         description_dict_list = []
         name_dict_list = []
         x_value_2_assay_id_dict = {}
-        colums_dict = {'x_value': [],'Compound': [],'Assay_ID': [], 'value': [], 'value_unit': [], 'description':[],'name':[], 'alpha2': []}
+        if assay_type != 'similarity':
+            colums_dict = {'x_value': [],'Compound': [],'Assay_ID': [], 'value': [], 'value_unit': [], 'description':[],'name':[], 'alpha2': []}
+        else:
+            colums_dict = {'x_value': [],'Compound': [], 'value': []}
+
         i = 0
         y_value_max_size = 0
         for compound in data:
             # if i > 30 and compound_ra_type_code[compound['ra_type']] == 'sc':
             #     continue
-            if len(compound['data_matrix']) > 0:
-                if compound['name'] is None:
-                    name = ''
-                else:
-                    name = compound['name']
-                comp = compound_ra_type_code[compound['ra_type']] + ':#' + str(compound['int_id'])+': '+name
-                y_values.append(comp)
-                comp_len = len(comp)
-                if y_value_max_size < comp_len:
-                    y_value_max_size = comp_len
-                values_dict = {}
-                values_unit_dict = {}
-                description_dict = {}
-                name_dict = {}
+            values_dict = {}
+            values_unit_dict = {}
+            description_dict = {}
+            name_dict = {}
+            if assay_type != 'similarity':
                 if len(compound['data_matrix']) > 0:
-                    for field in compound['data_matrix'][0]['data_matrix_fields']:
-                        if field['assay_type'] not in assay_types[assay_type]['value']:
-                            continue
-                        if assay_type == 'pc':
-                            x_value = field['name']+' ('+field['assay_id']+')'
-                        else:
-                            x_value = field['assay_id']
-                        x_values_set.add(x_value)
-                        x_value_2_assay_id_dict[x_value] = field['assay_id']
-                        description_dict[field['assay_id']] = field['description']
-                        name_dict[field['assay_id']] = field['name']
-                        if (field['std_value'] is None):
-                            if field['value'] is None:
-                                value = None
-                                unit = None
+                    y_value_max_size = self._setup_y_values(compound, y_values, y_value_max_size)
+                    if len(compound['data_matrix']) and assay_type != 'similarity':
+                        for field in compound['data_matrix'][0]['data_matrix_fields']:
+                            if field['assay_type'] not in assay_types[assay_type]['value']:
+                                continue
+                            if assay_type == 'pc':
+                                x_value = field['name']+' ('+field['assay_id']+')'
                             else:
-                                value = field['value']
-                                unit = field['unit']
+                                x_value = field['assay_id']
+                            x_values_set.add(x_value)
+                            x_value_2_assay_id_dict[x_value] = field['assay_id']
+                            description_dict[field['assay_id']] = field['description']
+                            name_dict[field['assay_id']] = field['name']
+                            if (field['std_value'] is None):
+                                if field['value'] is None:
+                                    value = None
+                                    unit = None
+                                else:
+                                    value = field['value']
+                                    unit = field['unit']
 
-                        else:
-                            value = field['std_value']
-                            unit = field['std_unit']
-                        
-                        if value is None:
-                            if field['text_value'] is None:
-                                values_dict[field['assay_id']] = 'N/A'
-                                values_unit_dict[field['assay_id']] = 'N/A'
                             else:
-                                values_dict[field['assay_id']] = field['text_value']
-                                values_unit_dict[field['assay_id']] = field['text_value']
-                        else:
-                            if unit is None:
-                                unit_suffix = ''
+                                value = field['std_value']
+                                unit = field['std_unit']
+                            
+                            if value is None:
+                                if field['text_value'] is None:
+                                    values_dict[field['assay_id']] = 'N/A'
+                                    values_unit_dict[field['assay_id']] = 'N/A'
+                                else:
+                                    values_dict[field['assay_id']] = field['text_value']
+                                    values_unit_dict[field['assay_id']] = field['text_value']
                             else:
-                                unit_suffix = ' ' + unit
-                            values_dict[field['assay_id']] = value
-                            values_unit_dict[field['assay_id']] = str(value) + unit_suffix
-                    values_dict_list.append(values_dict)
-                    values_unit_dict_list.append(values_unit_dict)
-                    description_dict_list.append(description_dict)
-                    name_dict_list.append(name_dict)
+                                if unit is None:
+                                    unit_suffix = ''
+                                else:
+                                    unit_suffix = ' ' + unit
+                                values_dict[field['assay_id']] = value
+                                values_unit_dict[field['assay_id']] = str(value) + unit_suffix
+                        values_dict_list.append(values_dict)
+                        values_unit_dict_list.append(values_unit_dict)
+                        description_dict_list.append(description_dict)
+                        name_dict_list.append(name_dict)
+            else:
+                y_value_max_size = self._setup_y_values(compound, y_values, y_value_max_size)
+                x_value = 'Similarity'
+                x_values_set.add(x_value)
+                values_dict_list.append({x_value : round(compound['tanimoto'],2)})
             i += 1
              
         del data
         x_values = sorted(list(x_values_set))
         compound_with_data_y_values = []
-        for comp, values_dict, values_unit_dict, description_dict, name_dict in zip(y_values,
-                values_dict_list, values_unit_dict_list, description_dict_list, name_dict_list):
-            colums_dict_comp = dict(colums_dict)
-            assay_counter = len(set(values_dict.keys()).intersection(set([x_value_2_assay_id_dict[x_value] for x_value in x_values])))
-            if assay_counter > 0:
-                for x_value in x_values:
-                    assay_id = x_value_2_assay_id_dict[x_value]
-                    if assay_id in values_dict:
-                        z_value = values_dict[assay_id]
-                        z_value_unit = values_unit_dict[assay_id]
-                        description = escape(description_dict[assay_id])
-                        description = escape(description_dict[assay_id])
-                        name = name_dict[assay_id]
-                        assay_counter += 1
-                    else:
-                        z_value = None
-                    if z_value is None:
-                        z_value = 'N/A'
-                        z_value_unit = 'N/A'
-                        description = 'N/A'
-                        name = 'N/A'
+        if assay_type != 'similarity':
+            for comp, values_dict, values_unit_dict, description_dict, name_dict in zip(y_values,
+                    values_dict_list, values_unit_dict_list, description_dict_list, name_dict_list):
+                colums_dict_comp = dict(colums_dict)
+                assay_counter = len(set(values_dict.keys()).intersection(set([x_value_2_assay_id_dict[x_value] for x_value in x_values])))
+                if assay_counter > 0:
+                    for x_value in x_values:
+                        assay_id = x_value_2_assay_id_dict[x_value]
+                        if assay_id in values_dict:
+                            z_value = values_dict[assay_id]
+                            z_value_unit = values_unit_dict[assay_id]
+                            description = escape(description_dict[assay_id])
+                            description = escape(description_dict[assay_id])
+                            name = name_dict[assay_id]
+                            assay_counter += 1
+                        else:
+                            z_value = None
+                        if z_value is None:
+                            z_value = 'N/A'
+                            z_value_unit = 'N/A'
+                            description = 'N/A'
+                            name = 'N/A'
 
-                    if isinstance(z_value, str) and z_value != 'N/A' and assay_id != 'molecular_species':
-                        alpha2 = 1.0
-                    else:
-                        alpha2 = 0
-                    colums_dict['x_value'].append(x_value)
-                    colums_dict['Compound'].append(comp)
-                    colums_dict['Assay_ID'].append(assay_id)
-                    colums_dict['value'].append(z_value)
-                    colums_dict['value_unit'].append(z_value_unit)
-                    colums_dict['description'].append(description)
-                    colums_dict['name'].append(name)
-                    colums_dict['alpha2'].append(alpha2)
+                        if isinstance(z_value, str) and z_value != 'N/A' and assay_id != 'molecular_species':
+                            alpha2 = 1.0
+                        else:
+                            alpha2 = 0
+                        colums_dict['x_value'].append(x_value)
+                        colums_dict['Compound'].append(comp)
+                        colums_dict['Assay_ID'].append(assay_id)
+                        colums_dict['value'].append(z_value)
+                        colums_dict['value_unit'].append(z_value_unit)
+                        colums_dict['description'].append(description)
+                        colums_dict['name'].append(name)
+                        colums_dict['alpha2'].append(alpha2)
+                    compound_with_data_y_values.append(comp)
+        else:
+            for comp, values_dict, in zip(y_values, values_dict_list):
+                x_value = list(values_dict.keys())[0]
+                colums_dict['x_value'].append(x_value)
+                colums_dict['Compound'].append(comp)
+                colums_dict['value'].append(values_dict[x_value])
                 compound_with_data_y_values.append(comp)
-        
         del values_dict_list
         del values_unit_dict_list
         del description_dict_list
@@ -1258,38 +1335,43 @@ class DataMatrixHeatmapView(GenericAPIView, ListModelMixin):
         dataframe = pd.DataFrame(colums_dict)
         
         del colums_dict
-        
-        dataframe['fscaled_value'] = None
-        for assay_id in [x_value_2_assay_id_dict[x_value] for x_value in x_values]:
-            idxs = np.where(dataframe['Assay_ID'] == assay_id)[0]
-            if dataframe.loc[idxs,'alpha2'].any() != 0 or assay_id == 'molecular_species':
-                dataframe.loc[idxs,'fscaled_value'] = 'N/A'
-                if assay_id == 'molecular_species':
-                    array = dataframe.loc[idxs,'value']
-                    for species, value in chembl_molecular_species.items():
-                        if species is None:
-                            array.replace(to_replace='None',value=value,regex=False,inplace=True)
-                            array.fillna(value=value,inplace=True)
-                        else:
-                            array.replace(to_replace=species,value=value,regex=False,inplace=True)
-                    dataframe.loc[idxs,'fscaled_value'] = array
-                continue
-            array = dataframe.loc[idxs,'value'].replace('N/A', np.nan).to_numpy(dtype=np.float32)
-            # array_min = np.nanmin(array)
-            array_min = 0
-            array_max = np.nanmax(np.abs(array))
-            array_max_min = array_max - array_min
-            if array_max_min == 0:
-                dataframe.loc[idxs[dataframe.loc[idxs,'value'] != 'N/A'],'fscaled_value'] = 0.0
-            else:
-                array_fscaled = (array - array_min)*1/array_max_min
-                dataframe.loc[idxs,'fscaled_value'] = array_fscaled
-        dataframe['fscaled_value'] = dataframe['fscaled_value'].replace(np.nan,'N/A')
+        if assay_type != 'similarity':
+            dataframe['fscaled_value'] = None
+            for assay_id in [x_value_2_assay_id_dict[x_value] for x_value in x_values]:
+                idxs = np.where(dataframe['Assay_ID'] == assay_id)[0]
+                if dataframe.loc[idxs,'alpha2'].any() != 0 or assay_id == 'molecular_species':
+                    dataframe.loc[idxs,'fscaled_value'] = 'N/A'
+                    if assay_id == 'molecular_species':
+                        array = dataframe.loc[idxs,'value']
+                        for species, value in chembl_molecular_species.items():
+                            if species is None:
+                                array.replace(to_replace='None',value=value,regex=False,inplace=True)
+                                array.fillna(value=value,inplace=True)
+                            else:
+                                array.replace(to_replace=species,value=value,regex=False,inplace=True)
+                        dataframe.loc[idxs,'fscaled_value'] = array
+                    continue
+                array = dataframe.loc[idxs,'value'].replace('N/A', np.nan).to_numpy(dtype=np.float32)
+                # array_min = np.nanmin(array)
+                array_min = 0
+                array_max = np.nanmax(np.abs(array))
+                array_max_min = array_max - array_min
+                if array_max_min == 0:
+                    dataframe.loc[idxs[dataframe.loc[idxs,'value'] != 'N/A'],'fscaled_value'] = 0.0
+                else:
+                    array_fscaled = (array - array_min)*1/array_max_min
+                    dataframe.loc[idxs,'fscaled_value'] = array_fscaled
+            dataframe['fscaled_value'] = dataframe['fscaled_value'].replace(np.nan,'N/A')
+
         if len(x_values) < 1 or len(y_values) < 1:
             return Response({"item": None,'heatmap_div_id': None,'status': 'No data'})
+        if assay_type == 'similarity':
+            map_color_field = 'value'
+        else:
+            map_color_field = 'fscaled_value'
         #Map colors
         mapper = LinearColorMapper(palette=bokeh.palettes.RdYlBu[10], low = 0,
-                         high = max([i for i in dataframe['fscaled_value'].to_list() if isinstance(i, numbers.Number) and not isinstance(i, bool)]))
+                         high = max([i for i in dataframe[map_color_field].to_list() if isinstance(i, numbers.Number) and not isinstance(i, bool)]))
     
         y_values = compound_with_data_y_values
         # Define a figure
@@ -1302,7 +1384,7 @@ class DataMatrixHeatmapView(GenericAPIView, ListModelMixin):
         cw=275
         ch=30
         #h=int(((w-cw)*len(df_t.index)/len(df_t.columns))+ch)
-        w= 760
+        w= 1024
         h= 132
         if (len(y_values) < 6 or len(x_values) < 6):
             min_border_right=100
@@ -1360,10 +1442,12 @@ class DataMatrixHeatmapView(GenericAPIView, ListModelMixin):
         mysource = ColumnDataSource(dataframe)
         del dataframe
 
-        if assay_type == 'pc':
+
+        if assay_type == 'pc' or assay_type == 'similarity':
             dummyw = 1024
         else:
             dummyw = w
+
         dummysource = ColumnDataSource({'Column':[0],'Row':[0]})
         p.rect(
             y='Column', 
@@ -1383,6 +1467,8 @@ class DataMatrixHeatmapView(GenericAPIView, ListModelMixin):
             nonselection_line_color=None
 
         )
+
+
         p.rect(
             y='Compound', 
             x='x_value', 
@@ -1390,44 +1476,45 @@ class DataMatrixHeatmapView(GenericAPIView, ListModelMixin):
             height=1, 
             source=mysource,
             line_color=None, 
-            fill_color=transform('fscaled_value', mapper),
+            fill_color=transform(map_color_field, mapper),
 
             # set visual properties for selected glyphs
             selection_line_color="crimson",
-            selection_fill_color=transform('fscaled_value', mapper),
+            selection_fill_color=transform(map_color_field, mapper),
             # set visual properties for non-selected glyphs
             nonselection_fill_alpha=1,
-            nonselection_fill_color=transform('fscaled_value', mapper),
+            nonselection_fill_color=transform(map_color_field, mapper),
             nonselection_line_color=None
 
             )
-        
-        p.rect(
-            y='Compound', 
-            x='x_value', 
-            width=0.9, 
-            height=1, 
-            source=mysource,
-            line_color=None, 
-            fill_color='black',
-            fill_alpha='alpha2',
-            
-            # set visual properties for selected glyphs
-            selection_line_color="crimson",
-            selection_fill_color='black',
-            selection_fill_alpha='alpha2',
-            # set visual properties for non-selected glyphs
-            nonselection_fill_alpha='alpha2',
-            nonselection_fill_color='black',
-            nonselection_line_color=None
+        if assay_type != 'similarity':
+            p.rect(
+                y='Compound', 
+                x='x_value', 
+                width=0.9, 
+                height=1, 
+                source=mysource,
+                line_color=None, 
+                fill_color='black',
+                fill_alpha='alpha2',
+                
+                # set visual properties for selected glyphs
+                selection_line_color="crimson",
+                selection_fill_color='black',
+                selection_fill_alpha='alpha2',
+                # set visual properties for non-selected glyphs
+                nonselection_fill_alpha='alpha2',
+                nonselection_fill_color='black',
+                nonselection_line_color=None
 
-            )
+                )
 
         p.title.text = assay_types[assay_type]['title']
         p.title.align = "left"
         p.title.text_font_size = "25px"
         p.add_layout(Title(text="Compounds", align="right"), "left")
-        p.add_layout(Title(text="Assays", align="left"), "above")
+        if assay_type != 'similarity':
+            p.add_layout(Title(text="Assays", align="left"), "above")
 
         # Add legend
 
@@ -1465,16 +1552,21 @@ class DataMatrixHeatmapView(GenericAPIView, ListModelMixin):
             </div>
         """
         
-        
-        #Hover tool:
-        p.select_one(HoverTool).tooltips = [
-         ('Compound', '@Compound'),
-         ('Assay ID', '@Assay_ID'),
-         ('Value', '@value_unit'),
-         ('Description','@description{safe}'),
-         ('Assay type', '@name')
-        ]
-        
+        if assay_type != 'similarity':
+            #Hover tool:
+            p.select_one(HoverTool).tooltips = [
+            ('Compound', '@Compound'),
+            ('Assay ID', '@Assay_ID'),
+            ('Value', '@value_unit'),
+            ('Description','@description{safe}'),
+            ('Assay type', '@name')
+            ]
+        else:
+            p.select_one(HoverTool).tooltips = [
+            ('Compound', '@Compound'),
+            ('Value', '@value{0.00}'),
+            ]
+            
         #p.select_one(HoverTool).tooltips = TOOLTIPS
     
         
