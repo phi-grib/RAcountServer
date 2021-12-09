@@ -2361,7 +2361,7 @@ class GenerateReportJson(APIView):
                     if len(tc_data_matrix_data) > 0:
                         if 'data_matrix' in tc_data_matrix_data[0]:
                             if len(tc_data_matrix_data[0]['data_matrix']) > 0:
-                                if 'data_matrix' in tc_data_matrix_data[0]['data_matrix'][0]:
+                                if 'data_matrix_fields' in tc_data_matrix_data[0]['data_matrix'][0]:
                                     tc_data = tc_data_matrix_data[0]['data_matrix'][0]['data_matrix_fields']
                                     tc_data.sort(key=lambda x: x['assay_id'])
                                     tc_data.sort(key=lambda x: x['name'])
