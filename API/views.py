@@ -2053,10 +2053,23 @@ class GenerateReportDocx(APIView):
                 if section['name'] == "Appendix: TC Physicochemical, ADME and Toxicity data":
                     tc_data_matrix_serializer = CompoundDataMatrixSerializer(Compound.objects.filter(project=project,ra_type=Compound.RAType.target), many=True)
                     tc_data_matrix_data = tc_data_matrix_serializer.data
-                    tc_data = tc_data_matrix_data[0]['data_matrix'][0]['data_matrix_fields']
-                    tc_data.sort(key=lambda x: x['assay_id'])
-                    tc_data.sort(key=lambda x: x['name'])
-                    tc_data.sort(key=lambda x: x['assay_type'])
+                    tc_data = None
+                    if len(tc_data_matrix_data) > 0:
+                        if 'data_matrix' in tc_data_matrix_data[0]:
+                            if len(tc_data_matrix_data[0]['data_matrix']) > 0:
+                                if 'data_matrix_fields' in tc_data_matrix_data[0]['data_matrix'][0]:
+                                    tc_data = tc_data_matrix_data[0]['data_matrix'][0]['data_matrix_fields']
+                                    tc_data.sort(key=lambda x: x['assay_id'])
+                                    tc_data.sort(key=lambda x: x['name'])
+                                    tc_data.sort(key=lambda x: x['assay_type'])
+                                else:
+                                    continue
+                            else:
+                                continue
+                        else:
+                            continue
+                    else:
+                        continue
                     data = {'tc_data': tc_data}
 
             self._recursive_sections(document, section['subsections'], data, heading=2)
