@@ -1841,14 +1841,19 @@ class GenerateReportDocx(APIView):
                 new_parser = self.CustomHtmlToDocx(heading_starting_level=heading-1,styles=document.styles)
                 new_parser.add_html_to_document(self._clean_ckeditor_html(data[section['field']]), document)
             elif section['type'] == "compound":
-                table = document.add_table(rows=1, cols=4)
+                table = document.add_table(rows=1, cols=5)
                 col0 = table.columns[0]
-                col0.width = Cm(1.5)
+                col0.width = Cm(1)
+                col3 = table.columns[3]
+                col3.width = Cm(4)
+                col4 = table.columns[4]
+                col4.width = Cm(2)
                 hdr_cells = table.rows[0].cells
                 hdr_cells[0].text = '#'
                 hdr_cells[1].text = 'CAS RN'
                 hdr_cells[2].text = 'ChEMBL ID'
                 hdr_cells[3].text = 'Structure'
+                hdr_cells[4].text = 'Tanimoto'
                 for compound in data[section['field']]:
                     srcs = glob(os.path.join(settings.MEDIA_ROOT_REPORTS,'images','compound_img_'+str(compound['id'])+'*'))
                     row_cells = table.add_row().cells
@@ -1861,6 +1866,7 @@ class GenerateReportDocx(APIView):
                         run.add_picture(srcs[0],height=1200000,width=1200000)
                     else:
                         row_cells[3].text = ''
+                    row_cells[4].text = "{t:.2f}".format(t=compound['tanimoto'])
             elif section['type'] == "datatable":
                 document.add_section()
                 docx_section = document.sections[-1]
