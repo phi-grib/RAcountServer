@@ -222,7 +222,6 @@ class ManageNodes(GenericAPIView,UpdateModelMixin,CreateModelMixin):
             serializer.is_valid(raise_exception=True)
             self.perform_create(serializer)
             headers = self.get_success_headers(serializer.data)
-            #return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
         return JsonResponse({'Ok':'ok'}, status=status.HTTP_200_OK)
 
@@ -345,7 +344,7 @@ class InitialRAxHypothesisView(GenericAPIView,CreateModelMixin,RetrieveModelMixi
     
 @method_decorator((csrf_protect,ensure_csrf_cookie), name='dispatch')
 class User(APIView):
-    # If the user is already logged in, it responds a JSON with user data and the CSRF token.
+    # If the user is already logged in, it responds with a JSON with user data and the CSRF token.
     # Otherwise, only responds a JSON with the CSRF token for the POST method.
     def get(self,request,logout):
         respdata = {}
@@ -537,7 +536,7 @@ class CompoundView(GenericAPIView, CreateModelMixin, ListModelMixin):
     
     def get_queryset(self):
         # The first thing that get(), post(), put() and delete() methods 
-        # of a GenericView from Django REST framework is to call get_queryset()
+        # of a GenericView from Django REST framework does is to call get_queryset()
         # directly or indirectly (the first thing that get_objects() method does
         # is calling get_queryset()). This way we are we are overwriting 
         # self.kwargs before they are used.
@@ -556,8 +555,6 @@ class CompoundView(GenericAPIView, CreateModelMixin, ListModelMixin):
     def post(self, request, project, ra_type):
         db_ra_type = compound_ra_type_abbreviation[ra_type]
         data = dict(request.data)
-        #for key in data:
-        #    data[key] = data[key][0]
 
 
         with transaction.atomic():
@@ -682,7 +679,7 @@ class CompoundCreateListView(GenericAPIView, CreateModelMixin, ListModelMixin):
     def get(self, request, project, ra_type):
         return self.list(request)
     def post(self, request, project, ra_type):
-        #debug
+
         if ra_type == 'sc':
             Compound.objects.filter(ra_type=1,project=project).delete()
         
@@ -740,7 +737,7 @@ class CompoundByIntIdView(RetrieveUpdateDestroyAPIView):
     
     def get_queryset(self):
         # The first thing that get(), post(), put() and delete() methods 
-        # of a GenericView from Django REST framework is to call get_queryset()
+        # of a GenericView from Django REST framework does is to call get_queryset()
         # directly or indirectly (the first thing that get_objects() method does
         # is calling get_queryset()). This way we are we are overwriting 
         # self.kwargs before they are used.
@@ -844,7 +841,7 @@ class ChemblDataMatrixView(APIView):
     permission_classes = [IsAuthenticated,IsProjectOwner]
     def get(self, request, project, ra_type, int_id, compound_init_id):
         # The first thing that get(), post(), put() and delete() methods 
-        # of a GenericView from Django REST framework is to call get_queryset()
+        # of a GenericView from Django REST framework does is to call get_queryset()
         # directly or indirectly (the first thing that get_objects() method does
         # is calling get_queryset()). This way we are we are overwriting 
         # self.kwargs before they are used.
@@ -879,7 +876,7 @@ class ChemblDataMatrixView(APIView):
         
         
         # The first thing that get(), post(), put() and delete() methods 
-        # of a GenericView from Django REST framework is to call get_queryset()
+        # of a GenericView from Django REST framework does is to call get_queryset()
         # directly or indirectly (the first thing that get_objects() method does
         # is calling get_queryset()). This way we are we are overwriting 
         # self.kwargs before they are used.
@@ -1079,7 +1076,7 @@ class DataMatrixFieldsView(ListAPIView):
     
     def get_queryset(self):
         # The first thing that get(), post(), put() and delete() methods 
-        # of a GenericView from Django REST framework is to call get_queryset()
+        # of a GenericView from Django REST framework does is to call get_queryset()
         # directly or indirectly (the first thing that get_objects() method does
         # is calling get_queryset()). This way we are we are overwriting 
         # self.kwargs before they are used.
@@ -1110,7 +1107,7 @@ class DataMatrixView(ListAPIView):
     
     def get_queryset(self):
         # The first thing that get(), post(), put() and delete() methods 
-        # of a GenericView from Django REST framework is to call get_queryset()
+        # of a GenericView from Django REST framework does is to call get_queryset()
         # directly or indirectly (the first thing that get_objects() method does
         # is calling get_queryset()). This way we are we are overwriting 
         # self.kwargs before they are used.
@@ -1146,7 +1143,7 @@ class DataMatrixHeatmapView(GenericAPIView, ListModelMixin):
     
     def get_queryset(self):
         # The first thing that get(), post(), put() and delete() methods 
-        # of a GenericView from Django REST framework is to call get_queryset()
+        # of a GenericView from Django REST framework does is to call get_queryset()
         # directly or indirectly (the first thing that get_objects() method does
         # is calling get_queryset()). This way we are we are overwriting 
         # self.kwargs before they are used.
@@ -1182,16 +1179,7 @@ class DataMatrixHeatmapView(GenericAPIView, ListModelMixin):
             }
         }
         
-        # assay_types = {
-        #     'bioactivity': {
-        #         'value':[DataMatrixFields.AssayType.bioactivity],
-        #         'title': None,
-        #     },
-        #     'pc': {
-        #         'value':[DataMatrixFields.AssayType.calculated_pc, DataMatrixFields.AssayType.pc],
-        #         'title': None,
-        #     }
-        # }
+
         
         chembl_molecular_species = {'ACID':1.0, 'NEUTRAL':0.45, 'ZWITTERION':0.65, 'BASE':0.0,None:np.nan,'N/A':np.nan}
         
@@ -1223,8 +1211,7 @@ class DataMatrixHeatmapView(GenericAPIView, ListModelMixin):
         i = 0
         y_value_max_size = 0
         for compound in data:
-            # if i > 30 and compound_ra_type_code[compound['ra_type']] == 'sc':
-            #     continue
+
             values_dict = {}
             values_unit_dict = {}
             description_dict = {}
@@ -1352,7 +1339,6 @@ class DataMatrixHeatmapView(GenericAPIView, ListModelMixin):
                         dataframe.loc[idxs,'fscaled_value'] = array
                     continue
                 array = dataframe.loc[idxs,'value'].replace('N/A', np.nan).to_numpy(dtype=np.float32)
-                # array_min = np.nanmin(array)
                 array_min = 0
                 array_max = np.nanmax(np.abs(array))
                 array_max_min = array_max - array_min
@@ -1448,6 +1434,7 @@ class DataMatrixHeatmapView(GenericAPIView, ListModelMixin):
         else:
             dummyw = w
 
+        # Dummy rectangle for fixing main title cut issues
         dummysource = ColumnDataSource({'Column':[0],'Row':[0]})
         p.rect(
             y='Column', 
@@ -1955,8 +1942,7 @@ class GenerateReportDocx(APIView):
                 'value':[DataMatrixFields.AssayType.calculated_pc],
                 'title':" Min-max normalized Physicochemical property",
             }
-        } #, DataMatrixFields.AssayType.pc
-
+        }
         step2node_seq = {1: 1, 2: 2, 3: 4, 4: 5, 5: 6}
 
         for section in sections_dict['sections']:
@@ -2003,8 +1989,6 @@ class GenerateReportDocx(APIView):
                     data['pc'] = {'Compound':[]}
                     i = 0
                     for compound in data_matrix_data:
-                        # if i > 10 and compound_ra_type_code[compound['ra_type']] == 'sc':
-                        #     continue
                         if len(compound['data_matrix']) > 0:
                             for field in compound['data_matrix'][0]['data_matrix_fields']:
                                 if field['assay_type'] not in assay_types['pc']['value']:
@@ -2018,8 +2002,6 @@ class GenerateReportDocx(APIView):
                             i +=1
                     i = 0
                     for compound in data_matrix_data:
-                        # if i > 10 and compound_ra_type_code[compound['ra_type']] == 'sc':
-                        #     continue
                         if len(compound['data_matrix']) > 0:
                             if compound['name'] is None:
                                 name = ''
@@ -2077,43 +2059,6 @@ class GenerateReportDocx(APIView):
 
             self._recursive_sections(document, section['subsections'], data, heading=2)
 
-
-        # p = document.add_paragraph('A plain paragraph having some ')
-        # p.add_run('bold').bold = True
-        # p.add_run(' and some ')
-        # p.add_run('italic.').italic = True
-
-        # document.add_heading('Heading, level 1', level=1)
-        # document.add_paragraph('Intense quote', style='Intense Quote')
-
-        # document.add_paragraph(
-        #     'first item in unordered list', style='List Bullet'
-        # )
-        # document.add_paragraph(
-        #     'first item in ordered list', style='List Number'
-        # )
-
-        # document.add_picture(os.path.join(settings.MEDIA_ROOT_REPORTS,'monty-truth.png'), width=Inches(1.25))
-
-        # records = (
-        #     (3, '101', 'Spam'),
-        #     (7, '422', 'Eggs'),
-        #     (4, '631', 'Spam, spam, eggs, and spam')
-        # )
-
-        # table = document.add_table(rows=1, cols=3)
-        # hdr_cells = table.rows[0].cells
-        # hdr_cells[0].text = 'Qty'
-        # hdr_cells[1].text = 'Id'
-        # hdr_cells[2].text = 'Desc'
-        # for qty, id, desc in records:
-        #     row_cells = table.add_row().cells
-        #     row_cells[0].text = str(qty)
-        #     row_cells[1].text = id
-        #     row_cells[2].text = desc
-
-        # document.add_page_break()
-
         os.makedirs(settings.MEDIA_ROOT_REPORTS,mode=settings.DIRECTORY_DOWNLOAD_PERMISSIONS,exist_ok=True)
         filename = 'report_'+str(project)+'.docx'
         document.save(os.path.join(settings.MEDIA_ROOT_REPORTS,filename))
@@ -2160,100 +2105,9 @@ class GenerateReportJson(APIView):
                 section_title = section['name']
             else:
                 section_title = str(section['step'])+'.'+section['name']
-            # if section['type'] not in {"datatable","datamatrix_single"}:
-            #     document.add_heading(section_title, heading)
             section['section_title'] = section_title
             if len(section['subsections']) > 0:
                 self._recursive_sections(section['subsections'], heading=heading+1)
-            # if section['description'] is not None:
-            #     p = document.add_paragraph(section['description'])
-            # if section['type'] == "free-text":
-            #     new_parser = self.CustomHtmlToDocx(heading_starting_level=heading-1,styles=document.styles)
-            #     new_parser.add_html_to_document(self._clean_ckeditor_html(data[section['field']]), document)
-            # elif section['type'] == "compound":
-            #     table = document.add_table(rows=1, cols=4)
-            #     col0 = table.columns[0]
-            #     col0.width = Cm(1.5)
-            #     hdr_cells = table.rows[0].cells
-            #     hdr_cells[0].text = '#'
-            #     hdr_cells[1].text = 'CAS RN'
-            #     hdr_cells[2].text = 'ChEMBL ID'
-            #     hdr_cells[3].text = 'Structure'
-            #     for compound in data[section['field']]:
-            #         srcs = glob(os.path.join(settings.MEDIA_ROOT_REPORTS,'images','compound_img_'+str(compound['id'])+'*'))
-            #         row_cells = table.add_row().cells
-            #         row_cells[0].text = str(compound['int_id'])
-            #         row_cells[1].text = ', '.join(compound['cas_rn'])
-            #         row_cells[2].text = compound['chembl_id']
-            #         if len(srcs) > 0 :
-            #             paragraph = row_cells[3].paragraphs[0]
-            #             run = paragraph.add_run()
-            #             run.add_picture(srcs[0],height=1200000,width=1200000)
-            #         else:
-            #             row_cells[3].text = ''
-            # elif section['type'] == "datatable":
-            #     document.add_section()
-            #     docx_section = document.sections[-1]
-            #     docx_section.orientation = WD_ORIENT.LANDSCAPE
-            #     new_height = docx_section.page_width
-            #     docx_section.page_width = docx_section.page_height
-            #     docx_section.page_height = new_height
-            #     document.add_heading(section_title, heading)
-            #     nrows = len(data['pc']['Compound'])
-            #     ncols = len(data['pc'].keys())
-            #     assay_headers = set(data['pc'].keys())
-            #     assay_headers.remove('Compound')
-            #     headers = ['Compound'] + sorted(assay_headers)
-            #     table = document.add_table(rows=1, cols=ncols)
-            #     hdr_cells = table.rows[0].cells
-            #     for hdr_cell, hdr_name in zip(hdr_cells,headers):
-            #         hdr_cell.text = hdr_name
-            #     for row in range(0,nrows):
-            #         row_cells = table.add_row().cells
-            #         row_cells[0].text = data['pc']['Compound'][row]
-            #         for idx, hdr_name in enumerate(headers[1:]):
-            #             row_cells[idx+1].text = data['pc'][hdr_name][row]
-            #     document.add_section()
-            #     docx_section2 = document.sections[-1]
-            #     docx_section2.orientation = WD_ORIENT.PORTRAIT
-            #     new_height = docx_section2.page_width
-            #     docx_section2.page_width = docx_section2.page_height
-            #     docx_section2.page_height = new_height
-            # elif section['type'] == "datamatrix_single":
-            #     document.add_section()
-            #     docx_section = document.sections[-1]
-            #     docx_section.orientation = WD_ORIENT.LANDSCAPE
-            #     new_height = docx_section.page_width
-            #     docx_section.page_width = docx_section.page_height
-            #     docx_section.page_height = new_height
-            #     document.add_heading(section_title, heading-1)
-            #     nrows = len(data[section['field']])
-            #     headers = ['Property','Value','Units','Description','Assay type','Assay ID']
-            #     fields = ['name', 'std_value', 'std_unit','description', 'assay_type','assay_id']
-
-            #     ncols = len(headers)
-            #     table = document.add_table(rows=1, cols=ncols)
-            #     hdr_cells = table.rows[0].cells
-            #     for hdr_cell, hdr_name in zip(hdr_cells,headers):
-            #         hdr_cell.text = hdr_name
-            #     for row in range(0,nrows):
-            #         row_cells = table.add_row().cells
-            #         for idx, field in enumerate(fields):
-            #             value = data[section['field']][row][field]
-            #             if field == 'assay_type':
-            #                 row_cells[idx].text = data_matrix_assay_type2readable[value]
-            #             elif field == 'assay_id' and value[0:6] == 'CHEMBL':
-            #                 row_cells[idx].text = ''
-            #                 paragraph = row_cells[idx].paragraphs[0]
-            #                 self.CustomHtmlToDocx._add_hyperlink(None,paragraph,"https://www.ebi.ac.uk/chembl/assay_report_card/"+value+"/",value)
-            #             else:
-            #                 row_cells[idx].text = str(value)
-            #     document.add_section()
-            #     docx_section2 = document.sections[-1]
-            #     docx_section2.orientation = WD_ORIENT.PORTRAIT
-            #     new_height = docx_section2.page_width
-            #     docx_section2.page_width = docx_section2.page_height
-            #     docx_section2.page_height = new_height
 
     def get(self, request, project):
         with open(settings.SECTIONS_FILE_PATH) as f:
@@ -2276,7 +2130,7 @@ class GenerateReportJson(APIView):
                 'value':[DataMatrixFields.AssayType.calculated_pc],
                 'title':" Min-max normalized Physicochemical property",
             }
-        } #, DataMatrixFields.AssayType.pc
+        }
 
         step2node_seq = {1: 1, 2: 2, 3: 4, 4: 5, 5: 6}
 
@@ -2288,8 +2142,7 @@ class GenerateReportJson(APIView):
                 section_title = str(section['step'])+'.'+section['name']
                 q_comments = NodesModel.objects.filter(project=project,node_seq=step2node_seq[section['step']]).values('outputs_comments')
                 node_comments = q_comments[0]['outputs_comments']
-            # if section['name'] != "Appendix: TC Physicochemical, ADME and Toxicity data":
-            #     document.add_heading(section_title, 1)
+
             output_section['section_title'] = section_title
             if section['step'] == 1:
                 q = ProblemDescription.objects.filter(project=project).values()
@@ -2326,8 +2179,7 @@ class GenerateReportJson(APIView):
                     data['pc'] = {'Compound':[]}
                     i = 0
                     for compound in data_matrix_data:
-                        # if i > 10 and compound_ra_type_code[compound['ra_type']] == 'sc':
-                        #     continue
+
                         if len(compound['data_matrix']) > 0:
                             for field in compound['data_matrix'][0]['data_matrix_fields']:
                                 if field['assay_type'] not in assay_types['pc']['value']:
@@ -2341,8 +2193,7 @@ class GenerateReportJson(APIView):
                             i +=1
                     i = 0
                     for compound in data_matrix_data:
-                        # if i > 10 and compound_ra_type_code[compound['ra_type']] == 'sc':
-                        #     continue
+
                         if len(compound['data_matrix']) > 0:
                             if compound['name'] is None:
                                 name = ''
@@ -2404,43 +2255,6 @@ class GenerateReportJson(APIView):
             output_dict['sections'].append(output_section)
             
         return Response(output_dict, status.HTTP_200_OK)
-
-
-        # p = document.add_paragraph('A plain paragraph having some ')
-        # p.add_run('bold').bold = True
-        # p.add_run(' and some ')
-        # p.add_run('italic.').italic = True
-
-        # document.add_heading('Heading, level 1', level=1)
-        # document.add_paragraph('Intense quote', style='Intense Quote')
-
-        # document.add_paragraph(
-        #     'first item in unordered list', style='List Bullet'
-        # )
-        # document.add_paragraph(
-        #     'first item in ordered list', style='List Number'
-        # )
-
-        # document.add_picture(os.path.join(settings.MEDIA_ROOT_REPORTS,'monty-truth.png'), width=Inches(1.25))
-
-        # records = (
-        #     (3, '101', 'Spam'),
-        #     (7, '422', 'Eggs'),
-        #     (4, '631', 'Spam, spam, eggs, and spam')
-        # )
-
-        # table = document.add_table(rows=1, cols=3)
-        # hdr_cells = table.rows[0].cells
-        # hdr_cells[0].text = 'Qty'
-        # hdr_cells[1].text = 'Id'
-        # hdr_cells[2].text = 'Desc'
-        # for qty, id, desc in records:
-        #     row_cells = table.add_row().cells
-        #     row_cells[0].text = str(qty)
-        #     row_cells[1].text = id
-        #     row_cells[2].text = desc
-
-        # document.add_page_break()
 
         os.makedirs(settings.MEDIA_ROOT_REPORTS,mode=settings.DIRECTORY_DOWNLOAD_PERMISSIONS,exist_ok=True)
         filename = 'report_'+str(project)+'.docx'
