@@ -1,5 +1,5 @@
 --INSERT INTO API_users (username, first_name, last_name, email, password) VALUES('manuel.pastor@upf.edu','Manuel', 'Pastor', 'manuel.pastor@upf.edu','manuel.pastor@upf.edu', 'Manuel');
---INSERT INTO API_users (username, first_name, last_name, email, password) VALUES('***REMOVED***', 'Ignacio', 'Pasamontes Fúnez', '***REMOVED***','Ignacio');
+--INSERT INTO API_users (username, first_name, last_name, email, password) VALUES('ignacio@example.com', 'Ignacio', 'Pasamontes Fúnez', 'ignacio@example.com','Ignacio');
 
 
 BEGIN TRANSACTION;

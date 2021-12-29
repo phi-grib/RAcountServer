@@ -10,7 +10,7 @@ def initialize_users(apps, schema_editor):
     User = get_user_model()
     user = User.objects.create_user('manuel.pastor@upf.edu', first_name='Manuel', last_name='Pastor', email='manuel.pastor@upf.edu', password='Manuel')
     user.save()
-    user = User.objects.create_user('***REMOVED***', first_name='Ignacio', last_name='Pasamontes Fúnez', email='***REMOVED***', password='Ignacio')
+    user = User.objects.create_user('ignacio.pasamontes@gmail.com', first_name='Ignacio', last_name='Pasamontes Fúnez', email='ignacio.pasamontes@gmail.com', password='Ignacio')
     user.save()
     
 

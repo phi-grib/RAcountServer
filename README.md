@@ -56,4 +56,4 @@ and then navigate to <http://localhost:8000>
 ## Login
 Example accounts are:
 - Example case study, User: manuel.pastor@upf.edu  Password: Manuel
-- Empty user, User: ***REMOVED*** Password: Ignacio
+- Empty user, User: ignacio@example.com Password: Ignacio
