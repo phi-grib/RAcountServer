@@ -1859,7 +1859,10 @@ class GenerateReportDocx(APIView):
                     row_cells = table.add_row().cells
                     row_cells[0].text = str(compound['int_id'])
                     row_cells[1].text = ', '.join(compound['cas_rn'])
-                    row_cells[2].text = compound['chembl_id']
+                    if compound['chembl_id'] is None:
+                        row_cells[2].text = ''
+                    else:
+                        row_cells[2].text = compound['chembl_id']
                     if len(srcs) > 0 :
                         paragraph = row_cells[3].paragraphs[0]
                         run = paragraph.add_run()
