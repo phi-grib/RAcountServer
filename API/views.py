@@ -1841,26 +1841,35 @@ class GenerateReportDocx(APIView):
                 new_parser = self.CustomHtmlToDocx(heading_starting_level=heading-1,styles=document.styles)
                 new_parser.add_html_to_document(self._clean_ckeditor_html(data[section['field']]), document)
             elif section['type'] == "compound":
-                table = document.add_table(rows=1, cols=4)
+                table = document.add_table(rows=1, cols=5)
                 col0 = table.columns[0]
-                col0.width = Cm(1.5)
+                col0.width = Cm(1)
+                col3 = table.columns[3]
+                col3.width = Cm(4)
+                col4 = table.columns[4]
+                col4.width = Cm(2)
                 hdr_cells = table.rows[0].cells
                 hdr_cells[0].text = '#'
                 hdr_cells[1].text = 'CAS RN'
                 hdr_cells[2].text = 'ChEMBL ID'
                 hdr_cells[3].text = 'Structure'
+                hdr_cells[4].text = 'Tanimoto'
                 for compound in data[section['field']]:
                     srcs = glob(os.path.join(settings.MEDIA_ROOT_REPORTS,'images','compound_img_'+str(compound['id'])+'*'))
                     row_cells = table.add_row().cells
                     row_cells[0].text = str(compound['int_id'])
                     row_cells[1].text = ', '.join(compound['cas_rn'])
-                    row_cells[2].text = compound['chembl_id']
+                    if compound['chembl_id'] is None:
+                        row_cells[2].text = ''
+                    else:
+                        row_cells[2].text = compound['chembl_id']
                     if len(srcs) > 0 :
                         paragraph = row_cells[3].paragraphs[0]
                         run = paragraph.add_run()
                         run.add_picture(srcs[0],height=1200000,width=1200000)
                     else:
                         row_cells[3].text = ''
+                    row_cells[4].text = "{t:.2f}".format(t=compound['tanimoto'])
             elif section['type'] == "datatable":
                 document.add_section()
                 docx_section = document.sections[-1]
@@ -2047,10 +2056,23 @@ class GenerateReportDocx(APIView):
                 if section['name'] == "Appendix: TC Physicochemical, ADME and Toxicity data":
                     tc_data_matrix_serializer = CompoundDataMatrixSerializer(Compound.objects.filter(project=project,ra_type=Compound.RAType.target), many=True)
                     tc_data_matrix_data = tc_data_matrix_serializer.data
-                    tc_data = tc_data_matrix_data[0]['data_matrix'][0]['data_matrix_fields']
-                    tc_data.sort(key=lambda x: x['assay_id'])
-                    tc_data.sort(key=lambda x: x['name'])
-                    tc_data.sort(key=lambda x: x['assay_type'])
+                    tc_data = None
+                    if len(tc_data_matrix_data) > 0:
+                        if 'data_matrix' in tc_data_matrix_data[0]:
+                            if len(tc_data_matrix_data[0]['data_matrix']) > 0:
+                                if 'data_matrix_fields' in tc_data_matrix_data[0]['data_matrix'][0]:
+                                    tc_data = tc_data_matrix_data[0]['data_matrix'][0]['data_matrix_fields']
+                                    tc_data.sort(key=lambda x: x['assay_id'])
+                                    tc_data.sort(key=lambda x: x['name'])
+                                    tc_data.sort(key=lambda x: x['assay_type'])
+                                else:
+                                    continue
+                            else:
+                                continue
+                        else:
+                            continue
+                    else:
+                        continue
                     data = {'tc_data': tc_data}
 
             self._recursive_sections(document, section['subsections'], data, heading=2)
@@ -2357,12 +2379,25 @@ class GenerateReportJson(APIView):
                 if section['name'] == "Appendix: TC Physicochemical, ADME and Toxicity data":
                     tc_data_matrix_serializer = CompoundDataMatrixSerializer(Compound.objects.filter(project=project,ra_type=Compound.RAType.target), many=True)
                     tc_data_matrix_data = tc_data_matrix_serializer.data
-                    tc_data = tc_data_matrix_data[0]['data_matrix'][0]['data_matrix_fields']
-                    tc_data.sort(key=lambda x: x['assay_id'])
-                    tc_data.sort(key=lambda x: x['name'])
-                    tc_data.sort(key=lambda x: x['assay_type'])
-                    for row in tc_data:
-                        row['assay_type'] = data_matrix_assay_type2readable[row['assay_type']]
+                    tc_data = None
+                    if len(tc_data_matrix_data) > 0:
+                        if 'data_matrix' in tc_data_matrix_data[0]:
+                            if len(tc_data_matrix_data[0]['data_matrix']) > 0:
+                                if 'data_matrix_fields' in tc_data_matrix_data[0]['data_matrix'][0]:
+                                    tc_data = tc_data_matrix_data[0]['data_matrix'][0]['data_matrix_fields']
+                                    tc_data.sort(key=lambda x: x['assay_id'])
+                                    tc_data.sort(key=lambda x: x['name'])
+                                    tc_data.sort(key=lambda x: x['assay_type'])
+                                    for row in tc_data:
+                                        row['assay_type'] = data_matrix_assay_type2readable[row['assay_type']]
+                                else:
+                                    continue
+                            else:
+                                continue
+                        else:
+                            continue
+                    else:
+                        continue
                     data = {'tc_data': tc_data}
             output_section['data'] = data
             self._recursive_sections(output_section['subsections'], heading=2)
